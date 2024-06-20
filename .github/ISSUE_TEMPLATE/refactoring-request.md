@@ -1,8 +1,8 @@
 ---
-name: Refactoring request
-about: Describe this issue template's purpose here.
-title: ''
-labels: ''
+name: "[ Refactor ] - Refactoring request"
+about: "\U0001F3A8 Refactor Template"
+title: "[ Refactor ] - "
+labels: "refactor \U0001F3A8"
 assignees: ''
 
 ---
