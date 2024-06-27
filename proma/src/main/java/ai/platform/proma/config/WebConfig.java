@@ -1,4 +1,4 @@
-package secure.project.secureProject.configuration;
+package ai.platform.proma.config;
 
 
 import lombok.RequiredArgsConstructor;
