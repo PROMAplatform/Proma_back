@@ -3,6 +3,7 @@ package ai.platform.proma.domain;
 import ai.platform.proma.domain.enums.PromptCategory;
 import ai.platform.proma.domain.enums.Scrap;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
@@ -58,5 +59,17 @@ public class Prompt {
     @OneToMany(mappedBy = "prompt", cascade = CascadeType.MERGE)
     private List<Message> messages = new ArrayList<>();
 
+
+    @Builder
+    public Prompt(String promptTitle, String promptDescription, String promptPreview, PromptCategory promptCategory, User user, CommunicationMethod communicationMethod, List<PromptBlock> promptBlocks) {
+        this.promptTitle = promptTitle;
+        this.promptDescription = promptDescription;
+        this.promptPreview = promptPreview;
+        this.promptCategory = promptCategory;
+        this.isScrap = Scrap.NOTSCRAP;
+        this.user = user;
+        this.communicationMethod = communicationMethod;
+        this.promptBlocks = promptBlocks;
+    }
 
 }
