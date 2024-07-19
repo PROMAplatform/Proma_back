@@ -20,7 +20,8 @@ public class CommunicationMethod {
     private Long id;
 
     @Column(nullable = false)
-    private PromptType Type;
+    @Enumerated(EnumType.STRING)
+    private PromptType type;
 
     // --------------------------------------------------------------------
 
