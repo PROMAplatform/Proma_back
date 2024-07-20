@@ -1,8 +1,8 @@
 package ai.platform.proma.service;
 import ai.platform.proma.domain.*;
 import ai.platform.proma.domain.enums.PromptCategory;
+import ai.platform.proma.dto.response.BlockResponseDto;
 import ai.platform.proma.dto.response.PostResponseDto;
-import ai.platform.proma.dto.response.PromptResponseDto;
 import ai.platform.proma.exception.ApiException;
 import ai.platform.proma.exception.ErrorDefine;
 import ai.platform.proma.repositroy.*;
@@ -63,16 +63,7 @@ public class PostService {
         promptRepository.save(prompt);
 
         List<PromptBlock> promptBlocks = promptBlockRepository.findByPrompt(post.getPrompt());
-//        for (PromptBlock promptBlock : promptBlocks) {
-//
-//            // Block
-//            Block block = Block.scrapBlock(promptBlock, user);
-//            blockRepository.save(block);
-//
-//            // Prompt-Block 매핑
-//            PromptBlock newPromptBlock = PromptBlock.scrapPromptBlock(prompt, block);
-//            promptBlockRepository.save(newPromptBlock);
-//        }
+
         for (PromptBlock promptBlock : promptBlocks) {
             // 기존 Block 조회 (title, blockDescription, blockCategory 기준)
             Block existingBlock = blockRepository.findByTitleAndBlockDescriptionAndBlockCategoryAndUserId(
@@ -96,5 +87,38 @@ public class PostService {
         return true;
     }
 
+    public List<BlockResponseDto> getPromptBlocksByPostId(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new ApiException(ErrorDefine.POST_NOT_FOUND));
+
+        List<PromptBlock> promptBlocks = promptBlockRepository.findByPrompt(post.getPrompt()); // PromptBlock 조회
+
+        return promptBlocks.stream()
+                .map(Block -> new BlockResponseDto(Block.getBlock())) // Block 정보만 추출하여 DTO 생성
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public Boolean postLike(Long postId){
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new ApiException(ErrorDefine.POST_NOT_FOUND));
+
+        User user = userRepository.findById(post.getPrompt().getUser().getId()) // post -> prompt -> userId
+                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+
+        // 좋아요를 눌렀는지 확인
+        boolean isLiked = likeRepository.existsByPostAndUser(post, user);
+
+        if (isLiked) {
+            // 이미 좋아요를 눌렀다면 취소
+            likeRepository.deleteByPostAndUser(post, user);
+            return true; // 좋아요 취소 결과 반환
+        } else {
+            // 좋아요를 누르지 않았다면 추가
+            Like like = Like.postLike(post, user);
+            likeRepository.save(like);
+            return true; // 좋아요 추가 결과 반환
+        }
+    }
 
 }
