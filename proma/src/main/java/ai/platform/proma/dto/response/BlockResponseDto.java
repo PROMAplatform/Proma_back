@@ -8,13 +8,13 @@ import lombok.ToString;
 @ToString
 public class BlockResponseDto {
 
-    private final Long id;
+    private final Long blockId;
     private final String blockTitle;
     private final String blockCategory;
 
 
     public BlockResponseDto(Block block) {
-        this.id = block.getId();
+        this.blockId = block.getId();
         this.blockTitle = block.getTitle();
         this.blockCategory = block.getBlockCategory();
     }

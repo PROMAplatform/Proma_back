@@ -1,6 +1,7 @@
 package ai.platform.proma.service;
 import ai.platform.proma.domain.*;
 import ai.platform.proma.domain.enums.PromptCategory;
+import ai.platform.proma.dto.request.PostRequestDto;
 import ai.platform.proma.dto.response.BlockResponseDto;
 import ai.platform.proma.dto.response.PostResponseDto;
 import ai.platform.proma.exception.ApiException;
@@ -31,6 +32,56 @@ public class PostService {
 
     public Page<PostResponseDto> getPosts(String searchKeyword, PromptCategory category, Pageable pageable, String likeOrder, String latestOrder) {
         Page<Post> posts = postRepository.findAllBySearchKeywordAndCategory(searchKeyword, category, pageable);
+
+        List<PostResponseDto> sortedPostResponseDtos = posts.stream() // posts를 Stream으로 변환
+                .map(post -> new PostResponseDto(post, likeRepository.countByPostId(post.getId())))
+                .sorted((dto1, dto2) -> {
+                    int likeCountComparison = Sort.Direction.fromString(likeOrder).isAscending()
+                            ? Integer.compare(dto1.getLikeCount(), dto2.getLikeCount())
+                            : Integer.compare(dto2.getLikeCount(), dto1.getLikeCount());
+
+                    if (likeCountComparison == 0) {
+                        return Sort.Direction.fromString(latestOrder).isAscending()
+                                ? dto1.getCreateAt().compareTo(dto2.getCreateAt())
+                                : dto2.getCreateAt().compareTo(dto1.getCreateAt());
+                    }
+                    return likeCountComparison;
+                })
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(sortedPostResponseDtos, pageable, posts.getTotalElements());
+    }
+    public Page<PostResponseDto> getPostsByUserLikes(Long userId, PromptCategory category, Pageable pageable, String likeOrder, String latestOrder) {
+        userRepository.findById(userId).orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+
+        List<Long> postIds = likeRepository.findPostIdsByUserId(userId);
+
+        Page<Post> posts = postRepository.findAllByPostIdInAndPromptCategory(category, postIds, pageable);
+
+        List<PostResponseDto> sortedPostResponseDtos = posts.stream() // posts를 Stream으로 변환
+                .map(post -> new PostResponseDto(post, likeRepository.countByPostId(post.getId())))
+                .sorted((dto1, dto2) -> {
+                    int likeCountComparison = Sort.Direction.fromString(likeOrder).isAscending()
+                            ? Integer.compare(dto1.getLikeCount(), dto2.getLikeCount())
+                            : Integer.compare(dto2.getLikeCount(), dto1.getLikeCount());
+
+                    if (likeCountComparison == 0) {
+                        return Sort.Direction.fromString(latestOrder).isAscending()
+                                ? dto1.getCreateAt().compareTo(dto2.getCreateAt())
+                                : dto2.getCreateAt().compareTo(dto1.getCreateAt());
+                    }
+                    return likeCountComparison;
+                })
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(sortedPostResponseDtos, pageable, posts.getTotalElements());
+    }
+    public Page<PostResponseDto> getPostsByUserDistribute(Long userId, PromptCategory category, Pageable pageable, String likeOrder, String latestOrder) {
+        userRepository.findById(userId).orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+
+//        List<Long> postIds = likeRepository.findPostIdsByUserId(userId);
+
+        Page<Post> posts = postRepository.findAllByPromptUserId(userId, pageable);
 
         List<PostResponseDto> sortedPostResponseDtos = posts.stream() // posts를 Stream으로 변환
                 .map(post -> new PostResponseDto(post, likeRepository.countByPostId(post.getId())))
@@ -119,6 +170,36 @@ public class PostService {
             likeRepository.save(like);
             return true; // 좋아요 추가 결과 반환
         }
+    }
+    @Transactional
+    public Boolean updatePost(Long userId, Long postId, PostRequestDto postRequestDto){
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new ApiException(ErrorDefine.POST_NOT_FOUND));
+        userRepository.findById(userId)
+                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+
+        if (!post.getPrompt().getUser().getId().equals(userId)) {
+            throw new ApiException(ErrorDefine.UNAUTHORIZED_USER);
+        }
+
+        post.update(postRequestDto.getPostTitle(), postRequestDto.getPostDescription());
+
+        return true;
+    }
+
+    @Transactional
+    public Boolean deletePost(Long userId, Long postId){
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new ApiException(ErrorDefine.POST_NOT_FOUND));
+        userRepository.findById(userId)
+                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+
+        if (!post.getPrompt().getUser().getId().equals(userId)) {
+            throw new ApiException(ErrorDefine.UNAUTHORIZED_USER);
+        }
+
+        postRepository.delete(post);
+        return true;
     }
 
 }
