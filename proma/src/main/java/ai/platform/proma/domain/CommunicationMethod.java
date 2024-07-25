@@ -21,7 +21,7 @@ public class CommunicationMethod {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private PromptType type;
+    private String type;
 
     // --------------------------------------------------------------------
 

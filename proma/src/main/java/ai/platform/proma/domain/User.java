@@ -2,6 +2,7 @@ package ai.platform.proma.domain;
 
 import ai.platform.proma.domain.enums.UserLoginMethod;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
@@ -49,4 +50,19 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE)
     private List<Block> blocks = new ArrayList<>();
+
+    @Builder
+    public User(Long id, String userLoginId, String userName, UserLoginMethod userLoginMethod, LocalDate createAt, Boolean userOngoing) {
+        this.id = id;
+        this.userLoginId = userLoginId;
+        this.userName = userName;
+        this.userLoginMethod = userLoginMethod;
+        this.createAt = createAt;
+        this.userOngoing = userOngoing;
+    }
+
+    public void secession(){
+        this.userOngoing = false;
+    }
+
 }

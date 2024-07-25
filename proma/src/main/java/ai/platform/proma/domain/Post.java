@@ -37,7 +37,12 @@ public class Post {
     @JoinColumn(name = "prompt_id", nullable = false)
     private Prompt prompt;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "post", cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
     private List<Like> likes = new ArrayList<>();
+
+    public void update(String postTitle, String postDescription) {
+        this.postTitle = postTitle;
+        this.postDescription = postDescription;
+    }
 
 }

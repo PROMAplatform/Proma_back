@@ -12,7 +12,7 @@ public class BlockSaveRequestDto {
     private Long userId;
     private String blockTitle;
     private String blockDescription;
-    private BlockCategory blockCategory;
+    private String blockCategory;
 
     public Block toEntity(User user, BlockSaveRequestDto blockSaveRequestDto) {
         return Block.builder()

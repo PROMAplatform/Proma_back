@@ -8,10 +8,13 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface BlockRepository extends JpaRepository<Block, Long> {
     @Query("SELECT b FROM Block b WHERE b.user = :user OR b.user IS NULL")
     List<Block> findByUserOrUserIsNull(@Param("user") User user);
+
+    Optional<Block> findByTitleAndBlockDescriptionAndBlockCategoryAndUserId(String title, String blockDescription, String blockCategory, Long userId);
 
 }
