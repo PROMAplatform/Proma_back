@@ -26,8 +26,9 @@ public class PostController {
 
     @GetMapping("/community")
     public ResponseDto<Map<String, Object>> getPostsBySearchKeyWord(
+            @Valid @RequestParam(value = "userId", required = false) Long userId,
             @Valid @RequestParam(value = "search", required = false) String searchKeyword,
-            @Valid @RequestParam(value = "category", required = false) PromptCategory category,
+            @Valid @RequestParam(value = "category", required = false) String category,
             @Valid @RequestParam(value = "latest", defaultValue = "desc") String latestOrder,
             @Valid @RequestParam(value = "like", defaultValue = "desc") String likeOrder,
             @Valid @RequestParam(value = "page", defaultValue = "0") int page,
@@ -35,7 +36,7 @@ public class PostController {
     ) {
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<PostResponseDto> postResponseDtos = postService.getPosts(searchKeyword, category, pageable, likeOrder, latestOrder);
+        Page<PostResponseDto> postResponseDtos = postService.getPosts(userId, searchKeyword, category, pageable, likeOrder, latestOrder);
 
         Map<String, Object> response = new HashMap<>();
         response.put("selectPrompt", postResponseDtos.getContent());

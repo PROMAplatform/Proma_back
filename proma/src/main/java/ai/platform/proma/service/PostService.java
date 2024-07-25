@@ -175,14 +175,22 @@ public class PostService {
     public Boolean updatePost(Long userId, Long postId, PostRequestDto postRequestDto){
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.POST_NOT_FOUND));
+
         userRepository.findById(userId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+
+        Prompt prompt = promptRepository.findById(post.getPrompt().getId())
+                .orElseThrow(() -> new ApiException(ErrorDefine.PROMPT_NOT_FOUND));
 
         if (!post.getPrompt().getUser().getId().equals(userId)) {
             throw new ApiException(ErrorDefine.UNAUTHORIZED_USER);
         }
-
-        post.update(postRequestDto.getPostTitle(), postRequestDto.getPostDescription());
+        try {
+            prompt.updateCategory(postRequestDto.getPromptCategory());
+        } catch (IllegalArgumentException e) {
+            throw new ApiException(ErrorDefine.INVALID_PROMPT_CATEGORY);
+        }
+        post.update(postRequestDto);
 
         return true;
     }
