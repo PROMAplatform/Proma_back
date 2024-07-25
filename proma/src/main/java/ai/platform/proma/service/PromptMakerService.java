@@ -1,6 +1,7 @@
 package ai.platform.proma.service;
 
 import ai.platform.proma.domain.*;
+import ai.platform.proma.domain.enums.PromptMethod;
 import ai.platform.proma.dto.request.BlockSaveRequestDto;
 import ai.platform.proma.dto.request.ListPromptAtom;
 import ai.platform.proma.dto.request.PromptSaveRequestDto;
@@ -29,17 +30,22 @@ public class PromptMakerService {
         User user = userRepository.findById(blockSaveRequestDto.getUserId())
                 .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
 
-        Block saveBlock = blockSaveRequestDto.toEntity(user, blockSaveRequestDto);
+        PromptMethods promptMethods = communicationMethodRepository.findByPromptMethod(blockSaveRequestDto.getPromptMethod())
+                .orElseThrow(() -> new ApiException(ErrorDefine.COMMUNICATION_METHOD_NOT_FOUND));
+        Block saveBlock = blockSaveRequestDto.toEntity(promptMethods, user, blockSaveRequestDto);
         blockRepository.save(saveBlock);
 
         return true;
     }
 
-    public List<SelectBlockDto> searchBlock(Long userId) {
+    public List<SelectBlockDto> searchBlock(Long userId, PromptMethod promptMethod) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
 
-        List<Block> blocks = blockRepository.findByUserOrUserIsNull(user);
+        PromptMethods promptMethods = communicationMethodRepository.findByPromptMethod(promptMethod)
+                .orElseThrow(() -> new ApiException(ErrorDefine.COMMUNICATION_METHOD_NOT_FOUND));
+
+        List<Block> blocks = blockRepository.findByUserOrUserIsNullAndPromptMethods(user, promptMethods);
 
         return blocks.stream()
                 .map(SelectBlockDto::of)
@@ -62,7 +68,7 @@ public class PromptMakerService {
                 .collect(Collectors.toList()));
 
         List<PromptBlock> savePromptBlocks = blocks.stream()
-                .map(block -> promptSaveRequestDto.toEntity(savePrompt, block))
+                .map(block -> ListPromptAtom.toEntity(savePrompt, block))
                 .toList();
 
         promptBlockRepository.saveAll(savePromptBlocks);
