@@ -30,11 +30,13 @@ public class PostService {
     private final PromptBlockRepository promptBlockRepository;
     private final BlockRepository blockRepository;
 
-    public Page<PostResponseDto> getPosts(String searchKeyword, PromptCategory category, Pageable pageable, String likeOrder, String latestOrder) {
+    public Page<PostResponseDto> getPosts(Long userId, String searchKeyword, String category, Pageable pageable, String likeOrder, String latestOrder) {
         Page<Post> posts = postRepository.findAllBySearchKeywordAndCategory(searchKeyword, category, pageable);
 
-        List<PostResponseDto> sortedPostResponseDtos = posts.stream() // posts를 Stream으로 변환
-                .map(post -> new PostResponseDto(post, likeRepository.countByPostId(post.getId())))
+        User user = userRepository.findById(userId).orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+
+        List<PostResponseDto> sortedPostResponseDtos = posts.stream()// posts를 Stream으로 변환
+                .map(post -> new PostResponseDto(post, likeRepository.countByPostId(post.getId()), likeRepository.existsByPostAndUser(post,user)))
                 .sorted((dto1, dto2) -> {
                     int likeCountComparison = Sort.Direction.fromString(likeOrder).isAscending()
                             ? Integer.compare(dto1.getLikeCount(), dto2.getLikeCount())
@@ -58,8 +60,10 @@ public class PostService {
 
         Page<Post> posts = postRepository.findAllByPostIdInAndPromptCategory(category, postIds, pageable);
 
+        User user = userRepository.findById(userId).orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+
         List<PostResponseDto> sortedPostResponseDtos = posts.stream() // posts를 Stream으로 변환
-                .map(post -> new PostResponseDto(post, likeRepository.countByPostId(post.getId())))
+                .map(post -> new PostResponseDto(post, likeRepository.countByPostId(post.getId()), likeRepository.existsByPostAndUser(post,user)))
                 .sorted((dto1, dto2) -> {
                     int likeCountComparison = Sort.Direction.fromString(likeOrder).isAscending()
                             ? Integer.compare(dto1.getLikeCount(), dto2.getLikeCount())
@@ -81,10 +85,13 @@ public class PostService {
 
 //        List<Long> postIds = likeRepository.findPostIdsByUserId(userId);
 
-        Page<Post> posts = postRepository.findAllByPromptUserId(userId, pageable);
+        Page<Post> posts = postRepository.findAllByPromptUserIdAndPromptCategory(userId, category, pageable);
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+
 
         List<PostResponseDto> sortedPostResponseDtos = posts.stream() // posts를 Stream으로 변환
-                .map(post -> new PostResponseDto(post, likeRepository.countByPostId(post.getId())))
+                .map(post -> new PostResponseDto(post, likeRepository.countByPostId(post.getId()), likeRepository.existsByPostAndUser(post,user)))
                 .sorted((dto1, dto2) -> {
                     int likeCountComparison = Sort.Direction.fromString(likeOrder).isAscending()
                             ? Integer.compare(dto1.getLikeCount(), dto2.getLikeCount())

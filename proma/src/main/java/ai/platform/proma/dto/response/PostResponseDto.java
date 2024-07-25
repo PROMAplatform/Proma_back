@@ -26,14 +26,16 @@ public class PostResponseDto {
 
     private final int likeCount;
 
-    private final PromptMethods promptMethods;
+    private final Long promptMethods;
 
     private final String promptPreview;
 
     private final PromptCategory promptCategory;
 
+    private final Boolean likeState;
+
     @Builder
-    public PostResponseDto(Post post, int likeCount) {
+    public PostResponseDto(Post post, int likeCount, Boolean likeState) {
         this.postId = post.getId();
         this.postTitle = post.getPostTitle();
         this.postDescription = post.getPostDescription();
@@ -41,8 +43,11 @@ public class PostResponseDto {
         this.createAt = post.getCreateAt();
         this.promptId = post.getPrompt().getId();
         this.likeCount = likeCount;
-        this.promptMethods = post.getPrompt().getPromptMethods();
+        this.promptMethods = post.getPrompt().getPromptMethods().getId();
         this.promptCategory = post.getPrompt().getPromptCategory();
         this.promptPreview = post.getPrompt().getPromptPreview();
+        this.likeState = likeState;
     }
+
+
 }
