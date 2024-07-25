@@ -10,14 +10,14 @@ import lombok.Getter;
 @AllArgsConstructor
 public class BlockSaveRequestDto {
     private Long userId;
-    private String blockTitle;
+    private String blockValue;
     private String blockDescription;
-    private String blockCategory;
+    private BlockCategory blockCategory;
 
     public Block toEntity(User user, BlockSaveRequestDto blockSaveRequestDto) {
         return Block.builder()
                 .user(user)
-                .title(blockSaveRequestDto.getBlockTitle())
+                .blockValue(blockSaveRequestDto.getBlockValue())
                 .blockDescription(blockSaveRequestDto.getBlockDescription())
                 .blockCategory(blockSaveRequestDto.getBlockCategory())
                 .build();

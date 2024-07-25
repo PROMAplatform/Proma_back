@@ -1,31 +1,30 @@
 package ai.platform.proma.domain;
 
-import ai.platform.proma.domain.enums.PromptType;
+import ai.platform.proma.domain.enums.PromptMethod;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
-
 import java.util.ArrayList;
 import java.util.List;
 
-@Table(name = "CommuMethod_TB")
+@Table(name = "PROMPT_TYPE_TB")
 @Entity
 @Getter
 @NoArgsConstructor
 @DynamicUpdate
-public class CommunicationMethod {
+public class PromptMethods {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private String type;
+    private PromptMethod promptMethod;
 
     // --------------------------------------------------------------------
 
-    @OneToMany(mappedBy = "communicationMethod", cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "promptMethods", cascade = CascadeType.MERGE)
     private List<Prompt> prompts = new ArrayList<>();
 
 

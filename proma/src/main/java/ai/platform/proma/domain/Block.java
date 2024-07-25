@@ -1,5 +1,6 @@
 package ai.platform.proma.domain;
 
+import ai.platform.proma.domain.enums.BlockCategory;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,13 +23,13 @@ public class Block {
     private Long id;
 
     @Column(nullable = false)
-    private String title;
+    private String blockValue;
 
     @Column(nullable = false)
     private String blockDescription;
 
     @Column(nullable = false)
-    private String blockCategory;
+    private BlockCategory blockCategory;
 
 // --------------------------------------------------------------------
 
@@ -41,16 +42,16 @@ public class Block {
 
 
     @Builder
-    public Block(Long id, String title, String blockDescription, String blockCategory, User user) {
+    public Block(Long id, String blockValue, String blockDescription, BlockCategory blockCategory, User user) {
         this.id = id;
-        this.title = title;
+        this.blockValue = blockValue;
         this.blockDescription = blockDescription;
         this.blockCategory = blockCategory;
         this.user = user;
     }
     public static Block scrapBlock(PromptBlock promptBlock, User user){
         return Block.builder()
-                .title(promptBlock.getBlock().getTitle())
+                .blockValue(promptBlock.getBlock().getBlockValue())
                 .blockDescription(promptBlock.getBlock().getBlockDescription())
                 .blockCategory(promptBlock.getBlock().getBlockCategory())
                 .user(user)

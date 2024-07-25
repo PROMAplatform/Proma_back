@@ -32,6 +32,9 @@ public class Prompt {
     @Column(nullable = false)
     private String promptPreview;
 
+    @Column(nullable = false)
+    private String emoji;
+
     @Column(name = "prompt_category",nullable = false)
     @Enumerated(EnumType.STRING)
     private PromptCategory promptCategory;
@@ -47,8 +50,8 @@ public class Prompt {
     private User user;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "communicationMethod_id", nullable = false)
-    private CommunicationMethod communicationMethod;
+    @JoinColumn(name = "promptMethod_id", nullable = false)
+    private PromptMethods promptMethods;
 
     @OneToMany(mappedBy = "prompt", cascade = CascadeType.MERGE)
     private List<PromptBlock> promptBlocks = new ArrayList<>();
@@ -60,15 +63,16 @@ public class Prompt {
     private List<Message> messages = new ArrayList<>();
 
     @Builder
-    public Prompt(Long id, String promptTitle, String promptDescription, String promptPreview, PromptCategory promptCategory, Scrap isScrap, User user, CommunicationMethod communicationMethod) {
+    public Prompt(Long id, String promptTitle, String promptDescription, String promptPreview, PromptCategory promptCategory,String emoji, Scrap isScrap, User user, PromptMethods promptMethods) {
         this.id = id;
         this.promptTitle = promptTitle;
         this.promptDescription = promptDescription;
         this.promptPreview = promptPreview;
         this.promptCategory = promptCategory;
+        this.emoji = emoji;
         this.isScrap = isScrap;
         this.user = user;
-        this.communicationMethod = communicationMethod;
+        this.promptMethods = promptMethods;
     }
 
     public static Prompt scrapPost(Post post, User user) {
@@ -77,9 +81,10 @@ public class Prompt {
                 .promptDescription(post.getPrompt().getPromptDescription())
                 .promptPreview(post.getPrompt().getPromptPreview())
                 .promptCategory(post.getPrompt().getPromptCategory())
+                .emoji(post.getPrompt().getEmoji())
                 .isScrap(Scrap.SCRAP)
                 .user(user) // 스크랩하는 사용자
-                .communicationMethod(post.getPrompt().getCommunicationMethod())
+                .promptMethods(post.getPrompt().getPromptMethods())
                 .build();
     }
 }

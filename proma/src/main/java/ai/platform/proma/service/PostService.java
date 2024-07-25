@@ -117,8 +117,8 @@ public class PostService {
 
         for (PromptBlock promptBlock : promptBlocks) {
             // 기존 Block 조회 (title, blockDescription, blockCategory 기준)
-            Block existingBlock = blockRepository.findByTitleAndBlockDescriptionAndBlockCategoryAndUserId(
-                    promptBlock.getBlock().getTitle(),
+            Block existingBlock = blockRepository.findByBlockValueAndBlockDescriptionAndBlockCategoryAndUserId(
+                    promptBlock.getBlock().getBlockValue(),
                     promptBlock.getBlock().getBlockDescription(),
                     promptBlock.getBlock().getBlockCategory(),
                     userId
