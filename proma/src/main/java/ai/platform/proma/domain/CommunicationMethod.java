@@ -19,7 +19,7 @@ public class CommunicationMethod {
     private Long id;
 
     @Column(nullable = false)
-    private String Type;
+    private String type;
 
     // --------------------------------------------------------------------
 
