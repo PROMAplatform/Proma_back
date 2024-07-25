@@ -17,7 +17,7 @@ public class SelectBlockDto {
     public static SelectBlockDto of(Block block) {
         return SelectBlockDto.builder()
                 .blockId(block.getId())
-                .blockTitle(block.getTitle())
+                .blockTitle(block.getBlockValue())
                 .blockDescription(block.getBlockDescription())
                 .blockCategory(block.getBlockCategory())
                 .build();

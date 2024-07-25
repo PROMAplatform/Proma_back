@@ -1,6 +1,6 @@
 package ai.platform.proma.dto.response;
 
-import ai.platform.proma.domain.CommunicationMethod;
+import ai.platform.proma.domain.PromptMethods;
 import ai.platform.proma.domain.Prompt;
 import ai.platform.proma.domain.enums.PromptCategory;
 import ai.platform.proma.domain.enums.Scrap;
@@ -19,7 +19,7 @@ public class PromptResponseDto {
     private final Scrap isScrap;
     private final String userName;
     private final Long userId;
-    private final CommunicationMethod communicationMethodName;
+    private final PromptMethods promptMethodsName;
 
     @Builder
     public PromptResponseDto(Prompt prompt) {
@@ -31,6 +31,6 @@ public class PromptResponseDto {
         this.isScrap = Scrap.SCRAP;
         this.userName = prompt.getUser().getUserName();
         this.userId = prompt.getUser().getId();
-        this.communicationMethodName = prompt.getCommunicationMethod();
+        this.promptMethodsName = prompt.getPromptMethods();
     }
 }

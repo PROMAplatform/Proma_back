@@ -2,7 +2,7 @@ package ai.platform.proma.dto.request;
 
 import ai.platform.proma.domain.*;
 import ai.platform.proma.domain.enums.PromptCategory;
-import ai.platform.proma.domain.enums.PromptType;
+import ai.platform.proma.domain.enums.PromptMethod;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -15,16 +15,16 @@ public class PromptSaveRequestDto {
     private String promptDescription;
     private String promptPreview;
     private PromptCategory promptCategory;
-    private PromptType promptType;
+    private PromptMethod promptMethod;
     private List<ListPromptAtom> listPromptAtom;
 
-    public Prompt toEntity(User user, CommunicationMethod communicationMethod, PromptSaveRequestDto promptSaveRequestDto) {
+    public Prompt toEntity(User user, PromptMethods promptMethods, PromptSaveRequestDto promptSaveRequestDto) {
         return Prompt.builder()
                 .user(user)
                 .promptTitle(promptSaveRequestDto.getPromptTitle())
                 .promptDescription(promptSaveRequestDto.getPromptDescription())
                 .promptPreview(promptSaveRequestDto.getPromptPreview())
-                .communicationMethod(communicationMethod)
+                .promptMethods(promptMethods)
                 .build();
     }
 

@@ -51,10 +51,10 @@ public class PromptMakerService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
 
-        CommunicationMethod communicationMethod = communicationMethodRepository.findByType(promptSaveRequestDto.getPromptType())
+        PromptMethods promptMethods = communicationMethodRepository.findByPromptMethod(promptSaveRequestDto.getPromptMethod())
                 .orElseThrow(() -> new ApiException(ErrorDefine.COMMUNICATION_METHOD_NOT_FOUND));
 
-        Prompt savePrompt = promptSaveRequestDto.toEntity(user, communicationMethod, promptSaveRequestDto);
+        Prompt savePrompt = promptSaveRequestDto.toEntity(user, promptMethods, promptSaveRequestDto);
         promptRepository.save(savePrompt);
 
         List<Block> blocks = blockRepository.findAllById(promptSaveRequestDto.getListPromptAtom().stream()
