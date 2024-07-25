@@ -1,5 +1,6 @@
 package ai.platform.proma.domain;
 
+import ai.platform.proma.domain.enums.PromptType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,7 @@ public class CommunicationMethod {
     private Long id;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private String type;
 
     // --------------------------------------------------------------------
