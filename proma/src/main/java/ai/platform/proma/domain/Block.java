@@ -34,19 +34,24 @@ public class Block {
 // --------------------------------------------------------------------
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @OneToMany(mappedBy = "block", cascade = CascadeType.MERGE)
     private List<PromptBlock> PromptBlocks = new ArrayList<>();
 
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "prompt_methods_id", nullable = false)
+    private PromptMethods promptMethods;
+
 
     @Builder
-    public Block(Long id, String blockValue, String blockDescription, BlockCategory blockCategory, User user) {
+    public Block(Long id, String blockValue, String blockDescription, BlockCategory blockCategory, User user, PromptMethods promptMethods) {
         this.id = id;
         this.blockValue = blockValue;
         this.blockDescription = blockDescription;
         this.blockCategory = blockCategory;
+        this.promptMethods = promptMethods;
         this.user = user;
     }
     public static Block scrapBlock(PromptBlock promptBlock, User user){
