@@ -1,6 +1,5 @@
 package ai.platform.proma.domain;
 
-import ai.platform.proma.domain.enums.BlockCategory;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,10 +28,9 @@ public class Block {
     private String blockDescription;
 
     @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private BlockCategory blockCategory;
+    private String blockCategory;
 
-    // --------------------------------------------------------------------
+// --------------------------------------------------------------------
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -41,11 +39,24 @@ public class Block {
     @OneToMany(mappedBy = "block", cascade = CascadeType.MERGE)
     private List<PromptBlock> PromptBlocks = new ArrayList<>();
 
-    // ----------------------------------------------------------------------
-    @Builder(toBuilder = true)
-    public Block(String title, String blockDescription, BlockCategory blockCategory, User user) {
+
+    @Builder
+    public Block(Long id, String title, String blockDescription, String blockCategory, User user) {
+        this.id = id;
         this.title = title;
         this.blockDescription = blockDescription;
         this.blockCategory = blockCategory;
+        this.user = user;
     }
+    public static Block scrapBlock(PromptBlock promptBlock, User user){
+        return Block.builder()
+                .title(promptBlock.getBlock().getTitle())
+                .blockDescription(promptBlock.getBlock().getBlockDescription())
+                .blockCategory(promptBlock.getBlock().getBlockCategory())
+                .user(user)
+                .build();
+    }
+
+
+
 }

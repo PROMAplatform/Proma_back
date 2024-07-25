@@ -34,4 +34,10 @@ public class PromptBlock {
         this.prompt = prompt;
         this.block = block;
     }
+    public static PromptBlock scrapPromptBlock(Prompt prompt, Block block) {
+        return PromptBlock.builder()
+                .prompt(prompt) // 새로 생성된 Prompt 엔티티 연결
+                .block(block) // 새로 생성된 Block 엔티티 연결
+                .build();
+    }
 }
