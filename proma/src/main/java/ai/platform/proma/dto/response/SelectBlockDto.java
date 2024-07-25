@@ -9,7 +9,7 @@ import lombok.Builder;
 @Builder
 public class SelectBlockDto {
     private Long blockId;
-    private String blockTitle;
+    private String blockValue;
     private String blockDescription;
     private BlockCategory blockCategory;
 
@@ -17,7 +17,7 @@ public class SelectBlockDto {
     public static SelectBlockDto of(Block block) {
         return SelectBlockDto.builder()
                 .blockId(block.getId())
-                .blockTitle(block.getBlockValue())
+                .blockValue(block.getBlockValue())
                 .blockDescription(block.getBlockDescription())
                 .blockCategory(block.getBlockCategory())
                 .build();

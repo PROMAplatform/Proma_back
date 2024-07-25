@@ -28,10 +28,10 @@ public class PromptSaveRequestDto {
                 .build();
     }
 
-    public PromptBlock toEntity(Prompt prompt, Block block) {
-        return PromptBlock.builder()
-                .prompt(prompt)
-                .block(block)
-                .build();
-    }
+//    public PromptBlock toEntity(Prompt prompt, Block block) {
+//        return PromptBlock.builder()
+//                .prompt(prompt)
+//                .block(block)
+//                .build();
+//    }
 }

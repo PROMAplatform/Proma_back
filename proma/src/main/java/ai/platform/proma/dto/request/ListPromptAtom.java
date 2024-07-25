@@ -12,7 +12,7 @@ import lombok.Getter;
 public class ListPromptAtom {
     private Long blockId;
 
-    public PromptBlock toEntity(Prompt prompt, Block block) {
+    public static PromptBlock toEntity(Prompt prompt, Block block) {
         return PromptBlock.builder()
                 .prompt(prompt)
                 .block(block)

@@ -1,6 +1,8 @@
 package ai.platform.proma.controller;
 
 
+import ai.platform.proma.domain.PromptMethods;
+import ai.platform.proma.domain.enums.PromptMethod;
 import ai.platform.proma.dto.request.BlockSaveRequestDto;
 import ai.platform.proma.dto.request.PromptSaveRequestDto;
 import ai.platform.proma.dto.response.ResponseDto;
@@ -28,9 +30,10 @@ public class PromptMakerController {
 
     @GetMapping("/prompt/block")
     public ResponseDto<List<SelectBlockDto>> searchBlock(
-         @Valid @RequestParam("userId") Long userId
+         @Valid @RequestParam("userId") Long userId,
+         @Valid @RequestParam("promptMethod") PromptMethod promptMethod
     ) {
-        return new ResponseDto<>(promptMakerService.searchBlock(userId));
+        return new ResponseDto<>(promptMakerService.searchBlock(userId, promptMethod));
     }
 
     @PostMapping("/prompt/save")

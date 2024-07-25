@@ -27,5 +27,8 @@ public class PromptMethods {
     @OneToMany(mappedBy = "promptMethods", cascade = CascadeType.MERGE)
     private List<Prompt> prompts = new ArrayList<>();
 
+    @OneToMany(mappedBy = "promptMethods", cascade = CascadeType.MERGE)
+    private List<Block> Blocks = new ArrayList<>();
+
 
 }
