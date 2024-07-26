@@ -1,8 +1,9 @@
 package ai.platform.proma.controller;
 
 import ai.platform.proma.dto.request.ChatRoomSaveRequestDto;
+import ai.platform.proma.dto.request.ChatRoomUpdateEmojiRequestDto;
 import ai.platform.proma.dto.response.ChatRoomListResponseDto;
-import ai.platform.proma.dto.response.ChatRoomSaveResponseDto;
+import ai.platform.proma.dto.response.ChatRoomIdResponseDto;
 import ai.platform.proma.dto.response.ResponseDto;
 import ai.platform.proma.service.ChatRoomSidebarService;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,7 @@ public class ChatRoomSidebarController {
     private final ChatRoomSidebarService chatRoomSidebarService;
 
     @PostMapping("/room/save")
-    public ResponseDto<ChatRoomSaveResponseDto> saveChatRoom(
+    public ResponseDto<ChatRoomIdResponseDto> saveChatRoom(
         @RequestBody ChatRoomSaveRequestDto chatRoomSaveRequestDto
     ) {
         return new ResponseDto<>(chatRoomSidebarService.saveChatRoom(chatRoomSaveRequestDto));
@@ -30,6 +31,15 @@ public class ChatRoomSidebarController {
             @RequestParam("userId") Long userId
     ) {
         return new ResponseDto<>(chatRoomSidebarService.getChatRoomList(userId));
+    }
+
+    @PatchMapping("/room/emoji/{chatRoomId}")
+    public ResponseDto<ChatRoomIdResponseDto> updateEmoji(
+            @PathVariable("chatRoomId") Long chatRoomId,
+            @RequestBody ChatRoomUpdateEmojiRequestDto chatRoomUpdateEmojiRequestDto
+
+            ) {
+        return new ResponseDto<>(chatRoomSidebarService.updateEmoji(chatRoomId, chatRoomUpdateEmojiRequestDto));
     }
 
 

@@ -47,4 +47,8 @@ public class ChatRoom {
         this.emoji = emoji;
         this.user = user;
     }
+
+    public void updateEmoji(String emoji) {
+        this.emoji = emoji;
+    }
 }

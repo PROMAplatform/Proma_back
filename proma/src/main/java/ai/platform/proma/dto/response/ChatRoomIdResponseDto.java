@@ -5,11 +5,11 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class ChatRoomSaveResponseDto {
+public class ChatRoomIdResponseDto {
     private Long roomId;
 
-    public static ChatRoomSaveResponseDto of(Long roomId) {
-        return ChatRoomSaveResponseDto.builder()
+    public static ChatRoomIdResponseDto of(Long roomId) {
+        return ChatRoomIdResponseDto.builder()
                 .roomId(roomId)
                 .build();
     }
