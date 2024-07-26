@@ -1,14 +1,17 @@
 package ai.platform.proma.service;
 
 import ai.platform.proma.domain.ChatRoom;
+import ai.platform.proma.domain.Prompt;
 import ai.platform.proma.domain.User;
 import ai.platform.proma.dto.request.ChatRoomSaveRequestDto;
 import ai.platform.proma.dto.request.ChatRoomUpdateEmojiRequestDto;
+import ai.platform.proma.dto.request.PromptDetailUpdateRequestDto;
 import ai.platform.proma.dto.response.ChatRoomListResponseDto;
 import ai.platform.proma.dto.response.ChatRoomIdResponseDto;
 import ai.platform.proma.exception.ApiException;
 import ai.platform.proma.exception.ErrorDefine;
 import ai.platform.proma.repositroy.ChatRoomRepository;
+import ai.platform.proma.repositroy.PromptRepository;
 import ai.platform.proma.repositroy.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,7 +29,7 @@ public class ChatRoomSidebarService {
 
     private final ChatRoomRepository chatRoomRepository;
     private final UserRepository userRepository;
-
+    private final PromptRepository promptRepository;
     public ChatRoomIdResponseDto saveChatRoom(ChatRoomSaveRequestDto chatRoomSaveRequestDto) {
         User user = userRepository.findById(chatRoomSaveRequestDto.getUserId())
                 .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
@@ -74,4 +77,17 @@ public class ChatRoomSidebarService {
 
         return true;
     }
+
+    public Boolean updatePromptDetail(PromptDetailUpdateRequestDto promptDetailUpdateRequestDto, Long promptId) {
+        User user = userRepository.findById(promptDetailUpdateRequestDto.getUserId())
+                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+        Prompt prompt = promptRepository.findByIdAndUser(promptId,user)
+                .orElseThrow(() -> new ApiException(ErrorDefine.PROMPT_NOT_FOUND));
+
+        prompt.updatePromptDetail(promptDetailUpdateRequestDto.getPromptTitle(), promptDetailUpdateRequestDto.getPromptDescription(), promptDetailUpdateRequestDto.getPromptCategory());
+
+        return true;
+    }
+
+
 }

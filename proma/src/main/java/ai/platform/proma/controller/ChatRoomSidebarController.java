@@ -2,6 +2,7 @@ package ai.platform.proma.controller;
 
 import ai.platform.proma.dto.request.ChatRoomSaveRequestDto;
 import ai.platform.proma.dto.request.ChatRoomUpdateEmojiRequestDto;
+import ai.platform.proma.dto.request.PromptDetailUpdateRequestDto;
 import ai.platform.proma.dto.response.ChatRoomListResponseDto;
 import ai.platform.proma.dto.response.ChatRoomIdResponseDto;
 import ai.platform.proma.dto.response.ResponseDto;
@@ -49,6 +50,15 @@ public class ChatRoomSidebarController {
     ) {
         return new ResponseDto<>(chatRoomSidebarService.deleteChatRoom(chatRoomId, userId));
     }
+
+    @PatchMapping("/sidebar/prompt/{promptId}")
+    public ResponseDto<Boolean> updatePromptDetail(
+            @RequestBody PromptDetailUpdateRequestDto promptDetailUpdateRequestDto,
+            @RequestParam("promptId") Long promptId
+    ) {
+        return new ResponseDto<>(chatRoomSidebarService.updatePromptDetail(promptDetailUpdateRequestDto, promptId));
+    }
+
 
 
 }
