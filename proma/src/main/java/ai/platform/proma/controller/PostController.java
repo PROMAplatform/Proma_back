@@ -66,9 +66,11 @@ public class PostController {
     }
 
     @PostMapping("/community/like/{postId}")
-    public ResponseDto<Boolean> postLike(@Valid @PathVariable("postId") Long postId) {
+    public ResponseDto<Boolean> postLike(@Valid @PathVariable("postId") Long postId,
+                                         @Valid @RequestParam(value = "userId", required = false) Long userId
+    ) {
 
-        return new ResponseDto<>(postService.postLike(postId));
+        return new ResponseDto<>(postService.postLike(postId, userId));
     }
     @GetMapping("/community/my-like")
     public ResponseDto<Map<String, Object>> getPostsByUserLike(

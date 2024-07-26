@@ -157,11 +157,11 @@ public class PostService {
     }
 
     @Transactional
-    public Boolean postLike(Long postId){
+    public Boolean postLike(Long postId, Long userId){
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.POST_NOT_FOUND));
 
-        User user = userRepository.findById(post.getPrompt().getUser().getId()) // post -> prompt -> userId
+        User user = userRepository.findById(userId) // post -> prompt -> userId
                 .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
 
         // 좋아요를 눌렀는지 확인
