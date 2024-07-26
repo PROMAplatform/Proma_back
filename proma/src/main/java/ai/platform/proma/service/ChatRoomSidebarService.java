@@ -89,5 +89,14 @@ public class ChatRoomSidebarService {
         return true;
     }
 
+    public Boolean deletePrompt(Long promptId, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+        Prompt prompt = promptRepository.findByIdAndUser(promptId, user)
+                .orElseThrow(() -> new ApiException(ErrorDefine.PROMPT_NOT_FOUND));
 
+        promptRepository.delete(prompt);
+
+        return true;
+    }
 }

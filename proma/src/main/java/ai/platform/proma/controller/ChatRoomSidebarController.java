@@ -59,6 +59,13 @@ public class ChatRoomSidebarController {
         return new ResponseDto<>(chatRoomSidebarService.updatePromptDetail(promptDetailUpdateRequestDto, promptId));
     }
 
+    @DeleteMapping("/sidebar/prompt/{promptId}")
+    public ResponseDto<Boolean> deletePrompt(
+            @PathVariable("promptId") Long promptId,
+            @RequestParam("userId") Long userId
+    ) {
+        return new ResponseDto<>(chatRoomSidebarService.deletePrompt(promptId, userId));
+    }
 
 
 }
