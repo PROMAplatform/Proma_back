@@ -28,7 +28,7 @@ public class ChatRoom {
     private LocalDate createAt;
 
     @Column(nullable = true)
-    private String Emoji;
+    private String emoji;
 
 // --------------------------------------------------------------------
 

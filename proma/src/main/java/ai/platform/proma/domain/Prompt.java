@@ -87,4 +87,8 @@ public class Prompt {
                 .promptMethods(post.getPrompt().getPromptMethods())
                 .build();
     }
+
+    public void updateCategory(PromptCategory promptCategory){
+        this.promptCategory = promptCategory;
+    }
 }
