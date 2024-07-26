@@ -42,5 +42,13 @@ public class ChatRoomSidebarController {
         return new ResponseDto<>(chatRoomSidebarService.updateEmoji(chatRoomId, chatRoomUpdateEmojiRequestDto));
     }
 
+    @DeleteMapping("/room/{chatRoomId}")
+    public ResponseDto<Boolean> deleteChatRoom(
+            @PathVariable("chatRoomId") Long chatRoomId,
+            @RequestParam("userId") Long userId
+    ) {
+        return new ResponseDto<>(chatRoomSidebarService.deleteChatRoom(chatRoomId, userId));
+    }
+
 
 }

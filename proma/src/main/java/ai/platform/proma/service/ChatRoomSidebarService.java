@@ -63,4 +63,15 @@ public class ChatRoomSidebarService {
 
         return ChatRoomIdResponseDto.of(chatRoom.getId());
     }
+
+    public Boolean deleteChatRoom(Long chatRoomId, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+        ChatRoom chatRoom = chatRoomRepository.findByIdAndUser(chatRoomId, user)
+                .orElseThrow(() -> new ApiException(ErrorDefine.CHAT_ROOM_NOT_FOUND));
+
+        chatRoomRepository.delete(chatRoom);
+
+        return true;
+    }
 }
