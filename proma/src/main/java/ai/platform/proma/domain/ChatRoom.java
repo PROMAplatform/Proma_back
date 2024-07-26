@@ -1,6 +1,7 @@
 package ai.platform.proma.domain;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
@@ -28,7 +29,7 @@ public class ChatRoom {
     private LocalDate createAt;
 
     @Column(nullable = true)
-    private String Emoji;
+    private String emoji;
 
 // --------------------------------------------------------------------
 
@@ -38,4 +39,12 @@ public class ChatRoom {
 
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.PERSIST)
     private List<Message> messages = new ArrayList<>();
+
+    @Builder
+    public ChatRoom(String chatRoomTitle, String emoji, User user) {
+        this.chatRoomTitle = chatRoomTitle;
+        this.createAt = LocalDate.now();
+        this.emoji = emoji;
+        this.user = user;
+    }
 }
