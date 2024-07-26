@@ -22,7 +22,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "AND (:category IS NULL OR pr.promptCategory = :category)")
     Page<Post> findAllBySearchKeywordAndCategory(
             @Param("searchKeyword") String searchKeyword,
-            @Param("category") PromptCategory category,
+            @Param("category") String category,
             Pageable pageable
     );
 
@@ -36,10 +36,12 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     );
 
     @Query("SELECT p FROM Post p JOIN FETCH p.prompt pr " +
-            "WHERE pr.user.id = :userId ")
-    Page<Post> findAllByPromptUserId(
-            @Param("userId") Long userId,
-            Pageable pageable
+            "WHERE pr.user.id = :userId " +
+            "AND (:category IS NULL OR pr.promptCategory = :category)") // category 조건 추가
+    Page<Post> findAllByPromptUserIdAndPromptCategory( // 메서드 이름 변경
+       @Param("userId") Long userId,
+       @Param("category") PromptCategory category, // category 파라미터 추가
+       Pageable pageable
     );
 
 }

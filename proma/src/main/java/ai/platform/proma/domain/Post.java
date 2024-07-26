@@ -1,5 +1,6 @@
 package ai.platform.proma.domain;
 
+import ai.platform.proma.dto.request.PostRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,9 +41,9 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
     private List<Like> likes = new ArrayList<>();
 
-    public void update(String postTitle, String postDescription) {
-        this.postTitle = postTitle;
-        this.postDescription = postDescription;
+    public void update(PostRequestDto postRequestDto) {
+        this.postTitle = postRequestDto.getPostTitle();
+        this.postDescription = postRequestDto.getPostDescription();
     }
 
 }

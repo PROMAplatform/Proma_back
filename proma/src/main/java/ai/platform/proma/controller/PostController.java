@@ -26,8 +26,9 @@ public class PostController {
 
     @GetMapping("/community")
     public ResponseDto<Map<String, Object>> getPostsBySearchKeyWord(
+            @Valid @RequestParam(value = "userId", required = false) Long userId,
             @Valid @RequestParam(value = "search", required = false) String searchKeyword,
-            @Valid @RequestParam(value = "category", required = false) PromptCategory category,
+            @Valid @RequestParam(value = "category", required = false) String category,
             @Valid @RequestParam(value = "latest", defaultValue = "desc") String latestOrder,
             @Valid @RequestParam(value = "like", defaultValue = "desc") String likeOrder,
             @Valid @RequestParam(value = "page", defaultValue = "0") int page,
@@ -35,7 +36,7 @@ public class PostController {
     ) {
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<PostResponseDto> postResponseDtos = postService.getPosts(searchKeyword, category, pageable, likeOrder, latestOrder);
+        Page<PostResponseDto> postResponseDtos = postService.getPosts(userId, searchKeyword, category, pageable, likeOrder, latestOrder);
 
         Map<String, Object> response = new HashMap<>();
         response.put("selectPrompt", postResponseDtos.getContent());
@@ -65,9 +66,11 @@ public class PostController {
     }
 
     @PostMapping("/community/like/{postId}")
-    public ResponseDto<Boolean> postLike(@Valid @PathVariable("postId") Long postId) {
+    public ResponseDto<Boolean> postLike(@Valid @PathVariable("postId") Long postId,
+                                         @Valid @RequestParam(value = "userId", required = false) Long userId
+    ) {
 
-        return new ResponseDto<>(postService.postLike(postId));
+        return new ResponseDto<>(postService.postLike(postId, userId));
     }
     @GetMapping("/community/my-like")
     public ResponseDto<Map<String, Object>> getPostsByUserLike(

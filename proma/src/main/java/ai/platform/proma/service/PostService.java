@@ -30,11 +30,13 @@ public class PostService {
     private final PromptBlockRepository promptBlockRepository;
     private final BlockRepository blockRepository;
 
-    public Page<PostResponseDto> getPosts(String searchKeyword, PromptCategory category, Pageable pageable, String likeOrder, String latestOrder) {
+    public Page<PostResponseDto> getPosts(Long userId, String searchKeyword, String category, Pageable pageable, String likeOrder, String latestOrder) {
         Page<Post> posts = postRepository.findAllBySearchKeywordAndCategory(searchKeyword, category, pageable);
 
-        List<PostResponseDto> sortedPostResponseDtos = posts.stream() // posts를 Stream으로 변환
-                .map(post -> new PostResponseDto(post, likeRepository.countByPostId(post.getId())))
+        User user = userRepository.findById(userId).orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+
+        List<PostResponseDto> sortedPostResponseDtos = posts.stream()// posts를 Stream으로 변환
+                .map(post -> new PostResponseDto(post, likeRepository.countByPostId(post.getId()), likeRepository.existsByPostAndUser(post,user)))
                 .sorted((dto1, dto2) -> {
                     int likeCountComparison = Sort.Direction.fromString(likeOrder).isAscending()
                             ? Integer.compare(dto1.getLikeCount(), dto2.getLikeCount())
@@ -58,8 +60,10 @@ public class PostService {
 
         Page<Post> posts = postRepository.findAllByPostIdInAndPromptCategory(category, postIds, pageable);
 
+        User user = userRepository.findById(userId).orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+
         List<PostResponseDto> sortedPostResponseDtos = posts.stream() // posts를 Stream으로 변환
-                .map(post -> new PostResponseDto(post, likeRepository.countByPostId(post.getId())))
+                .map(post -> new PostResponseDto(post, likeRepository.countByPostId(post.getId()), likeRepository.existsByPostAndUser(post,user)))
                 .sorted((dto1, dto2) -> {
                     int likeCountComparison = Sort.Direction.fromString(likeOrder).isAscending()
                             ? Integer.compare(dto1.getLikeCount(), dto2.getLikeCount())
@@ -81,10 +85,13 @@ public class PostService {
 
 //        List<Long> postIds = likeRepository.findPostIdsByUserId(userId);
 
-        Page<Post> posts = postRepository.findAllByPromptUserId(userId, pageable);
+        Page<Post> posts = postRepository.findAllByPromptUserIdAndPromptCategory(userId, category, pageable);
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+
 
         List<PostResponseDto> sortedPostResponseDtos = posts.stream() // posts를 Stream으로 변환
-                .map(post -> new PostResponseDto(post, likeRepository.countByPostId(post.getId())))
+                .map(post -> new PostResponseDto(post, likeRepository.countByPostId(post.getId()), likeRepository.existsByPostAndUser(post,user)))
                 .sorted((dto1, dto2) -> {
                     int likeCountComparison = Sort.Direction.fromString(likeOrder).isAscending()
                             ? Integer.compare(dto1.getLikeCount(), dto2.getLikeCount())
@@ -150,11 +157,11 @@ public class PostService {
     }
 
     @Transactional
-    public Boolean postLike(Long postId){
+    public Boolean postLike(Long postId, Long userId){
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.POST_NOT_FOUND));
 
-        User user = userRepository.findById(post.getPrompt().getUser().getId()) // post -> prompt -> userId
+        User user = userRepository.findById(userId) // post -> prompt -> userId
                 .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
 
         // 좋아요를 눌렀는지 확인
@@ -175,14 +182,22 @@ public class PostService {
     public Boolean updatePost(Long userId, Long postId, PostRequestDto postRequestDto){
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.POST_NOT_FOUND));
+
         userRepository.findById(userId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+
+        Prompt prompt = promptRepository.findById(post.getPrompt().getId())
+                .orElseThrow(() -> new ApiException(ErrorDefine.PROMPT_NOT_FOUND));
 
         if (!post.getPrompt().getUser().getId().equals(userId)) {
             throw new ApiException(ErrorDefine.UNAUTHORIZED_USER);
         }
-
-        post.update(postRequestDto.getPostTitle(), postRequestDto.getPostDescription());
+        try {
+            prompt.updateCategory(postRequestDto.getPromptCategory());
+        } catch (IllegalArgumentException e) {
+            throw new ApiException(ErrorDefine.INVALID_PROMPT_CATEGORY);
+        }
+        post.update(postRequestDto);
 
         return true;
     }
