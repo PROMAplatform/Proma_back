@@ -52,7 +52,7 @@ public class ChatRoomSidebarController {
         return new ResponseDto<>(chatRoomSidebarService.deleteChatRoom(chatRoomId, userId));
     }
 
-    @PatchMapping("/sidebar/prompt/{promptId}")
+    @PatchMapping("/prompt/{promptId}")
     public ResponseDto<Boolean> updatePromptDetail(
             @RequestBody PromptDetailUpdateRequestDto promptDetailUpdateRequestDto,
             @RequestParam("promptId") Long promptId
@@ -60,7 +60,7 @@ public class ChatRoomSidebarController {
         return new ResponseDto<>(chatRoomSidebarService.updatePromptDetail(promptDetailUpdateRequestDto, promptId));
     }
 
-    @DeleteMapping("/sidebar/prompt/{promptId}")
+    @DeleteMapping("/prompt/{promptId}")
     public ResponseDto<Boolean> deletePrompt(
             @PathVariable("promptId") Long promptId,
             @RequestParam("userId") Long userId
@@ -68,7 +68,7 @@ public class ChatRoomSidebarController {
         return new ResponseDto<>(chatRoomSidebarService.deletePrompt(promptId, userId));
     }
 
-    @GetMapping("/sidebar/prompt/list")
+    @GetMapping("/prompt/list")
     public ResponseDto<Map<String, List<PromptListResponseDto>>> promptList(
             @RequestParam("userId") Long userId
     ) {
