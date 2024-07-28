@@ -46,4 +46,26 @@ public class ChatRoomService {
         return response;
     }
 
+    public boolean updatePromptBlock(List<ListPromptAtom> listPromptAtoms, Long promptId, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+
+        Prompt prompt = promptRepository.findByIdAndUser(promptId, user)
+                .orElseThrow(() -> new ApiException(ErrorDefine.PROMPT_NOT_FOUND));
+
+        List<PromptBlock> promptBlock = promptBlockRepository.findByPrompt(prompt);
+        promptBlockRepository.deleteAll(promptBlock);
+
+        List<Block> blocks = blockRepository.findAllById(listPromptAtoms.stream()
+                .map(ListPromptAtom::getBlockId)
+                .collect(Collectors.toList()));
+
+        List<PromptBlock> savePromptBlocks = blocks.stream()
+                .map(block -> ListPromptAtom.toEntity(prompt, block))
+                .toList();
+
+        promptBlockRepository.saveAll(savePromptBlocks);
+
+        return true;
+    }
 }
