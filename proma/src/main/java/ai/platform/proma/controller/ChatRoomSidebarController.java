@@ -5,6 +5,7 @@ import ai.platform.proma.dto.request.ChatRoomUpdateEmojiRequestDto;
 import ai.platform.proma.dto.request.PromptDetailUpdateRequestDto;
 import ai.platform.proma.dto.response.ChatRoomListResponseDto;
 import ai.platform.proma.dto.response.ChatRoomIdResponseDto;
+import ai.platform.proma.dto.response.PromptListResponseDto;
 import ai.platform.proma.dto.response.ResponseDto;
 import ai.platform.proma.service.ChatRoomSidebarService;
 import lombok.RequiredArgsConstructor;
@@ -65,6 +66,13 @@ public class ChatRoomSidebarController {
             @RequestParam("userId") Long userId
     ) {
         return new ResponseDto<>(chatRoomSidebarService.deletePrompt(promptId, userId));
+    }
+
+    @GetMapping("/sidebar/prompt/list")
+    public ResponseDto<Map<String, List<PromptListResponseDto>>> promptList(
+            @RequestParam("userId") Long userId
+    ) {
+        return new ResponseDto<>(chatRoomSidebarService.getPromptList(userId));
     }
 
 

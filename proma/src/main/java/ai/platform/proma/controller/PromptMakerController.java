@@ -28,13 +28,13 @@ public class PromptMakerController {
         return new ResponseDto<>(promptMakerService.makeBlock(blockSaveRequestDto));
     }
 
-    @GetMapping("/prompt/block")
-    public ResponseDto<List<SelectBlockDto>> searchBlock(
-         @Valid @RequestParam("userId") Long userId,
-         @Valid @RequestParam("promptMethod") PromptMethod promptMethod
-    ) {
-        return new ResponseDto<>(promptMakerService.searchBlock(userId, promptMethod));
-    }
+//    @GetMapping("/prompt/block")
+//    public ResponseDto<List<SelectBlockDto>> searchBlock(
+//         @Valid @RequestParam("userId") Long userId,
+//         @Valid @RequestParam("promptMethod") PromptMethod promptMethod
+//    ) {
+//        return new ResponseDto<>(promptMakerService.searchBlock(userId, promptMethod));
+//    }
 
     @PostMapping("/prompt/save")
     public ResponseDto<Boolean> makePrompt(
