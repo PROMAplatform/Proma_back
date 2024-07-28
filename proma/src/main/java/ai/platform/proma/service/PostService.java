@@ -1,6 +1,7 @@
 package ai.platform.proma.service;
 import ai.platform.proma.domain.*;
 import ai.platform.proma.domain.enums.PromptCategory;
+import ai.platform.proma.dto.request.PostDistributeRequestDto;
 import ai.platform.proma.dto.request.PostRequestDto;
 import ai.platform.proma.dto.response.BlockResponseDto;
 import ai.platform.proma.dto.response.PostResponseDto;
@@ -29,6 +30,26 @@ public class PostService {
     private final PromptRepository promptRepository;
     private final PromptBlockRepository promptBlockRepository;
     private final BlockRepository blockRepository;
+
+    public Boolean distributePrompt(Long userId, Long promptId, PostDistributeRequestDto postDistributeRequestDto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+
+        Prompt prompt = promptRepository.findById(promptId)
+                .orElseThrow(() -> new ApiException(ErrorDefine.PROMPT_NOT_FOUND));
+
+        promptRepository.save(Prompt.distributePrompt(prompt, user));
+        postRepository.save(postDistributeRequestDto.toEntity(prompt, postDistributeRequestDto));
+
+        List<PromptBlock> promptBlocks = promptBlockRepository.findByPrompt(prompt);
+        List<PromptBlock> newPromptBlocks = promptBlocks.stream()
+                .map(promptBlock -> PromptBlock.scrapPromptBlock(prompt, promptBlock.getBlock()))
+                .toList();
+        promptBlockRepository.saveAll(newPromptBlocks);
+
+
+        return true;
+    }
 
     public Page<PostResponseDto> getPosts(Long userId, String searchKeyword, String category, Pageable pageable, String likeOrder, String latestOrder) {
         Page<Post> posts = postRepository.findAllBySearchKeywordAndCategory(searchKeyword, category, pageable);
