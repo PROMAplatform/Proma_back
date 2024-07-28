@@ -18,6 +18,8 @@ public enum ErrorDefine {
     PROMPT_NOT_FOUND("4043", HttpStatus.NOT_FOUND, "Not Found: Prompt Not Found"),
     CHAT_ROOM_NOT_FOUND("4044", HttpStatus.NOT_FOUND, "Not Found: Chat Room Not Found"),
     BLOCK_NOT_FOUND("4045", HttpStatus.NOT_FOUND, "Not Found: Block Not Found"),
+    MESSAGE_NOT_FOUND("4046", HttpStatus.NOT_FOUND, "Not Found: Message Not Found"),
+    PROMPT_BLOCK_NOT_FOUND("4047", HttpStatus.NOT_FOUND, "Not Found: Prompt Block Not Found"),
     //Forbidden
     UNAUTHORIZED_USER("4030", HttpStatus.FORBIDDEN, "Forbidden: Unauthorized User");
 
