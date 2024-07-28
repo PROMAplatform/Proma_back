@@ -91,4 +91,10 @@ public class Prompt {
     public void updateCategory(PromptCategory promptCategory){
         this.promptCategory = promptCategory;
     }
+
+    public void updatePromptDetail(String promptTitle, String promptDescription, PromptCategory promptCategory){
+        this.promptTitle = promptTitle;
+        this.promptDescription = promptDescription;
+        this.promptCategory = promptCategory;
+    }
 }

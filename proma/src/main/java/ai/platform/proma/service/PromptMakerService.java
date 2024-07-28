@@ -38,19 +38,22 @@ public class PromptMakerService {
         return true;
     }
 
-    public List<SelectBlockDto> searchBlock(Long userId, PromptMethod promptMethod) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
-
-        PromptMethods promptMethods = communicationMethodRepository.findByPromptMethod(promptMethod)
-                .orElseThrow(() -> new ApiException(ErrorDefine.COMMUNICATION_METHOD_NOT_FOUND));
-
-        List<Block> blocks = blockRepository.findByUserOrUserIsNullAndPromptMethods(user, promptMethods);
-
-        return blocks.stream()
-                .map(SelectBlockDto::of)
-                .collect(Collectors.toList());
-    }
+//    public List<SelectBlockDto> searchBlock(Long userId, PromptMethod promptMethod) {
+//        User user = userRepository.findById(userId)
+//                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+//
+//        PromptMethods promptMethods = communicationMethodRepository.findByPromptMethod(promptMethod)
+//                .orElseThrow(() -> new ApiException(ErrorDefine.COMMUNICATION_METHOD_NOT_FOUND));
+//
+//        List<Block> blocks = blockRepository.findByUserOrUserIsNullAndPromptMethods(user, promptMethods);
+//
+////        return blocks.stream()
+////                .map(SelectBlockDto::of)
+////                .collect(Collectors.toList());
+//        return blocks.stream()
+//                .map(SelectBlockDto::off)
+//                .collect(Collectors.toList());
+//    }
 
     @Transactional
     public Boolean makePrompt(PromptSaveRequestDto promptSaveRequestDto, Long userId) {

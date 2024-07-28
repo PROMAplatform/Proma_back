@@ -16,7 +16,8 @@ public enum ErrorDefine {
     COMMUNICATION_METHOD_NOT_FOUND("4041", HttpStatus.NOT_FOUND, "Not Found: Communication Method Not Found"),
     POST_NOT_FOUND("4042", HttpStatus.NOT_FOUND, "Not Found: Post Not Found"),
     PROMPT_NOT_FOUND("4043", HttpStatus.NOT_FOUND, "Not Found: Prompt Not Found"),
-
+    CHAT_ROOM_NOT_FOUND("4044", HttpStatus.NOT_FOUND, "Not Found: Chat Room Not Found"),
+    BLOCK_NOT_FOUND("4045", HttpStatus.NOT_FOUND, "Not Found: Block Not Found"),
     //Forbidden
     UNAUTHORIZED_USER("4030", HttpStatus.FORBIDDEN, "Forbidden: Unauthorized User");
 
