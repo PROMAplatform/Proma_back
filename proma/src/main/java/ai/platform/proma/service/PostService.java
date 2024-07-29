@@ -5,6 +5,7 @@ import ai.platform.proma.dto.request.PostDistributeRequestDto;
 import ai.platform.proma.dto.request.PostRequestDto;
 import ai.platform.proma.dto.response.BlockResponseDto;
 import ai.platform.proma.dto.response.PostResponseDto;
+import ai.platform.proma.dto.response.PromptTitleList;
 import ai.platform.proma.exception.ApiException;
 import ai.platform.proma.exception.ErrorDefine;
 import ai.platform.proma.repositroy.*;
@@ -16,7 +17,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,6 +34,21 @@ public class PostService {
     private final PromptBlockRepository promptBlockRepository;
     private final BlockRepository blockRepository;
 
+
+    public Map<String, List<PromptTitleList>> promptTitleList(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+
+        List<Prompt> prompts = promptRepository.findByUser(user);
+
+        Map<String, List<PromptTitleList>> response = new HashMap<>();
+
+        response.put("selectPrompt", prompts.stream()
+                .map(PromptTitleList::of)
+                .collect(Collectors.toList()));
+
+        return response;
+    }
     public Boolean distributePrompt(Long userId, Long promptId, PostDistributeRequestDto postDistributeRequestDto) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
