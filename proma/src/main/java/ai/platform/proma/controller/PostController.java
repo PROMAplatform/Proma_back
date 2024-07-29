@@ -25,11 +25,19 @@ public class PostController {
 
     private final PostService postService;
 
-    @GetMapping("community/titleList")
+    @GetMapping("/community/titleList")
     public ResponseDto<Map<String, List<PromptTitleList>>> promptTitleList(
             @RequestParam(value = "userId") Long userId
     ) {
         return new ResponseDto<>(postService.promptTitleList(userId));
+    }
+
+    @GetMapping("/prompt/detail/{promptId}")
+    public ResponseDto<PromptListResponseDto> promptDetail(
+            @PathVariable("promptId") Long promptId,
+            @RequestParam(value = "userId") Long userId
+    ) {
+        return new ResponseDto<>(postService.promptDetail(promptId, userId));
     }
 
     @PostMapping("/community/distribute/{promptId}")

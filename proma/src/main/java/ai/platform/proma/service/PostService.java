@@ -3,9 +3,7 @@ import ai.platform.proma.domain.*;
 import ai.platform.proma.domain.enums.PromptCategory;
 import ai.platform.proma.dto.request.PostDistributeRequestDto;
 import ai.platform.proma.dto.request.PostRequestDto;
-import ai.platform.proma.dto.response.BlockResponseDto;
-import ai.platform.proma.dto.response.PostResponseDto;
-import ai.platform.proma.dto.response.PromptTitleList;
+import ai.platform.proma.dto.response.*;
 import ai.platform.proma.exception.ApiException;
 import ai.platform.proma.exception.ErrorDefine;
 import ai.platform.proma.repositroy.*;
@@ -48,6 +46,18 @@ public class PostService {
                 .collect(Collectors.toList()));
 
         return response;
+    }
+
+    public PromptListResponseDto promptDetail(Long promptId, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+
+        Prompt prompt = promptRepository.findByIdAndUser(promptId, user)
+                .orElseThrow(() -> new ApiException(ErrorDefine.PROMPT_NOT_FOUND));
+
+        return PromptListResponseDto.of(prompt, prompt.getPromptMethods(), prompt.getPromptBlocks().stream()
+                .map(promptBlock -> SelectBlockDto.of(promptBlock.getBlock()))
+                .collect(Collectors.toList()));
     }
     public Boolean distributePrompt(Long userId, Long promptId, PostDistributeRequestDto postDistributeRequestDto) {
         User user = userRepository.findById(userId)
