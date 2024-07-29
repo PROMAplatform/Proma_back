@@ -1,6 +1,7 @@
 package ai.platform.proma.controller;
 
 import ai.platform.proma.domain.enums.PromptCategory;
+import ai.platform.proma.dto.request.PostDistributeRequestDto;
 import ai.platform.proma.dto.request.PostRequestDto;
 import ai.platform.proma.dto.response.*;
 import ai.platform.proma.service.PostService;
@@ -23,6 +24,30 @@ import java.util.Map;
 public class PostController {
 
     private final PostService postService;
+
+    @GetMapping("/community/titleList")
+    public ResponseDto<Map<String, List<PromptTitleList>>> promptTitleList(
+            @RequestParam(value = "userId") Long userId
+    ) {
+        return new ResponseDto<>(postService.promptTitleList(userId));
+    }
+
+    @GetMapping("/prompt/detail/{promptId}")
+    public ResponseDto<PromptListResponseDto> promptDetail(
+            @PathVariable("promptId") Long promptId,
+            @RequestParam(value = "userId") Long userId
+    ) {
+        return new ResponseDto<>(postService.promptDetail(promptId, userId));
+    }
+
+    @PostMapping("/community/distribute/{promptId}")
+    public ResponseDto<Boolean> distributePrompt(
+            @Valid @PathVariable("promptId") Long promptId,
+            @Valid @RequestBody PostDistributeRequestDto postDistributeRequestDto,
+            @Valid @RequestParam(value = "userId", required = false) Long userId
+    ) {
+        return new ResponseDto<>(postService.distributePrompt(userId, promptId, postDistributeRequestDto));
+    }
 
     @GetMapping("/community")
     public ResponseDto<Map<String, Object>> getPostsBySearchKeyWord(

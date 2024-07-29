@@ -75,6 +75,19 @@ public class Prompt {
         this.promptMethods = promptMethods;
     }
 
+    public static Prompt distributePrompt(Prompt prompt, User user) {
+        return Prompt.builder()
+                .promptTitle(prompt.getPromptTitle())
+                .promptDescription(prompt.getPromptDescription())
+                .promptPreview(prompt.getPromptPreview())
+                .promptCategory(prompt.getPromptCategory())
+                .emoji(prompt.getEmoji())
+                .isScrap(Scrap.NOTSCRAP)
+                .user(user)
+                .promptMethods(prompt.getPromptMethods())
+                .build();
+    }
+
     public static Prompt scrapPost(Post post, User user) {
         return Prompt.builder()
                 .promptTitle(post.getPrompt().getPromptTitle())

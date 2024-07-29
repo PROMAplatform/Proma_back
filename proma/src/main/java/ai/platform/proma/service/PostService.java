@@ -1,9 +1,9 @@
 package ai.platform.proma.service;
 import ai.platform.proma.domain.*;
 import ai.platform.proma.domain.enums.PromptCategory;
+import ai.platform.proma.dto.request.PostDistributeRequestDto;
 import ai.platform.proma.dto.request.PostRequestDto;
-import ai.platform.proma.dto.response.BlockResponseDto;
-import ai.platform.proma.dto.response.PostResponseDto;
+import ai.platform.proma.dto.response.*;
 import ai.platform.proma.exception.ApiException;
 import ai.platform.proma.exception.ErrorDefine;
 import ai.platform.proma.repositroy.*;
@@ -15,7 +15,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,6 +31,53 @@ public class PostService {
     private final PromptRepository promptRepository;
     private final PromptBlockRepository promptBlockRepository;
     private final BlockRepository blockRepository;
+
+
+    public Map<String, List<PromptTitleList>> promptTitleList(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+
+        List<Prompt> prompts = promptRepository.findByUser(user);
+
+        Map<String, List<PromptTitleList>> response = new HashMap<>();
+
+        response.put("selectPrompt", prompts.stream()
+                .map(PromptTitleList::of)
+                .collect(Collectors.toList()));
+
+        return response;
+    }
+
+    public PromptListResponseDto promptDetail(Long promptId, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+
+        Prompt prompt = promptRepository.findByIdAndUser(promptId, user)
+                .orElseThrow(() -> new ApiException(ErrorDefine.PROMPT_NOT_FOUND));
+
+        return PromptListResponseDto.of(prompt, prompt.getPromptMethods(), prompt.getPromptBlocks().stream()
+                .map(promptBlock -> SelectBlockDto.of(promptBlock.getBlock()))
+                .collect(Collectors.toList()));
+    }
+    public Boolean distributePrompt(Long userId, Long promptId, PostDistributeRequestDto postDistributeRequestDto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+
+        Prompt prompt = promptRepository.findById(promptId)
+                .orElseThrow(() -> new ApiException(ErrorDefine.PROMPT_NOT_FOUND));
+
+        promptRepository.save(Prompt.distributePrompt(prompt, user));
+        postRepository.save(postDistributeRequestDto.toEntity(prompt, postDistributeRequestDto));
+
+        List<PromptBlock> promptBlocks = promptBlockRepository.findByPrompt(prompt);
+        List<PromptBlock> newPromptBlocks = promptBlocks.stream()
+                .map(promptBlock -> PromptBlock.scrapPromptBlock(prompt, promptBlock.getBlock()))
+                .toList();
+        promptBlockRepository.saveAll(newPromptBlocks);
+
+
+        return true;
+    }
 
     public Page<PostResponseDto> getPosts(Long userId, String searchKeyword, String category, Pageable pageable, String likeOrder, String latestOrder) {
         Page<Post> posts = postRepository.findAllBySearchKeywordAndCategory(searchKeyword, category, pageable);
