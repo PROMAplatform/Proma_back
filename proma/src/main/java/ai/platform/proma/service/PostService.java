@@ -102,6 +102,28 @@ public class PostService {
 
         return new PageImpl<>(sortedPostResponseDtos, pageable, posts.getTotalElements());
     }
+
+    public Page<PostResponseDto> getPostsPreview(String searchKeyword, String category, Pageable pageable, String likeOrder, String latestOrder) {
+        Page<Post> posts = postRepository.findAllBySearchKeywordAndCategory(searchKeyword, category, pageable);
+
+        List<PostResponseDto> sortedPostResponseDtos = posts.stream()// posts를 Stream으로 변환
+                .map(post -> new PostResponseDto(post, likeRepository.countByPostId(post.getId()), likeRepository.existsByPost(post)))
+                .sorted((dto1, dto2) -> {
+                    int likeCountComparison = Sort.Direction.fromString(likeOrder).isAscending()
+                            ? Integer.compare(dto1.getLikeCount(), dto2.getLikeCount())
+                            : Integer.compare(dto2.getLikeCount(), dto1.getLikeCount());
+
+                    if (likeCountComparison == 0) {
+                        return Sort.Direction.fromString(latestOrder).isAscending()
+                                ? dto1.getCreateAt().compareTo(dto2.getCreateAt())
+                                : dto2.getCreateAt().compareTo(dto1.getCreateAt());
+                    }
+                    return likeCountComparison;
+                })
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(sortedPostResponseDtos, pageable, posts.getTotalElements());
+    }
     public Page<PostResponseDto> getPostsByUserLikes(Long userId, PromptCategory category, Pageable pageable, String likeOrder, String latestOrder) {
         userRepository.findById(userId).orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
 
