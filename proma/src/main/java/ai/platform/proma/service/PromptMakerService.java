@@ -13,7 +13,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,6 +40,22 @@ public class PromptMakerService {
         return true;
     }
 
+    public Map<String, List<SelectBlockDto>> searchBlock(Long userId, PromptMethod promptMethod) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+
+        PromptMethods promptMethods = communicationMethodRepository.findByPromptMethod(promptMethod)
+                .orElseThrow(() -> new ApiException(ErrorDefine.COMMUNICATION_METHOD_NOT_FOUND));
+
+        List<Block> blocks = blockRepository.findByUserOrUserIsNullAndPromptMethods(user, promptMethods);
+        Map<String, List<SelectBlockDto>> blockMap = new HashMap<>();
+
+        blockMap.put("selectBlock", blocks.stream()
+                .map(SelectBlockDto::of)
+                .toList());
+
+        return blockMap;
+    }
 
     @Transactional
     public Boolean makePrompt(PromptSaveRequestDto promptSaveRequestDto, Long userId) {
