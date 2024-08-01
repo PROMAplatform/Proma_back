@@ -39,14 +39,20 @@ jobs:
 
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
+      
+    - name: Grant Execute Permission For Gradlew & Build gradle
+      run: |
+        cd ./proma
+        chmod +x gradlew
+        ./gradlew build 
+        
+    # - name: Grant execute permission for gradlew
+    #   run: chmod +x proma/gradlew
 
-    - name: Grant execute permission for gradlew
-      run: chmod +x proma/gradlew
-
-    # Spring Boot 어플리케이션 Build
-    - name: Build with Gradle Wrapper
-      working-directory: proma 
-      run: ./gradlew build
+    # # Spring Boot 어플리케이션 Build
+    # - name: Build with Gradle Wrapper
+    #   working-directory: proma 
+    #   run: ./gradlew build
 
     # Docker 이미지 Build
     - name: docker image build
