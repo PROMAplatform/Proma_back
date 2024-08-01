@@ -1,20 +1,11 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
-
-name: Java CI with Gradle
+name: Deploy to EC2
 
 on:
   push:
     branches: [ "dev" ]
-  pull_request:
-    branches: [ "dev" ]
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -41,10 +32,22 @@ jobs:
     - name: Build with Gradle
       uses: gradle/gradle-build-action@v2
       with:
-        arguments: clean build 
+        arguments: clean build
 
     - name: Build and push Docker image
       run: |
         docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/proma .
         echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
         docker push ${{ secrets.DOCKERHUB_USERNAME }}/proma
+
+    - name: Deploy to EC2
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USERNAME }}
+        key: ${{ secrets.EC2_PRIVATE_KEY }}
+        script: |
+          sudo docker stop $(sudo docker ps -aq)  # 기존 컨테이너 중지
+          sudo docker rm $(sudo docker ps -aq)   # 기존 컨테이너 삭제
+          sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/proma  # 새 이미지 pull
+          sudo docker run -d -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/proma  # 새 컨테이너 실행
