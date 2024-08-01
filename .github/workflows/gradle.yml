@@ -45,7 +45,7 @@ jobs:
         cd proma
         gradle wrapper 
         chmod +x gradlew
-        ./gradlew build 
+        ./gradlew clean build 
         
     # - name: Grant execute permission for gradlew
     #   run: chmod +x proma/gradlew
