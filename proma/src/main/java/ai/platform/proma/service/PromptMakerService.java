@@ -26,8 +26,8 @@ public class PromptMakerService {
     private final CommunicationMethodRepository communicationMethodRepository;
     private final PromptBlockRepository promptBlockRepository;
 
-    public Boolean makeBlock(BlockSaveRequestDto blockSaveRequestDto) {
-        User user = userRepository.findById(blockSaveRequestDto.getUserId())
+    public Boolean makeBlock(BlockSaveRequestDto blockSaveRequestDto, Long userId) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
 
         PromptMethods promptMethods = communicationMethodRepository.findByPromptMethod(blockSaveRequestDto.getPromptMethod())

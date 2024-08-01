@@ -7,7 +7,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class PromptDetailUpdateRequestDto {
-    private Long userId;
     private String promptTitle;
     private String promptDescription;
     private PromptCategory promptCategory;

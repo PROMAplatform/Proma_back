@@ -23,9 +23,10 @@ public class ChatRoomSidebarController {
 
     @PostMapping("/room/save")
     public ResponseDto<ChatRoomIdResponseDto> saveChatRoom(
-        @RequestBody ChatRoomSaveRequestDto chatRoomSaveRequestDto
+        @RequestBody ChatRoomSaveRequestDto chatRoomSaveRequestDto,
+        @RequestParam("userId") Long userId
     ) {
-        return new ResponseDto<>(chatRoomSidebarService.saveChatRoom(chatRoomSaveRequestDto));
+        return new ResponseDto<>(chatRoomSidebarService.saveChatRoom(chatRoomSaveRequestDto, userId));
     }
 
     @GetMapping("/room/list")
@@ -38,10 +39,11 @@ public class ChatRoomSidebarController {
     @PatchMapping("/room/emoji/{chatRoomId}")
     public ResponseDto<ChatRoomIdResponseDto> updateEmoji(
             @PathVariable("chatRoomId") Long chatRoomId,
-            @RequestBody ChatRoomUpdateEmojiRequestDto chatRoomUpdateEmojiRequestDto
+            @RequestBody ChatRoomUpdateEmojiRequestDto chatRoomUpdateEmojiRequestDto,
+            @RequestParam("userId") Long userId
 
             ) {
-        return new ResponseDto<>(chatRoomSidebarService.updateEmoji(chatRoomId, chatRoomUpdateEmojiRequestDto));
+        return new ResponseDto<>(chatRoomSidebarService.updateEmoji(chatRoomId, chatRoomUpdateEmojiRequestDto, userId));
     }
 
     @DeleteMapping("/room/{chatRoomId}")
@@ -55,9 +57,10 @@ public class ChatRoomSidebarController {
     @PatchMapping("/prompt/{promptId}")
     public ResponseDto<Boolean> updatePromptDetail(
             @RequestBody PromptDetailUpdateRequestDto promptDetailUpdateRequestDto,
-            @RequestParam("promptId") Long promptId
+            @PathVariable("promptId") Long promptId,
+            @RequestParam("userId") Long userId
     ) {
-        return new ResponseDto<>(chatRoomSidebarService.updatePromptDetail(promptDetailUpdateRequestDto, promptId));
+        return new ResponseDto<>(chatRoomSidebarService.updatePromptDetail(promptDetailUpdateRequestDto, promptId, userId));
     }
 
     @DeleteMapping("/prompt/{promptId}")

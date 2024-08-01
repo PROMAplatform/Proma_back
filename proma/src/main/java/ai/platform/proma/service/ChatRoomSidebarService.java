@@ -30,8 +30,8 @@ public class ChatRoomSidebarService {
     private final CommunicationMethodRepository communicationMethodRepository;
     private final BlockRepository blockRepository;
     private final PromptBlockRepository promptBlockRepository;
-    public ChatRoomIdResponseDto saveChatRoom(ChatRoomSaveRequestDto chatRoomSaveRequestDto) {
-        User user = userRepository.findById(chatRoomSaveRequestDto.getUserId())
+    public ChatRoomIdResponseDto saveChatRoom(ChatRoomSaveRequestDto chatRoomSaveRequestDto, Long userId) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
 
         ChatRoom chatRoom = chatRoomSaveRequestDto.toEntity(chatRoomSaveRequestDto, user);
@@ -56,8 +56,8 @@ public class ChatRoomSidebarService {
         return chatRoomMap;
     }
 
-    public ChatRoomIdResponseDto updateEmoji(Long chatRoomId, ChatRoomUpdateEmojiRequestDto chatRoomUpdateEmojiRequestDto) {
-        User user = userRepository.findById(chatRoomUpdateEmojiRequestDto.getUserId())
+    public ChatRoomIdResponseDto updateEmoji(Long chatRoomId, ChatRoomUpdateEmojiRequestDto chatRoomUpdateEmojiRequestDto, Long userId) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
         ChatRoom chatRoom = chatRoomRepository.findByIdAndUser(chatRoomId, user)
                 .orElseThrow(() -> new ApiException(ErrorDefine.CHAT_ROOM_NOT_FOUND));
@@ -78,8 +78,8 @@ public class ChatRoomSidebarService {
         return true;
     }
 
-    public Boolean updatePromptDetail(PromptDetailUpdateRequestDto promptDetailUpdateRequestDto, Long promptId) {
-        User user = userRepository.findById(promptDetailUpdateRequestDto.getUserId())
+    public Boolean updatePromptDetail(PromptDetailUpdateRequestDto promptDetailUpdateRequestDto, Long promptId, Long userId) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
         Prompt prompt = promptRepository.findByIdAndUser(promptId,user)
                 .orElseThrow(() -> new ApiException(ErrorDefine.PROMPT_NOT_FOUND));
