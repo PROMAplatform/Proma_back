@@ -21,6 +21,7 @@ public class PromptListResponseDto {
     private String promptDescription;
     private String promptPreview;
     private List<SelectBlockDto> listPromptAtom;
+    private String emoji;
 
     @Builder
     public PromptListResponseDto(Prompt prompt, PromptMethods promptMethods, List<SelectBlockDto> listPromptAtom){
@@ -29,6 +30,7 @@ public class PromptListResponseDto {
         this.promptTitle = prompt.getPromptTitle();
         this.promptDescription = prompt.getPromptDescription();
         this.promptPreview = prompt.getPromptPreview();
+        this.emoji = prompt.getEmoji();
         this.listPromptAtom = listPromptAtom;
     }
 

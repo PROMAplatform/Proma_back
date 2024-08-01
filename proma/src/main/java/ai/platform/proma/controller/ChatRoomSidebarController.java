@@ -1,7 +1,7 @@
 package ai.platform.proma.controller;
 
 import ai.platform.proma.dto.request.ChatRoomSaveRequestDto;
-import ai.platform.proma.dto.request.ChatRoomUpdateEmojiRequestDto;
+import ai.platform.proma.dto.request.UpdateEmojiRequestDto;
 import ai.platform.proma.dto.request.PromptDetailUpdateRequestDto;
 import ai.platform.proma.dto.response.ChatRoomListResponseDto;
 import ai.platform.proma.dto.response.ChatRoomIdResponseDto;
@@ -37,13 +37,13 @@ public class ChatRoomSidebarController {
     }
 
     @PatchMapping("/room/emoji/{chatRoomId}")
-    public ResponseDto<ChatRoomIdResponseDto> updateEmoji(
+    public ResponseDto<ChatRoomIdResponseDto> updateChatRoomEmoji(
             @PathVariable("chatRoomId") Long chatRoomId,
-            @RequestBody ChatRoomUpdateEmojiRequestDto chatRoomUpdateEmojiRequestDto,
+            @RequestBody UpdateEmojiRequestDto updateEmojiRequestDto,
             @RequestParam("userId") Long userId
 
             ) {
-        return new ResponseDto<>(chatRoomSidebarService.updateEmoji(chatRoomId, chatRoomUpdateEmojiRequestDto, userId));
+        return new ResponseDto<>(chatRoomSidebarService.updateChatRoomEmoji(chatRoomId, updateEmojiRequestDto, userId));
     }
 
     @DeleteMapping("/room/{chatRoomId}")
@@ -78,5 +78,13 @@ public class ChatRoomSidebarController {
         return new ResponseDto<>(chatRoomSidebarService.getPromptList(userId));
     }
 
+    @PatchMapping("/prompt/emoji/{promptId}")
+    public ResponseDto<ChatRoomIdResponseDto> updatePromptEmoji(
+            @PathVariable("promptId") Long promptId,
+            @RequestBody UpdateEmojiRequestDto updateEmojiRequestDto,
+            @RequestParam("userId") Long userId
+    ) {
+        return new ResponseDto<>(chatRoomSidebarService.updatePromptEmoji(promptId, updateEmojiRequestDto, userId));
+    }
 
 }

@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ChatRoomUpdateEmojiRequestDto {
+public class UpdateEmojiRequestDto {
     private String emoji;
 }
