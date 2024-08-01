@@ -79,7 +79,7 @@ public class PostService {
         return true;
     }
 
-    public Map<String, Object> getPosts(Long userId, String searchKeyword, String category, Pageable pageable, String likeOrder, String latestOrder) {
+    public Map<String, Object> getPosts(Long userId, String searchKeyword, PromptCategory category, Pageable pageable, String likeOrder, String latestOrder) {
         Page<Post> posts = postRepository.findAllBySearchKeywordAndCategory(searchKeyword, category, pageable);
 
         User user = userRepository.findById(userId).orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
@@ -106,7 +106,7 @@ public class PostService {
         return response;
     }
 
-    public Map<String, Object> getPostsPreview(String searchKeyword, String category, Pageable pageable, String likeOrder, String latestOrder) {
+    public Map<String, Object> getPostsPreview(String searchKeyword, PromptCategory category, Pageable pageable, String likeOrder, String latestOrder) {
         Page<Post> posts = postRepository.findAllBySearchKeywordAndCategory(searchKeyword, category, pageable);
 
         List<PostResponseDto> sortedPostResponseDtos = posts.stream()// posts를 Stream으로 변환

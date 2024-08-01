@@ -22,7 +22,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "AND (:category IS NULL OR pr.promptCategory = :category)")
     Page<Post> findAllBySearchKeywordAndCategory(
             @Param("searchKeyword") String searchKeyword,
-            @Param("category") String category,
+            @Param("category") PromptCategory category,
             Pageable pageable
     );
 
