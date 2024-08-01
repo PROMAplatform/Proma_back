@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class PromptListResponseDto {
     private Long promptId;
-    private PromptMethod promptMethod;
+    private String promptMethod;
     private String promptTitle;
     private String promptDescription;
     private String promptPreview;
@@ -26,7 +26,7 @@ public class PromptListResponseDto {
     @Builder
     public PromptListResponseDto(Prompt prompt, PromptMethods promptMethods, List<SelectBlockDto> listPromptAtom){
         this.promptId = prompt.getId();
-        this.promptMethod = promptMethods.getPromptMethod();
+        this.promptMethod = promptMethods.getPromptMethod().toString();
         this.promptTitle = prompt.getPromptTitle();
         this.promptDescription = prompt.getPromptDescription();
         this.promptPreview = prompt.getPromptPreview();

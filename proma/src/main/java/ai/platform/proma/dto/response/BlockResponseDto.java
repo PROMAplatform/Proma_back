@@ -11,12 +11,12 @@ public class BlockResponseDto {
 
     private final Long blockId;
     private final String blockTitle;
-    private final BlockCategory blockCategory;
+    private final String blockCategory;
 
 
     public BlockResponseDto(Block block) {
         this.blockId = block.getId();
         this.blockTitle = block.getBlockValue();
-        this.blockCategory = block.getBlockCategory();
+        this.blockCategory = block.getBlockCategory().toString();
     }
 }

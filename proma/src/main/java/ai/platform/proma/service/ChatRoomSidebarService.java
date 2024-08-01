@@ -1,6 +1,7 @@
 package ai.platform.proma.service;
 
 import ai.platform.proma.domain.*;
+import ai.platform.proma.domain.enums.PromptCategory;
 import ai.platform.proma.dto.request.ChatRoomSaveRequestDto;
 import ai.platform.proma.dto.request.UpdateEmojiRequestDto;
 import ai.platform.proma.dto.request.PromptDetailUpdateRequestDto;
@@ -81,7 +82,7 @@ public class ChatRoomSidebarService {
         Prompt prompt = promptRepository.findByIdAndUser(promptId,user)
                 .orElseThrow(() -> new ApiException(ErrorDefine.PROMPT_NOT_FOUND));
 
-        prompt.updatePromptDetail(promptDetailUpdateRequestDto.getPromptTitle(), promptDetailUpdateRequestDto.getPromptDescription(), promptDetailUpdateRequestDto.getPromptCategory());
+        prompt.updatePromptDetail(promptDetailUpdateRequestDto.getPromptTitle(), promptDetailUpdateRequestDto.getPromptDescription(), PromptCategory.fromValue(promptDetailUpdateRequestDto.getPromptCategory()));
 
         return true;
     }

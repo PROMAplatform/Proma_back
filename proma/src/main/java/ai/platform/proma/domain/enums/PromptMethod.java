@@ -1,5 +1,12 @@
 package ai.platform.proma.domain.enums;
 
+import ai.platform.proma.exception.ApiException;
+import ai.platform.proma.exception.ErrorDefine;
+import lombok.RequiredArgsConstructor;
+
+import java.util.Arrays;
+
+@RequiredArgsConstructor
 public enum PromptMethod {
     // ex) Character, Task/Research ..
     CHARACTER("Character"), // Character
@@ -7,8 +14,11 @@ public enum PromptMethod {
 
     private final String displayName;
 
-    PromptMethod(String displayName) {
-        this.displayName = displayName;
+    public static PromptMethod fromValue(String value) {
+        return Arrays.stream(PromptMethod.values())
+                .filter(v -> v.displayName.equalsIgnoreCase(value))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Invalid PromptMethod value: " + value));
     }
 
     @Override

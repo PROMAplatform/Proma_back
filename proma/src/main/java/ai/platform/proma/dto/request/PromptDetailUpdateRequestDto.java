@@ -9,5 +9,5 @@ import lombok.Getter;
 public class PromptDetailUpdateRequestDto {
     private String promptTitle;
     private String promptDescription;
-    private PromptCategory promptCategory;
+    private String promptCategory;
 }
