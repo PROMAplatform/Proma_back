@@ -41,7 +41,7 @@ public class PostService {
 
         Map<String, List<PromptTitleList>> response = new HashMap<>();
 
-        response.put("selectPrompt", prompts.stream()
+        response.put("promptList", prompts.stream()
                 .map(PromptTitleList::of)
                 .collect(Collectors.toList()));
 
