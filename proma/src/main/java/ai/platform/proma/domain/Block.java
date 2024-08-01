@@ -38,7 +38,7 @@ public class Block {
     private User user;
 
     @OneToMany(mappedBy = "block", cascade = CascadeType.MERGE)
-    private List<PromptBlock> promptBlocks = new ArrayList<>();
+    private List<PromptBlock> promptBlocks;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "prompt_methods_id", nullable = false)

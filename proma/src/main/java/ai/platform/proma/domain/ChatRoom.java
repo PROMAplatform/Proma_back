@@ -38,7 +38,7 @@ public class ChatRoom {
     private User user;
 
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.PERSIST)
-    private List<Message> messages = new ArrayList<>();
+    private List<Message> messages;
 
     @Builder
     public ChatRoom(String chatRoomTitle, String emoji, User user) {
