@@ -14,7 +14,7 @@ public class BlockSaveRequestDto {
     private String blockValue;
     private String blockDescription;
     private BlockCategory blockCategory;
-    private PromptMethod promptMethod;
+    private String promptMethod;
 
     public Block toEntity(PromptMethods promptMethods, User user, BlockSaveRequestDto blockSaveRequestDto) {
         return Block.builder()

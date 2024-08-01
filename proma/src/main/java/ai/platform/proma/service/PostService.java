@@ -80,7 +80,7 @@ public class PostService {
     }
 
     public Map<String, Object> getPosts(Long userId, String searchKeyword, String category, Pageable pageable, String likeOrder, String latestOrder) {
-        Page<Post> posts = postRepository.findAllBySearchKeywordAndCategory(searchKeyword, category, pageable);
+        Page<Post> posts = postRepository.findAllBySearchKeywordAndCategory(searchKeyword, PromptCategory.fromValue(category), pageable);
 
         User user = userRepository.findById(userId).orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
 
@@ -107,7 +107,7 @@ public class PostService {
     }
 
     public Map<String, Object> getPostsPreview(String searchKeyword, String category, Pageable pageable, String likeOrder, String latestOrder) {
-        Page<Post> posts = postRepository.findAllBySearchKeywordAndCategory(searchKeyword, category, pageable);
+        Page<Post> posts = postRepository.findAllBySearchKeywordAndCategory(searchKeyword, PromptCategory.fromValue(category), pageable);
 
         List<PostResponseDto> sortedPostResponseDtos = posts.stream()// posts를 Stream으로 변환
                 .map(post -> new PostResponseDto(post, likeRepository.countByPostId(post.getId()), likeRepository.existsByPost(post)))
@@ -131,12 +131,12 @@ public class PostService {
 
         return response;
     }
-    public Map<String, Object> getPostsByUserLikes(Long userId, PromptCategory category, Pageable pageable, String likeOrder, String latestOrder) {
+    public Map<String, Object> getPostsByUserLikes(Long userId, String category, Pageable pageable, String likeOrder, String latestOrder) {
         userRepository.findById(userId).orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
 
         List<Long> postIds = likeRepository.findPostIdsByUserId(userId);
 
-        Page<Post> posts = postRepository.findAllByPostIdInAndPromptCategory(category, postIds, pageable);
+        Page<Post> posts = postRepository.findAllByPostIdInAndPromptCategory(PromptCategory.fromValue(category), postIds, pageable);
 
         User user = userRepository.findById(userId).orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
 
@@ -161,12 +161,12 @@ public class PostService {
 
         return response;
     }
-    public Map<String, Object> getPostsByUserDistribute(Long userId, PromptCategory category, Pageable pageable, String likeOrder, String latestOrder) {
+    public Map<String, Object> getPostsByUserDistribute(Long userId, String category, Pageable pageable, String likeOrder, String latestOrder) {
         userRepository.findById(userId).orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
 
 //        List<Long> postIds = likeRepository.findPostIdsByUserId(userId);
 
-        Page<Post> posts = postRepository.findAllByPromptUserIdAndPromptCategory(userId, category, pageable);
+        Page<Post> posts = postRepository.findAllByPromptUserIdAndPromptCategory(userId, PromptCategory.fromValue(category), pageable);
 
         User user = userRepository.findById(userId).orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
 
@@ -281,7 +281,7 @@ public class PostService {
             throw new ApiException(ErrorDefine.UNAUTHORIZED_USER);
         }
         try {
-            prompt.updateCategory(postRequestDto.getPromptCategory());
+            prompt.updateCategory(PromptCategory.fromValue(postRequestDto.getPromptCategory()));
         } catch (IllegalArgumentException e) {
             throw new ApiException(ErrorDefine.INVALID_PROMPT_CATEGORY);
         }

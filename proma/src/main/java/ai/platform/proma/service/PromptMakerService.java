@@ -32,7 +32,7 @@ public class PromptMakerService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
 
-        PromptMethods promptMethods = communicationMethodRepository.findByPromptMethod(blockSaveRequestDto.getPromptMethod())
+        PromptMethods promptMethods = communicationMethodRepository.findByPromptMethod(PromptMethod.fromValue(blockSaveRequestDto.getPromptMethod()))
                 .orElseThrow(() -> new ApiException(ErrorDefine.COMMUNICATION_METHOD_NOT_FOUND));
         Block saveBlock = blockSaveRequestDto.toEntity(promptMethods, user, blockSaveRequestDto);
         blockRepository.save(saveBlock);
@@ -40,11 +40,11 @@ public class PromptMakerService {
         return true;
     }
 
-    public Map<String, List<SelectBlockDto>> searchBlock(Long userId, PromptMethod promptMethod) {
+    public Map<String, List<SelectBlockDto>> searchBlock(Long userId, String promptMethod) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
 
-        PromptMethods promptMethods = communicationMethodRepository.findByPromptMethod(promptMethod)
+        PromptMethods promptMethods = communicationMethodRepository.findByPromptMethod(PromptMethod.fromValue(promptMethod))
                 .orElseThrow(() -> new ApiException(ErrorDefine.COMMUNICATION_METHOD_NOT_FOUND));
 
         List<Block> blocks = blockRepository.findByUserOrUserIsNullAndPromptMethods(user, promptMethods);
@@ -62,7 +62,7 @@ public class PromptMakerService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
 
-        PromptMethods promptMethods = communicationMethodRepository.findByPromptMethod(promptSaveRequestDto.getPromptMethod())
+        PromptMethods promptMethods = communicationMethodRepository.findByPromptMethod(PromptMethod.fromValue(promptSaveRequestDto.getPromptMethod()))
                 .orElseThrow(() -> new ApiException(ErrorDefine.COMMUNICATION_METHOD_NOT_FOUND));
 
         Prompt savePrompt = promptSaveRequestDto.toEntity(user, promptMethods, promptSaveRequestDto);

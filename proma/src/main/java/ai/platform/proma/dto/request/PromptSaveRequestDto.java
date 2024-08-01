@@ -15,7 +15,7 @@ public class PromptSaveRequestDto {
     private String promptDescription;
     private String promptPreview;
     private PromptCategory promptCategory;
-    private PromptMethod promptMethod;
+    private String promptMethod;
     private List<ListPromptAtom> listPromptAtom;
 
     public Prompt toEntity(User user, PromptMethods promptMethods, PromptSaveRequestDto promptSaveRequestDto) {
@@ -27,11 +27,4 @@ public class PromptSaveRequestDto {
                 .promptMethods(promptMethods)
                 .build();
     }
-
-//    public PromptBlock toEntity(Prompt prompt, Block block) {
-//        return PromptBlock.builder()
-//                .prompt(prompt)
-//                .block(block)
-//                .build();
-//    }
 }

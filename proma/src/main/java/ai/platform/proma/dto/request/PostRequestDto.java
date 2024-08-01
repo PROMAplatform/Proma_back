@@ -7,5 +7,5 @@ import lombok.Getter;
 public class PostRequestDto {
     private String postTitle;
     private String postDescription;
-    private PromptCategory promptCategory;
+    private String promptCategory;
 }

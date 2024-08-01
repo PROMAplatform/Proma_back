@@ -102,7 +102,7 @@ public class PostController {
     @GetMapping("/community/my-like")
     public ResponseDto<Map<String, Object>> getPostsByUserLike(
             @Valid @RequestParam(value = "userId", required = false) Long userId, //JWT 수정필요
-            @Valid @RequestParam(value = "category", required = false) PromptCategory category,
+            @Valid @RequestParam(value = "category", required = false) String category,
             @Valid @RequestParam(value = "latest", defaultValue = "desc") String latestOrder,
             @Valid @RequestParam(value = "like", defaultValue = "desc") String likeOrder,
             @Valid @RequestParam(value = "page", defaultValue = "0") int page,
@@ -115,7 +115,7 @@ public class PostController {
     @GetMapping("/community/my-distribute")
     public ResponseDto<Map<String, Object>> getPostsByUserDistribute(
             @Valid @RequestParam(value = "userId", required = false) Long userId, //JWT 수정필요
-            @Valid @RequestParam(value = "category", required = false) PromptCategory category,
+            @Valid @RequestParam(value = "category", required = false) String category,
             @Valid @RequestParam(value = "latest", defaultValue = "desc") String latestOrder,
             @Valid @RequestParam(value = "like", defaultValue = "desc") String likeOrder,
             @Valid @RequestParam(value = "page", defaultValue = "0") int page,

@@ -15,7 +15,7 @@ public class SelectBlockDto {
     private Long blockId;
     private String blockValue;
     private String blockDescription;
-    private BlockCategory blockCategory;
+    private String blockCategory;
 
 
     public static SelectBlockDto of(Block block) {
@@ -23,7 +23,7 @@ public class SelectBlockDto {
                 .blockId(block.getId())
                 .blockValue(block.getBlockValue())
                 .blockDescription(block.getBlockDescription())
-                .blockCategory(block.getBlockCategory())
+                .blockCategory(block.getBlockCategory().toString())
                 .build();
     }
 }
