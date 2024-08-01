@@ -70,6 +70,26 @@ public class PostController {
         return new ResponseDto<>(response);
     }
 
+    @GetMapping("/community-preview")
+    public ResponseDto<Map<String, Object>> getPostsPreview(
+            @Valid @RequestParam(value = "search", required = false) String searchKeyword,
+            @Valid @RequestParam(value = "category", required = false) String category,
+            @Valid @RequestParam(value = "latest", defaultValue = "desc") String latestOrder,
+            @Valid @RequestParam(value = "like", defaultValue = "desc") String likeOrder,
+            @Valid @RequestParam(value = "page", defaultValue = "0") int page,
+            @Valid @RequestParam(value = "size", defaultValue = "9") int size
+    ) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<PostResponseDto> postResponseDtos = postService.getPostsPreview(searchKeyword, category, pageable, likeOrder, latestOrder);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("selectPrompt", postResponseDtos.getContent());
+        response.put("pageInfo", new PageInfo(postResponseDtos));
+
+        return new ResponseDto<>(response);
+    }
+
     @PostMapping("/community/scrap/{postId}")
     public ResponseDto<Boolean> promptScrapByPostId(
             @Valid @PathVariable("postId") Long postId, // JWT사용시 수정 필요
