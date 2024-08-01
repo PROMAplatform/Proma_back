@@ -12,7 +12,6 @@ import ai.platform.proma.exception.ApiException;
 import ai.platform.proma.exception.ErrorDefine;
 import ai.platform.proma.repositroy.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.relational.core.sql.Select;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,9 +26,7 @@ public class ChatRoomSidebarService {
     private final ChatRoomRepository chatRoomRepository;
     private final UserRepository userRepository;
     private final PromptRepository promptRepository;
-    private final CommunicationMethodRepository communicationMethodRepository;
-    private final BlockRepository blockRepository;
-    private final PromptBlockRepository promptBlockRepository;
+
     public ChatRoomIdResponseDto saveChatRoom(ChatRoomSaveRequestDto chatRoomSaveRequestDto, Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
@@ -106,21 +103,8 @@ public class ChatRoomSidebarService {
                 .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
 
         List<Prompt> prompts = promptRepository.findByUser(user);
-        Optional<PromptBlock> promptBlocks = null;
-
-        prompts.stream()
-                .flatMap(prompt -> prompt.getPromptBlocks().stream())
-                .forEach(promptBlock -> {
-                    Optional<PromptBlock> optionalBlock = promptBlockRepository.findById(promptBlock.getId());
-                    optionalBlock.ifPresent(block -> {
-                        System.err.println(block.getBlock().getBlockValue());
-                    });
-                });
 
         Map<String, List<PromptListResponseDto>> promptMap = new HashMap<>();
-        Map<String, SelectBlockDto> selectBlockDtoMap = new HashMap<>();
-        List<SelectBlockDto> selectBlockDtos = new ArrayList<>();
-        System.err.println("여기 전");
 
         promptMap.put("selectPrompt", prompts.stream()
                 .map(prompt -> PromptListResponseDto.of(
