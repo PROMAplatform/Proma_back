@@ -15,8 +15,8 @@ public class ChatRoomSaveRequestDto {
     public ChatRoom toEntity(ChatRoomSaveRequestDto chatRoomSaveRequestDto, User user) {
         return ChatRoom.builder()
                 .user(user)
-                .chatRoomTitle(roomTitle)
-                .emoji(emoji)
+                .chatRoomTitle(chatRoomSaveRequestDto.getRoomTitle())
+                .emoji(chatRoomSaveRequestDto.getEmoji())
                 .build();
     }
 }

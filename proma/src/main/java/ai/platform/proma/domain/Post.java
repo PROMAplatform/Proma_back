@@ -45,7 +45,7 @@ public class Post {
     private Prompt prompt;
 
     @OneToMany(mappedBy = "post", cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
-    private List<Like> likes = new ArrayList<>();
+    private List<Like> likes;
 
     @Builder
     public Post(String postTitle, String postDescription, PromptCategory promptCategory, Prompt prompt) {

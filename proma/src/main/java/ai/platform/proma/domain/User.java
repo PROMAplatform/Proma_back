@@ -40,16 +40,16 @@ public class User {
     // --------------------------------------------------------------------
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE)
-    private List<ChatRoom> chatRooms = new ArrayList<>();
+    private List<ChatRoom> chatRooms;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE)
-    private List<Like> likes = new ArrayList<>();
+    private List<Like> likes;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE)
-    private List<Prompt> prompts = new ArrayList<>();
+    private List<Prompt> prompts;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE)
-    private List<Block> blocks = new ArrayList<>();
+    private List<Block> blocks;
 
     @Builder
     public User(Long id, String userLoginId, String userName, UserLoginMethod userLoginMethod, LocalDate createAt, Boolean userOngoing) {

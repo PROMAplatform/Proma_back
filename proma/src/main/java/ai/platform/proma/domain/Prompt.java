@@ -54,13 +54,13 @@ public class Prompt {
     private PromptMethods promptMethods;
 
     @OneToMany(mappedBy = "prompt", cascade = CascadeType.MERGE)
-    private List<PromptBlock> promptBlocks = new ArrayList<>();
+    private List<PromptBlock> promptBlocks;
 
     @OneToMany(mappedBy = "prompt", cascade = CascadeType.MERGE)
-    private List<Post> posts = new ArrayList<>();
+    private List<Post> posts;
 
     @OneToMany(mappedBy = "prompt", cascade = CascadeType.MERGE)
-    private List<Message> messages = new ArrayList<>();
+    private List<Message> messages;
 
     @Builder
     public Prompt(Long id, String promptTitle, String promptDescription, String promptPreview, PromptCategory promptCategory,String emoji, Scrap isScrap, User user, PromptMethods promptMethods) {
