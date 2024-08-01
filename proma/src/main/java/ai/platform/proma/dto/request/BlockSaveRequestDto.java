@@ -11,7 +11,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class BlockSaveRequestDto {
-    private Long userId;
     private String blockValue;
     private String blockDescription;
     private BlockCategory blockCategory;

@@ -8,7 +8,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class ChatRoomSaveRequestDto {
-    private Long userId;
     private String roomTitle;
     private String emoji;
 
