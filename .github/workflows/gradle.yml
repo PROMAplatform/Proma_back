@@ -28,6 +28,7 @@ jobs:
 
     # Spring Boot 어플리케이션 Build
     - name: Build with Gradle Wrapper
+      working-directory: proma 
       run: ./gradlew build
 
     # Docker 이미지 Build
