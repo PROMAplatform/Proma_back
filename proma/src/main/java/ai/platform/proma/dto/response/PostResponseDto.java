@@ -3,6 +3,7 @@ package ai.platform.proma.dto.response;
 import ai.platform.proma.domain.PromptMethods;
 import ai.platform.proma.domain.Post;
 import ai.platform.proma.domain.enums.PromptCategory;
+import ai.platform.proma.domain.enums.PromptMethod;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -26,7 +27,7 @@ public class PostResponseDto {
 
     private final int likeCount;
 
-    private final Long promptMethods;
+    private final PromptMethods promptMethod;
 
     private final String promptPreview;
 
@@ -43,7 +44,7 @@ public class PostResponseDto {
         this.createAt = post.getCreateAt();
         this.promptId = post.getPrompt().getId();
         this.likeCount = likeCount;
-        this.promptMethods = post.getPrompt().getPromptMethods().getId();
+        this.promptMethod = post.getPrompt().getPromptMethods();
         this.promptCategory = post.getPrompt().getPromptCategory();
         this.promptPreview = post.getPrompt().getPromptPreview();
         this.likeState = likeState;

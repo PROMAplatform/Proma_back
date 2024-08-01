@@ -29,6 +29,7 @@ public class Block {
     private String blockDescription;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private BlockCategory blockCategory;
 
 // --------------------------------------------------------------------
