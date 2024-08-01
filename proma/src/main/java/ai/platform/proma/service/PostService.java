@@ -79,7 +79,7 @@ public class PostService {
         return true;
     }
 
-    public Page<PostResponseDto> getPosts(Long userId, String searchKeyword, String category, Pageable pageable, String likeOrder, String latestOrder) {
+    public Map<String, Object> getPosts(Long userId, String searchKeyword, String category, Pageable pageable, String likeOrder, String latestOrder) {
         Page<Post> posts = postRepository.findAllBySearchKeywordAndCategory(searchKeyword, category, pageable);
 
         User user = userRepository.findById(userId).orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
@@ -99,11 +99,14 @@ public class PostService {
                     return likeCountComparison;
                 })
                 .collect(Collectors.toList());
+        Map<String, Object> response = new HashMap<>();
+        response.put("selectPrompt", sortedPostResponseDtos);
+        response.put("pageInfo", new PageInfo(posts));
 
-        return new PageImpl<>(sortedPostResponseDtos, pageable, posts.getTotalElements());
+        return response;
     }
 
-    public Page<PostResponseDto> getPostsPreview(String searchKeyword, String category, Pageable pageable, String likeOrder, String latestOrder) {
+    public Map<String, Object> getPostsPreview(String searchKeyword, String category, Pageable pageable, String likeOrder, String latestOrder) {
         Page<Post> posts = postRepository.findAllBySearchKeywordAndCategory(searchKeyword, category, pageable);
 
         List<PostResponseDto> sortedPostResponseDtos = posts.stream()// posts를 Stream으로 변환
@@ -122,9 +125,13 @@ public class PostService {
                 })
                 .collect(Collectors.toList());
 
-        return new PageImpl<>(sortedPostResponseDtos, pageable, posts.getTotalElements());
+        Map<String, Object> response = new HashMap<>();
+        response.put("selectPrompt", sortedPostResponseDtos);
+        response.put("pageInfo", new PageInfo(posts));
+
+        return response;
     }
-    public Page<PostResponseDto> getPostsByUserLikes(Long userId, PromptCategory category, Pageable pageable, String likeOrder, String latestOrder) {
+    public Map<String, Object> getPostsByUserLikes(Long userId, PromptCategory category, Pageable pageable, String likeOrder, String latestOrder) {
         userRepository.findById(userId).orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
 
         List<Long> postIds = likeRepository.findPostIdsByUserId(userId);
@@ -148,10 +155,13 @@ public class PostService {
                     return likeCountComparison;
                 })
                 .collect(Collectors.toList());
+        Map<String, Object> response = new HashMap<>();
+        response.put("selectPrompt", sortedPostResponseDtos);
+        response.put("pageInfo", new PageInfo(posts));
 
-        return new PageImpl<>(sortedPostResponseDtos, pageable, posts.getTotalElements());
+        return response;
     }
-    public Page<PostResponseDto> getPostsByUserDistribute(Long userId, PromptCategory category, Pageable pageable, String likeOrder, String latestOrder) {
+    public Map<String, Object> getPostsByUserDistribute(Long userId, PromptCategory category, Pageable pageable, String likeOrder, String latestOrder) {
         userRepository.findById(userId).orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
 
 //        List<Long> postIds = likeRepository.findPostIdsByUserId(userId);
@@ -176,8 +186,11 @@ public class PostService {
                     return likeCountComparison;
                 })
                 .collect(Collectors.toList());
+        Map<String, Object> response = new HashMap<>();
+        response.put("selectPrompt", sortedPostResponseDtos);
+        response.put("pageInfo", new PageInfo(posts));
 
-        return new PageImpl<>(sortedPostResponseDtos, pageable, posts.getTotalElements());
+        return response;
     }
 
     @Transactional
@@ -216,15 +229,19 @@ public class PostService {
         return true;
     }
 
-    public List<BlockResponseDto> getPromptBlocksByPostId(Long postId) {
+    public Map<String, Object> getPromptBlocksByPostId(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.POST_NOT_FOUND));
 
         List<PromptBlock> promptBlocks = promptBlockRepository.findByPrompt(post.getPrompt()); // PromptBlock 조회
-
-        return promptBlocks.stream()
+        List<BlockResponseDto> blockResponseDtoList=  promptBlocks.stream()
                 .map(Block -> new BlockResponseDto(Block.getBlock())) // Block 정보만 추출하여 DTO 생성
                 .collect(Collectors.toList());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("selectPromptAtom", blockResponseDtoList);
+
+        return response;
     }
 
     @Transactional

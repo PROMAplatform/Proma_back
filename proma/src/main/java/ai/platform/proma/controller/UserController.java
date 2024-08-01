@@ -9,22 +9,24 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Slf4j
 @RequiredArgsConstructor
+@RequestMapping("/user")
 public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/user/name")
+    @GetMapping("/name")
     public ResponseDto<UserResponseDto> findUserName(
             @Valid @RequestBody UserRequestDto userRequestDto){
         return new ResponseDto<>(userService.findById(userRequestDto));
     }
 
-    @GetMapping("/user/secession")
+    @GetMapping("/secession")
     public ResponseDto<Boolean> userSecession(
             @Valid @RequestBody UserRequestDto userRequestDto){
         return new ResponseDto<>(userService.userSecession(userRequestDto));

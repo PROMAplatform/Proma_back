@@ -61,16 +61,10 @@ public class PostController {
     ) {
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<PostResponseDto> postResponseDtos = postService.getPosts(userId, searchKeyword, category, pageable, likeOrder, latestOrder);
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("selectPrompt", postResponseDtos.getContent());
-        response.put("pageInfo", new PageInfo(postResponseDtos));
-
-        return new ResponseDto<>(response);
+        return new ResponseDto<>(postService.getPosts(userId, searchKeyword, category, pageable, likeOrder, latestOrder));
     }
 
-    @GetMapping("/community-preview")
+    @GetMapping("/community/preview")
     public ResponseDto<Map<String, Object>> getPostsPreview(
             @Valid @RequestParam(value = "search", required = false) String searchKeyword,
             @Valid @RequestParam(value = "category", required = false) String category,
@@ -81,13 +75,7 @@ public class PostController {
     ) {
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<PostResponseDto> postResponseDtos = postService.getPostsPreview(searchKeyword, category, pageable, likeOrder, latestOrder);
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("selectPrompt", postResponseDtos.getContent());
-        response.put("pageInfo", new PageInfo(postResponseDtos));
-
-        return new ResponseDto<>(response);
+        return new ResponseDto<>(postService.getPostsPreview(searchKeyword, category, pageable, likeOrder, latestOrder));
     }
 
     @PostMapping("/community/scrap/{postId}")
@@ -102,19 +90,13 @@ public class PostController {
     public ResponseDto<Map<String, Object>> getPromptBlocksByPostId(
             @Valid @PathVariable("postId") Long postId
     ) {
-        List<BlockResponseDto> BlockResponseDtos = postService.getPromptBlocksByPostId(postId);
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("selectPromptAtom", BlockResponseDtos); // selectPromptAtom 키 사용
-
-        return new ResponseDto<>(response);
+        return new ResponseDto<>(postService.getPromptBlocksByPostId(postId));
     }
 
     @PostMapping("/community/like/{postId}")
     public ResponseDto<Boolean> postLike(@Valid @PathVariable("postId") Long postId,
                                          @Valid @RequestParam(value = "userId", required = false) Long userId
     ) {
-
         return new ResponseDto<>(postService.postLike(postId, userId));
     }
     @GetMapping("/community/my-like")
@@ -127,13 +109,7 @@ public class PostController {
             @Valid @RequestParam(value = "size", defaultValue = "9") int size
     ){
         Pageable pageable = PageRequest.of(page, size);
-        Page<PostResponseDto> postResponseDtos = postService.getPostsByUserLikes(userId, category, pageable, likeOrder, latestOrder);
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("selectPrompt", postResponseDtos.getContent());
-        response.put("pageInfo", new PageInfo(postResponseDtos));
-
-        return new ResponseDto<>(response);
+        return new ResponseDto<>(postService.getPostsByUserLikes(userId, category, pageable, likeOrder, latestOrder));
     }
 
     @GetMapping("/community/my-distribute")
@@ -146,13 +122,7 @@ public class PostController {
             @Valid @RequestParam(value = "size", defaultValue = "9") int size
     ){
         Pageable pageable = PageRequest.of(page, size);
-        Page<PostResponseDto> postResponseDtos = postService.getPostsByUserDistribute(userId, category, pageable, likeOrder, latestOrder);
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("selectPrompt", postResponseDtos.getContent());
-        response.put("pageInfo", new PageInfo(postResponseDtos));
-
-        return new ResponseDto<>(response);
+        return new ResponseDto<>(postService.getPostsByUserDistribute(userId, category, pageable, likeOrder, latestOrder));
     }
 
     @PatchMapping("/community/my-distribute/patch/{postId}")
