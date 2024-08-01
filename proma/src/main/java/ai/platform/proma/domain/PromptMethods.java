@@ -8,7 +8,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Table(name = "PROMPT_TYPE_TB")
+@Table(name = "PROMPT_METHOD_TB")
 @Entity
 @Getter
 @NoArgsConstructor
