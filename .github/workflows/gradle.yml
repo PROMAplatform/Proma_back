@@ -42,7 +42,7 @@ jobs:
       
     - name: Grant Execute Permission For Gradlew & Build gradle
       run: |
-        cd ./proma
+        cd proma
         chmod +x gradlew
         ./gradlew build 
         
