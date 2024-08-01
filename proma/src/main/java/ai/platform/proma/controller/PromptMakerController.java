@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,15 +30,15 @@ public class PromptMakerController {
         return new ResponseDto<>(promptMakerService.makeBlock(blockSaveRequestDto, userId));
     }
 
-//    @GetMapping("/prompt/block")
-//    public ResponseDto<List<SelectBlockDto>> searchBlock(
-//         @Valid @RequestParam("userId") Long userId,
-//         @Valid @RequestParam("promptMethod") PromptMethod promptMethod
-//    ) {
-//        return new ResponseDto<>(promptMakerService.searchBlock(userId, promptMethod));
-//    }
+    @GetMapping("/block")
+    public ResponseDto<Map<String, List<SelectBlockDto>>> searchBlock(
+         @Valid @RequestParam("userId") Long userId,
+         @Valid @RequestParam("promptMethod") PromptMethod promptMethod
+    ) {
+        return new ResponseDto<>(promptMakerService.searchBlock(userId, promptMethod));
+    }
 
-    @PostMapping("/prompt/save")
+    @PostMapping("/save")
     public ResponseDto<Boolean> makePrompt(
         @Valid @RequestBody PromptSaveRequestDto promptSaveRequestDto,
         @Valid @RequestParam("userId") Long userId
