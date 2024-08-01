@@ -110,4 +110,8 @@ public class Prompt {
         this.promptDescription = promptDescription;
         this.promptCategory = promptCategory;
     }
+
+    public void updateEmoji(String emoji){
+        this.emoji = emoji;
+    }
 }

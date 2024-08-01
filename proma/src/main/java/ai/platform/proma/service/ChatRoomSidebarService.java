@@ -2,7 +2,7 @@ package ai.platform.proma.service;
 
 import ai.platform.proma.domain.*;
 import ai.platform.proma.dto.request.ChatRoomSaveRequestDto;
-import ai.platform.proma.dto.request.ChatRoomUpdateEmojiRequestDto;
+import ai.platform.proma.dto.request.UpdateEmojiRequestDto;
 import ai.platform.proma.dto.request.PromptDetailUpdateRequestDto;
 import ai.platform.proma.dto.response.ChatRoomListResponseDto;
 import ai.platform.proma.dto.response.ChatRoomIdResponseDto;
@@ -53,7 +53,7 @@ public class ChatRoomSidebarService {
         return chatRoomMap;
     }
 
-    public ChatRoomIdResponseDto updateEmoji(Long chatRoomId, ChatRoomUpdateEmojiRequestDto chatRoomUpdateEmojiRequestDto, Long userId) {
+    public ChatRoomIdResponseDto updateChatRoomEmoji(Long chatRoomId, UpdateEmojiRequestDto chatRoomUpdateEmojiRequestDto, Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
         ChatRoom chatRoom = chatRoomRepository.findByIdAndUser(chatRoomId, user)
@@ -115,5 +115,16 @@ public class ChatRoomSidebarService {
                 .collect(Collectors.toList()));
 
         return promptMap;
+    }
+
+    public ChatRoomIdResponseDto updatePromptEmoji(Long promptId, UpdateEmojiRequestDto updateEmojiRequestDto, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+        Prompt prompt = promptRepository.findByIdAndUser(promptId, user)
+                .orElseThrow(() -> new ApiException(ErrorDefine.PROMPT_NOT_FOUND));
+
+       prompt.updateEmoji(updateEmojiRequestDto.getEmoji());
+
+        return ChatRoomIdResponseDto.of(prompt.getId());
     }
 }
