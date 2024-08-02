@@ -6,9 +6,12 @@ import ai.platform.proma.domain.PromptBlock;
 import ai.platform.proma.domain.enums.BlockCategory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
-@AllArgsConstructor
+@Setter
+@NoArgsConstructor
 public class ListPromptAtom {
     private Long blockId;
 
