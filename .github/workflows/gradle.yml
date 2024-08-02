@@ -110,17 +110,15 @@ jobs:
     runs-on: self-hosted
 
     steps:
-    - name: docker pull
-      run : sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/proma
-
-    - name: docker stop container
-      run: |
-        if [ $(sudo docker ps -a -q -f name=proma) ]; then
-          sudo docker stop proma
-        fi
-
-    - name: docker run new container
-      run: sudo docker run --rm -it -d -p 8080:8080 --name proma ${{ secrets.DOCKERHUB_USERNAME }}/proma
-
-    - name: delete old docker image
-      run: sudo docker system prune -f
+    - name: Deploy to EC2
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USERNAME }}
+        key: ${{ secrets.EC2_PRIVATE_KEY }}
+        script: |
+          sudo docker stop $(sudo docker ps -aq)  # 기존 컨테이너 중지
+          sudo docker rm $(sudo docker ps -aq)   # 기존 컨테이너 삭제
+          sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/proma  # 새 이미지 pull
+          sudo docker run -d -p 8080:8080 --name proma ${{ secrets.DOCKERHUB_USERNAME }}/proma  # 새 컨테이너 실행
+          sudo docker system prune -f
