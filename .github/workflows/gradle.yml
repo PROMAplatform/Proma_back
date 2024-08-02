@@ -70,6 +70,10 @@ jobs:
     # - name: Build with Gradle Wrapper
     #   working-directory: proma 
     #   run: ./gradlew build
+    - name: Set JAR_FILE environment variable
+      run: |  
+        JAR_FILE=$(ls proma/build/libs/*.jar | head -n 1)
+        echo "JAR_FILE=$JAR_FILE" >> $GITHUB_ENV
     - name: Create Dockerfile
       run: |
         tee Dockerfile <<EOF
