@@ -1,18 +1,26 @@
-name: Deploy to EC2
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
+
+name: Java CI with Gradle
 
 on:
   push:
     branches: [ "dev" ]
+  pull_request:
+    branches: [ "dev" ]
 
 jobs:
-  build-and-deploy:
+  build-docker-image:
     runs-on: ubuntu-latest
     permissions:
       contents: read
 
     steps:
     - uses: actions/checkout@v4
-
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
@@ -29,25 +37,72 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-gradle-
 
-    - name: Build with Gradle
-      uses: gradle/gradle-build-action@v2
-      with:
-        arguments: clean build
-
-    - name: Build and push Docker image
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
+    - name: Create application.yml
       run: |
-        docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/proma .
-        echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
-        docker push ${{ secrets.DOCKERHUB_USERNAME }}/proma
+        mkdir -p proma/src/main/resources  # 필요한 디렉토리 생성
+        tee proma/src/main/resources/application.yml <<EOF
+        spring:
+          datasource:
+            driver-class-name: com.mysql.cj.jdbc.Driver
+            url: ${{ secrets.DB_URL }}
+            username: ${{ secrets.DB_USERNAME }}
+            password: ${{ secrets.DB_PASSWORD }}
+            hikari:
+              pool-name: jpa-hikari-pool
+              maximum-pool-size: 5
+              data-source-properties:
+                rewriteBatchedStatements: true
+        EOF
 
-    - name: Deploy to EC2
-      uses: appleboy/ssh-action@master
+    - name: Grant Execute Permission For Gradlew & Build gradle
+      run: |
+        cd proma
+        gradle wrapper 
+        chmod +x gradlew
+        ./gradlew clean build 
+        
+    # - name: Grant execute permission for gradlew
+    #   run: chmod +x proma/gradlew
+
+    # # Spring Boot 어플리케이션 Build
+    # - name: Build with Gradle Wrapper
+    #   working-directory: proma 
+    #   run: ./gradlew build
+
+    # Docker 이미지 Build
+    - name: docker image build
+      run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/proma .
+
+    # DockerHub Login (push 하기 위해)
+    - name: docker login
+      uses: docker/login-action@v2
       with:
-        host: ${{ secrets.EC2_HOST }}
-        username: ${{ secrets.EC2_USERNAME }}
-        key: ${{ secrets.EC2_PRIVATE_KEY }}
-        script: |
-          sudo docker stop $(sudo docker ps -aq)  # 기존 컨테이너 중지
-          sudo docker rm $(sudo docker ps -aq)   # 기존 컨테이너 삭제
-          sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/proma  # 새 이미지 pull
-          sudo docker run -d -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/proma  # 새 컨테이너 실행
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+    # Docker hub 로 push
+    - name: Docker Hub push
+      run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/proma
+
+  # 위 과정에서 푸시한 이미지를 ec2에서 풀받아서 실행
+  run-docker-image-on-ec2:
+    needs: build-docker-image
+    runs-on: self-hosted
+
+    steps:
+    - name: docker pull
+      run : sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/proma
+
+    - name: docker stop container
+      run: |
+        if [ $(sudo docker ps -a -q -f name=proma) ]; then
+          sudo docker stop proma
+        fi
+
+    - name: docker run new container
+      run: sudo docker run --rm -it -d -p 8080:8080 --name proma ${{ secrets.DOCKERHUB_USERNAME }}/proma
+
+    - name: delete old docker image
+      run: sudo docker system prune -f
