@@ -70,7 +70,15 @@ jobs:
     # - name: Build with Gradle Wrapper
     #   working-directory: proma 
     #   run: ./gradlew build
-
+    - name: Create Dockerfile  
+      run: |
+        tee Dockerfile <<EOF
+        FROM openjdk:17-jdk
+        ARG JAR_FILE=build/libs/*.jar
+        COPY ${JAR_FILE} app.jar
+        EXPOSE 8080
+        ENTRYPOINT ["java", "-jar", "/app.jar"]          
+        EOF
     # Docker 이미지 Build
     - name: docker image build
       run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/proma .
