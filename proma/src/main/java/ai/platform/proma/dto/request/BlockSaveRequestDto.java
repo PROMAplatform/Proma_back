@@ -13,7 +13,7 @@ import lombok.Getter;
 public class BlockSaveRequestDto {
     private String blockValue;
     private String blockDescription;
-    private BlockCategory blockCategory;
+    private String blockCategory;
     private String promptMethod;
 
     public Block toEntity(PromptMethods promptMethods, User user, BlockSaveRequestDto blockSaveRequestDto) {
@@ -21,7 +21,7 @@ public class BlockSaveRequestDto {
                 .user(user)
                 .blockValue(blockSaveRequestDto.getBlockValue())
                 .blockDescription(blockSaveRequestDto.getBlockDescription())
-                .blockCategory(blockSaveRequestDto.getBlockCategory())
+                .blockCategory(BlockCategory.fromValue(blockSaveRequestDto.getBlockCategory()))
                 .promptMethods(promptMethods)
                 .build();
     }

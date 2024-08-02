@@ -14,7 +14,7 @@ public class PromptSaveRequestDto {
     private String promptTitle;
     private String promptDescription;
     private String promptPreview;
-    private PromptCategory promptCategory;
+    private String promptCategory;
     private String promptMethod;
     private List<ListPromptAtom> listPromptAtom;
 
@@ -24,6 +24,7 @@ public class PromptSaveRequestDto {
                 .promptTitle(promptSaveRequestDto.getPromptTitle())
                 .promptDescription(promptSaveRequestDto.getPromptDescription())
                 .promptPreview(promptSaveRequestDto.getPromptPreview())
+                .promptCategory(PromptCategory.fromValue(promptSaveRequestDto.getPromptCategory()))
                 .promptMethods(promptMethods)
                 .build();
     }
