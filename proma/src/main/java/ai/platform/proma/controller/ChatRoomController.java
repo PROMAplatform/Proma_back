@@ -24,7 +24,7 @@ public class ChatRoomController {
         return new ResponseDto<>(chatRoomService.enterChatRoom(chatRoomId, userId));
     }
 
-    @PatchMapping("prompt/block/{promptId}")
+    @PatchMapping("/prompt/block/{promptId}")
     public ResponseDto<Boolean> blockPrompt(
             @PathVariable("promptId") Long promptId,
             @RequestParam("userId") Long userId,
