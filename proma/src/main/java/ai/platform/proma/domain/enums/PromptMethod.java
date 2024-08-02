@@ -18,7 +18,7 @@ public enum PromptMethod {
         return Arrays.stream(PromptMethod.values())
                 .filter(v -> v.displayName.equalsIgnoreCase(value))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Invalid PromptMethod value: " + value));
+                .orElse(null);
     }
 
     @Override

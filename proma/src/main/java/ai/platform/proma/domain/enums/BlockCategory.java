@@ -27,7 +27,7 @@ public enum BlockCategory {
         return Arrays.stream(BlockCategory.values())
                 .filter(v -> v.displayName.equalsIgnoreCase(value))
                 .findFirst()
-                .orElseThrow(() -> new ApiException(ErrorDefine.INVALID_BLOCK_CATEGORY));
+                .orElse(null);
     }
 
     @Override

@@ -23,7 +23,7 @@ public enum PromptCategory {
         return Arrays.stream(PromptCategory.values())
                 .filter(v -> v.displayName.equalsIgnoreCase(value))
                 .findFirst()
-                .orElseThrow(() -> new ApiException(ErrorDefine.INVALID_PROMPT_CATEGORY));
+                .orElse(null);
     }
     @Override
     public String toString() {
