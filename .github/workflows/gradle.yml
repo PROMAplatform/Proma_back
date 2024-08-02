@@ -107,7 +107,7 @@ jobs:
   # 위 과정에서 푸시한 이미지를 ec2에서 풀받아서 실행
   run-docker-image-on-ec2:
     needs: build-docker-image
-    runs-on: self-hosted
+    runs-on: GitHub-hosted runner
 
     steps:
     - name: Deploy to EC2
