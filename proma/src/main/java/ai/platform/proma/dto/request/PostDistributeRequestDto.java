@@ -17,7 +17,7 @@ public class PostDistributeRequestDto {
         return Post.builder()
                 .postTitle(postDistributeRequestDto.getPostTitle())
                 .postDescription(postDistributeRequestDto.getPostDescription())
-                .promptCategory(PromptCategory.fromValue(postDistributeRequestDto.getPromptCategory()))
+                .postCategory(PromptCategory.fromValue(postDistributeRequestDto.getPromptCategory()))
                 .prompt(prompt)
                 .build();
     }

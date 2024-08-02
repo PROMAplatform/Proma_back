@@ -278,7 +278,7 @@ public class PostService {
             throw new ApiException(ErrorDefine.UNAUTHORIZED_USER);
         }
         try {
-            prompt.updateCategory(PromptCategory.fromValue(postRequestDto.getPromptCategory()));
+            prompt.updateCategory(PromptCategory.fromValue(postRequestDto.getPostCategory()));
         } catch (IllegalArgumentException e) {
             throw new ApiException(ErrorDefine.INVALID_PROMPT_CATEGORY);
         }

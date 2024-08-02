@@ -31,7 +31,7 @@ public class PostResponseDto {
 
     private final String promptPreview;
 
-    private final String promptCategory;
+    private final String postCategory;
 
     private final Boolean likeState;
 
@@ -45,7 +45,7 @@ public class PostResponseDto {
         this.promptId = post.getPrompt().getId();
         this.likeCount = likeCount;
         this.promptMethod = post.getPrompt().getPromptMethods().getPromptMethod().toString();
-        this.promptCategory = post.getPrompt().getPromptCategory().toString();
+        this.postCategory = post.getPostCategory().toString();
         this.promptPreview = post.getPrompt().getPromptPreview();
         this.likeState = likeState;
     }
