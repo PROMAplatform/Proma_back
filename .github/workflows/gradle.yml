@@ -107,7 +107,7 @@ jobs:
   # 위 과정에서 푸시한 이미지를 ec2에서 풀받아서 실행
   run-docker-image-on-ec2:
     needs: build-docker-image
-    runs-on: GitHub-hosted runner
+    runs-on: ubuntu-latest
     steps:
     - name: Deploy to EC2
       uses: appleboy/ssh-action@master
