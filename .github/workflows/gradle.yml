@@ -41,7 +41,8 @@ jobs:
       uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
     - name: Create application.yml
       run: |
-        cat <<EOF > proma/src/main/resources/application.yml
+        mkdir -p proma/src/main/resources  # 필요한 디렉토리 생성
+        tee proma/src/main/resources/application.yml <<EOF
         spring:
           datasource:
             driver-class-name: com.mysql.cj.jdbc.Driver
