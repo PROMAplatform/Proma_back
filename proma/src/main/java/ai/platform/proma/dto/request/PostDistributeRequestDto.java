@@ -11,13 +11,13 @@ import lombok.Getter;
 public class PostDistributeRequestDto {
     private String postTitle;
     private String postDescription;
-    private String promptCategory;
+    private String postCategory;
 
     public Post toEntity(Prompt prompt, PostDistributeRequestDto postDistributeRequestDto) {
         return Post.builder()
                 .postTitle(postDistributeRequestDto.getPostTitle())
                 .postDescription(postDistributeRequestDto.getPostDescription())
-                .postCategory(PromptCategory.fromValue(postDistributeRequestDto.getPromptCategory()))
+                .postCategory(PromptCategory.fromValue(postDistributeRequestDto.getPostCategory()))
                 .prompt(prompt)
                 .build();
     }
