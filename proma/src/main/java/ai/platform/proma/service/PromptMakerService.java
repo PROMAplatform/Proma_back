@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 @RequiredArgsConstructor
 public class PromptMakerService {
     private final BlockRepository blockRepository;
@@ -57,7 +57,7 @@ public class PromptMakerService {
         return blockMap;
     }
 
-    @Transactional
+
     public Boolean makePrompt(PromptSaveRequestDto promptSaveRequestDto, Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));

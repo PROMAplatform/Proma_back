@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional(readOnly=true)
+@Transactional
 @RequiredArgsConstructor
 public class PostService {
 
@@ -193,7 +193,6 @@ public class PostService {
         return response;
     }
 
-    @Transactional
     public Boolean scrapPrompt(Long postId, Long userId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.POST_NOT_FOUND));
@@ -244,7 +243,6 @@ public class PostService {
         return response;
     }
 
-    @Transactional
     public Boolean postLike(Long postId, Long userId){
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.POST_NOT_FOUND));
@@ -266,7 +264,6 @@ public class PostService {
             return true; // 좋아요 추가 결과 반환
         }
     }
-    @Transactional
     public Boolean updatePost(Long userId, Long postId, PostRequestDto postRequestDto){
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.POST_NOT_FOUND));
@@ -290,7 +287,6 @@ public class PostService {
         return true;
     }
 
-    @Transactional
     public Boolean deletePost(Long userId, Long postId){
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.POST_NOT_FOUND));
