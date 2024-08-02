@@ -34,9 +34,9 @@ public class Post {
     @Column(nullable = false)
     private LocalDate createAt;
 
-    @Column(nullable = false)
+    @Column(name = "postCategory",nullable = false)
     @Enumerated(EnumType.STRING)
-    private PromptCategory promptCategory;
+    private PromptCategory postCategory;
 
 // --------------------------------------------------------------------
 
@@ -48,11 +48,11 @@ public class Post {
     private List<Like> likes;
 
     @Builder
-    public Post(String postTitle, String postDescription, PromptCategory promptCategory, Prompt prompt) {
+    public Post(String postTitle, String postDescription, PromptCategory postCategory, Prompt prompt) {
         this.postTitle = postTitle;
         this.postDescription = postDescription;
         this.createAt = LocalDate.now();
-        this.promptCategory = promptCategory;
+        this.postCategory = postCategory;
         this.prompt = prompt;
     }
 
