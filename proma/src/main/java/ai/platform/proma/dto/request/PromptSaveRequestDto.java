@@ -5,11 +5,14 @@ import ai.platform.proma.domain.enums.PromptCategory;
 import ai.platform.proma.domain.enums.PromptMethod;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
 @Getter
-@AllArgsConstructor
+@Setter
+@NoArgsConstructor
 public class PromptSaveRequestDto {
     private String promptTitle;
     private String promptDescription;
@@ -25,6 +28,7 @@ public class PromptSaveRequestDto {
                 .promptDescription(promptSaveRequestDto.getPromptDescription())
                 .promptPreview(promptSaveRequestDto.getPromptPreview())
                 .promptCategory(PromptCategory.fromValue(promptSaveRequestDto.getPromptCategory()))
+                .emoji("💡")
                 .promptMethods(promptMethods)
                 .build();
     }
