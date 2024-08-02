@@ -122,11 +122,6 @@ jobs:
       run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/proma
 
   # 위 과정에서 푸시한 이미지를 ec2에서 풀받아서 실행
-  run-docker-image-on-ec2:
-    needs: build-docker-image
-    runs-on: ubuntu-latest
-      
-    steps:
     - name: Deploy to EC2
       uses: appleboy/ssh-action@master
       with:
@@ -134,8 +129,18 @@ jobs:
         username: ${{ secrets.EC2_USERNAME }}
         key: ${{ secrets.EC2_PRIVATE_KEY }}
         script: |
-          sudo docker stop $(sudo docker ps -aq)  # 기존 컨테이너 중지
-          sudo docker rm $(sudo docker ps -aq)   # 기존 컨테이너 삭제
-          sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/proma  # 새 이미지 pull
-          sudo docker run -d -p 8080:8080 --name proma ${{ secrets.DOCKERHUB_USERNAME }}/proma  # 새 컨테이너 실행
+          # 실행 중인 proma 컨테이너가 있는지 확인
+          if [ $(sudo docker ps -q -f name=proma) ]; then
+            echo "Stopping and removing existing proma container"
+            sudo docker stop proma
+            sudo docker rm proma
+          fi
+          
+          echo "Pulling new image"
+          sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/proma
+          
+          echo "Running new container"
+          sudo docker run -d -p 8080:8080 —name proma ${{ secrets.DOCKERHUB_USERNAME }}/proma
+          
+          echo "Cleaning up unused Docker resources"
           sudo docker system prune -f
