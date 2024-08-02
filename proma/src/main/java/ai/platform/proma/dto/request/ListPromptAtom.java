@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
-@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class ListPromptAtom {
     private Long blockId;
 
