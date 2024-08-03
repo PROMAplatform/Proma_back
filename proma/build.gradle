@@ -40,7 +40,5 @@ tasks.named('test') {
 }
 
 jar {
-	manifest {
-		attributes 'Main-Class': 'ai.platform.proma.PromaApplication'
-	}
+	enabled = false
 }
