@@ -37,7 +37,7 @@ public class ChatRoom {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "chatRoom", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Message> messages;
 
     @Builder
