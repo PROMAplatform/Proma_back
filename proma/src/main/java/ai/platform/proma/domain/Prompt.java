@@ -53,7 +53,7 @@ public class Prompt {
     @JoinColumn(name = "promptMethod_id", nullable = false)
     private PromptMethods promptMethods;
 
-    @OneToMany(mappedBy = "prompt", cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "prompt", cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     private List<PromptBlock> promptBlocks;
 
     @OneToMany(mappedBy = "prompt", cascade = CascadeType.MERGE)
