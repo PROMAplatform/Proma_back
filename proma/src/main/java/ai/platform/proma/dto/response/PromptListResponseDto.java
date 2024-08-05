@@ -20,6 +20,7 @@ public class PromptListResponseDto {
     private String promptTitle;
     private String promptDescription;
     private String promptPreview;
+    private String promptCategory;
     private List<SelectBlockDto> listPromptAtom;
     private String emoji;
 
@@ -31,6 +32,7 @@ public class PromptListResponseDto {
         this.promptDescription = prompt.getPromptDescription();
         this.promptPreview = prompt.getPromptPreview();
         this.emoji = prompt.getEmoji();
+        this.promptCategory = prompt.getPromptCategory().toString();
         this.listPromptAtom = listPromptAtom;
     }
 
