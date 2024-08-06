@@ -56,10 +56,10 @@ public class Post {
         this.prompt = prompt;
     }
 
-    public void update(PostRequestDto postRequestDto) {
-        this.postTitle = postRequestDto.getPostTitle();
-        this.postDescription = postRequestDto.getPostDescription();
-        this.postCategory = PromptCategory.valueOf(postRequestDto.getPostCategory());
+    public void update(Post post) {
+        this.postTitle = post.getPostTitle();
+        this.postDescription = post.getPostDescription();
+        this.postCategory = post.getPostCategory();
     }
 
 }

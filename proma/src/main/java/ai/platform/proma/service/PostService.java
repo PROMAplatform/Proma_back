@@ -271,18 +271,10 @@ public class PostService {
         userRepository.findById(userId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
 
-//        Prompt prompt = promptRepository.findById(post.getPrompt().getId())
-//                .orElseThrow(() -> new ApiException(ErrorDefine.PROMPT_NOT_FOUND));
-
         if (!post.getPrompt().getUser().getId().equals(userId)) {
             throw new ApiException(ErrorDefine.UNAUTHORIZED_USER);
         }
-//        try {
-//            prompt.updateCategory(PromptCategory.fromValue(postRequestDto.getPostCategory()));
-//        } catch (IllegalArgumentException e) {
-//            throw new ApiException(ErrorDefine.INVALID_PROMPT_CATEGORY);
-//        }
-        post.update(postRequestDto);
+        post.update(postRequestDto.toEntity(postRequestDto));
 
         return true;
     }
