@@ -10,6 +10,7 @@ import java.util.Arrays;
 public enum PromptMethod {
     // ex) Character, Task/Research ..
     CHARACTER("Character"), // Character
+    FREE("Free"),
     TASK_RESEARCH("Task/Research");
 
     private final String displayName;
