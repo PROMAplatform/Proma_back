@@ -19,7 +19,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query("SELECT p FROM Post p JOIN FETCH p.prompt pr " +
             "WHERE (:searchKeyword IS NULL OR p.postTitle LIKE %:searchKeyword% OR p.postDescription LIKE %:searchKeyword%) " +
-            "AND (:category IS NULL OR pr.promptCategory = :category)")
+            "AND (:category IS NULL OR p.postCategory = :category)")
     Page<Post> findAllBySearchKeywordAndCategory(
             @Param("searchKeyword") String searchKeyword,
             @Param("category") PromptCategory category,
@@ -28,8 +28,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query("SELECT p FROM Post p JOIN FETCH p.prompt pr " +
             "WHERE p.id IN :postIds " +
-            "AND (:category IS NULL OR pr.promptCategory = :category)")
-    Page<Post> findAllByPostIdInAndPromptCategory( // 메서드 이름 변경
+            "AND (:category IS NULL OR p.postCategory = :category)")
+    Page<Post> findAllByPostIdInAndPostCategory( // 메서드 이름 변경
            @Param("category") PromptCategory category,
            @Param("postIds")List<Long> postIds,
            Pageable pageable
@@ -37,8 +37,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query("SELECT p FROM Post p JOIN FETCH p.prompt pr " +
             "WHERE pr.user.id = :userId " +
-            "AND (:category IS NULL OR pr.promptCategory = :category)") // category 조건 추가
-    Page<Post> findAllByPromptUserIdAndPromptCategory( // 메서드 이름 변경
+            "AND (:category IS NULL OR p.postCategory = :category)") // category 조건 추가
+    Page<Post> findAllByPromptUserIdAndPostCategory( // 메서드 이름 변경
        @Param("userId") Long userId,
        @Param("category") PromptCategory category, // category 파라미터 추가
        Pageable pageable

@@ -136,7 +136,7 @@ public class PostService {
 
         List<Long> postIds = likeRepository.findPostIdsByUserId(userId);
 
-        Page<Post> posts = postRepository.findAllByPostIdInAndPromptCategory(PromptCategory.fromValue(category), postIds, pageable);
+        Page<Post> posts = postRepository.findAllByPostIdInAndPostCategory(PromptCategory.fromValue(category), postIds, pageable);
 
         User user = userRepository.findById(userId).orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
 
@@ -166,7 +166,7 @@ public class PostService {
 
 //        List<Long> postIds = likeRepository.findPostIdsByUserId(userId);
 
-        Page<Post> posts = postRepository.findAllByPromptUserIdAndPromptCategory(userId, PromptCategory.fromValue(category), pageable);
+        Page<Post> posts = postRepository.findAllByPromptUserIdAndPostCategory(userId, PromptCategory.fromValue(category), pageable);
 
         User user = userRepository.findById(userId).orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
 
