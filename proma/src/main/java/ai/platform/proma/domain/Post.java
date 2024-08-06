@@ -59,6 +59,7 @@ public class Post {
     public void update(PostRequestDto postRequestDto) {
         this.postTitle = postRequestDto.getPostTitle();
         this.postDescription = postRequestDto.getPostDescription();
+        this.postCategory = PromptCategory.valueOf(postRequestDto.getPostCategory());
     }
 
 }
