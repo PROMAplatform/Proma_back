@@ -1,7 +1,5 @@
 package ai.platform.proma.util;
 
-import ai.platform.proma.repositroy.UserRepository;
-import ai.platform.proma.security.JwtProvider;
 import ai.platform.proma.util.dto.OauthSignUpDto;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -72,8 +70,6 @@ public class OauthUtil {
     private String GOOGLE_REDIRECT_URL;
 
     private final RestTemplate restTemplate;
-    private final JwtProvider jwtProvider;
-    private final UserRepository userRepository;
 
     public String getKakaoAccessToken(String authCode) {
         HttpHeaders httpHeaders = new HttpHeaders();
