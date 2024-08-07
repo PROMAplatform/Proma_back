@@ -17,22 +17,28 @@ public class UserService {
 
     public final UserRepository userRepository;
 
-    public UserResponseDto findById(UserRequestDto userRequestDto) {
-        User user = userRepository.findById(userRequestDto.getUserId())
+    public User getUserBySocialId(String socialId) {
+        return userRepository.findBySocialId(socialId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
-
-        return UserResponseDto.builder()
-                .userName(user.getUserName())
-                .build();
     }
-    public Boolean userSecession(UserRequestDto userRequestDto){
 
-        User user = userRepository.findById(userRequestDto.getUserId())
-                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
 
-        user.secession();
-        return true;
-    }
+//    public UserResponseDto findById(UserRequestDto userRequestDto) {
+//        User user = userRepository.findById(userRequestDto.getUserId())
+//                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+//
+//        return UserResponseDto.builder()
+//                .userName(user.getUserName())
+//                .build();
+//    }
+//    public Boolean userSecession(UserRequestDto userRequestDto){
+//
+//        User user = userRepository.findById(userRequestDto.getUserId())
+//                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+//
+//        user.secession();
+//        return true;
+//    }
 
 
 }

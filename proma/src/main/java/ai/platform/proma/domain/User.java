@@ -1,5 +1,6 @@
 package ai.platform.proma.domain;
 
+import ai.platform.proma.domain.enums.Role;
 import ai.platform.proma.domain.enums.UserLoginMethod;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -28,11 +29,25 @@ public class User {
     private String userName;
 
     @Column(nullable = false)
+    private String socialId;
+
+    @Column
+    @Lob
+    private String refreshToken;
+
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserLoginMethod userLoginMethod;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    @Column(nullable = false)
     private LocalDate createAt;
+
+    @Column(nullable = false)
+    private Boolean isLogin;
 
     @Column(nullable = false)
     private Boolean userOngoing;
