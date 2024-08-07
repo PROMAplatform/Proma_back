@@ -20,17 +20,17 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/name")
-    public ResponseDto<UserResponseDto> findUserName(
-            @Valid @RequestBody UserRequestDto userRequestDto){
-        return new ResponseDto<>(userService.findById(userRequestDto));
-    }
-
-    @GetMapping("/secession")
-    public ResponseDto<Boolean> userSecession(
-            @Valid @RequestBody UserRequestDto userRequestDto){
-        return new ResponseDto<>(userService.userSecession(userRequestDto));
-    }
+//    @GetMapping("/name")
+//    public ResponseDto<UserResponseDto> findUserName(
+//            @Valid @RequestBody UserRequestDto userRequestDto){
+//        return new ResponseDto<>(userService.findById(userRequestDto));
+//    }
+//
+//    @GetMapping("/secession")
+//    public ResponseDto<Boolean> userSecession(
+//            @Valid @RequestBody UserRequestDto userRequestDto){
+//        return new ResponseDto<>(userService.userSecession(userRequestDto));
+//    }
 
 
 
