@@ -82,7 +82,7 @@ public class Prompt {
                 .promptPreview(prompt.getPromptPreview())
                 .promptCategory(prompt.getPromptCategory())
                 .emoji(prompt.getEmoji())
-                .isScrap(Scrap.NOTSCRAP)
+                .isScrap(Scrap.SHARED)
                 .user(user)
                 .promptMethods(prompt.getPromptMethods())
                 .build();

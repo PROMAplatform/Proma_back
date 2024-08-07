@@ -63,12 +63,14 @@ public class PostService {
         Prompt prompt = promptRepository.findById(promptId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.PROMPT_NOT_FOUND));
 
-        promptRepository.save(Prompt.distributePrompt(prompt, user));
+
+        Prompt prompt1 = promptRepository.save(Prompt.distributePrompt(prompt, user));
+
         postRepository.save(postDistributeRequestDto.toEntity(prompt, postDistributeRequestDto));
 
         List<PromptBlock> promptBlocks = promptBlockRepository.findByPrompt(prompt);
         List<PromptBlock> newPromptBlocks = promptBlocks.stream()
-                .map(promptBlock -> PromptBlock.scrapPromptBlock(prompt, promptBlock.getBlock()))
+                .map(promptBlock -> PromptBlock.scrapPromptBlock(prompt1, promptBlock.getBlock()))
                 .toList();
         promptBlockRepository.saveAll(newPromptBlocks);
 

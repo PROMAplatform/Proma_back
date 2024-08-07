@@ -26,6 +26,7 @@ public enum ErrorDefine {
 
     //Forbidden
     UNAUTHORIZED_USER("4030", HttpStatus.FORBIDDEN, "Forbidden: Unauthorized User"),
+    BLOCK_NOT_MATCH("4038", HttpStatus.FORBIDDEN, "Forbidden: Block Not Match"),
 
     // 소셜로그인 관련
     LOGIN_ACCESS_DENIED("4031", HttpStatus.FORBIDDEN, "Forbidden: Login Access Denied"),

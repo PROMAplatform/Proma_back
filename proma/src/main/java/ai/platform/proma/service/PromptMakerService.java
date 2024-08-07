@@ -68,9 +68,10 @@ public class PromptMakerService {
         Prompt savePrompt = promptSaveRequestDto.toEntity(user, promptMethods, promptSaveRequestDto);
         promptRepository.save(savePrompt);
 
-        List<Block> blocks = blockRepository.findAllById(promptSaveRequestDto.getListPromptAtom().stream()
-                .map(ListPromptAtom::getBlockId)
-                .collect(Collectors.toList()));
+        List<Block> blocks = promptSaveRequestDto.getListPromptAtom().stream()
+                .map(listPromptAtom -> blockRepository.findByIdAndPromptMethods(listPromptAtom.getBlockId(), promptMethods)
+                        .orElseThrow(() -> new ApiException(ErrorDefine.BLOCK_NOT_FOUND)))
+                .toList();
 
         List<PromptBlock> savePromptBlocks = blocks.stream()
                 .map(block -> ListPromptAtom.toEntity(savePrompt, block))
