@@ -33,38 +33,37 @@ public class SecurityConfig {
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
-//
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http
-//                .httpBasic(AbstractHttpConfigurer::disable)
-//                .csrf(AbstractHttpConfigurer::disable)
-//                .sessionManagement(sessionManagement ->
-//                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//                .formLogin(AbstractHttpConfigurer::disable)
-//                .authorizeHttpRequests(authorize -> authorize
-//                        .requestMatchers("/admin/**").hasRole("ADMIN")
-//                        .requestMatchers("/**").permitAll()
-//                        .anyRequest().authenticated())
-//                .oauth2Login(oauth2 -> oauth2 // OAuth2 로그인 설정
-//                        .loginPage("/oauth2/authorization/messaging-client-oidc")
-//                        .defaultSuccessUrl("/loginSuccess")
-//                        .failureUrl("/loginFailure"))
-//                .exceptionHandling(exceptionHandling ->
-//                        exceptionHandling
-//                                .authenticationEntryPoint(jwtEntryPoint)
-//                                .accessDeniedHandler(jwtAccessDeniedHandler))
-//                .headers(headers -> headers.xssProtection(
-//                                xss -> xss.headerValue(XXssProtectionHeaderWriter.HeaderValue.ENABLED_MODE_BLOCK)
-//                        ).contentSecurityPolicy(
-//                                cps -> cps.policyDirectives("script-src 'self'")
-//                        )
-//                )
-//                .addFilterBefore(new JwtAuthenticationFilter(jwtProvider, customUserDetailService),
-//                        UsernamePasswordAuthenticationFilter.class)
-//                .addFilterBefore(new JwtExceptionFilter(), JwtAuthenticationFilter.class);
-//        return http.build();
-//    }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(sessionManagement ->
+                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .formLogin(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/**").permitAll()
+                        .anyRequest().authenticated())
+                .oauth2Login(oauth2 -> oauth2 // OAuth2 로그인 설정
+                        .loginPage("/oauth2/authorization/messaging-client-oidc")
+                        .defaultSuccessUrl("/loginSuccess")
+                        .failureUrl("/loginFailure"))
+                .exceptionHandling(exceptionHandling ->
+                        exceptionHandling
+                                .authenticationEntryPoint(jwtEntryPoint)
+                                .accessDeniedHandler(jwtAccessDeniedHandler))
+                .headers(headers -> headers.xssProtection(
+                                xss -> xss.headerValue(XXssProtectionHeaderWriter.HeaderValue.ENABLED_MODE_BLOCK)
+                        ).contentSecurityPolicy(
+                                cps -> cps.policyDirectives("script-src 'self'")
+                        )
+                )
+                .addFilterBefore(new JwtAuthenticationFilter(jwtProvider, customUserDetailService),
+                        UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtExceptionFilter(), JwtAuthenticationFilter.class);
+        return http.build();
+    }
 
 }
 
