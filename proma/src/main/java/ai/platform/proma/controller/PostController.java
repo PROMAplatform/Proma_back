@@ -54,28 +54,26 @@ public class PostController {
             @Valid @RequestParam(value = "userId", required = false) Long userId,
             @Valid @RequestParam(value = "search", required = false) String searchKeyword,
             @Valid @RequestParam(value = "category", required = false) String category,
-            @Valid @RequestParam(value = "latest", defaultValue = "desc") String latestOrder,
-            @Valid @RequestParam(value = "like", defaultValue = "desc") String likeOrder,
+            @Valid @RequestParam(value = "like", required = false) String likeOrder,
             @Valid @RequestParam(value = "page", defaultValue = "0") int page,
             @Valid @RequestParam(value = "size", defaultValue = "9") int size
     ) {
 
-        Pageable pageable = PageRequest.of(page, size);
-        return new ResponseDto<>(postService.getPosts(userId, searchKeyword, category, pageable, likeOrder, latestOrder));
+//        Pageable pageable = PageRequest.of(page, size);
+        return new ResponseDto<>(postService.getPosts(userId, searchKeyword, category, page, size, likeOrder));
     }
 
     @GetMapping("/community/preview")
     public ResponseDto<Map<String, Object>> getPostsPreview(
             @Valid @RequestParam(value = "search", required = false) String searchKeyword,
             @Valid @RequestParam(value = "category", required = false) String category,
-            @Valid @RequestParam(value = "latest", defaultValue = "desc") String latestOrder,
-            @Valid @RequestParam(value = "like", defaultValue = "desc") String likeOrder,
+            @Valid @RequestParam(value = "like", required = false) String likeOrder,
             @Valid @RequestParam(value = "page", defaultValue = "0") int page,
             @Valid @RequestParam(value = "size", defaultValue = "9") int size
     ) {
 
-        Pageable pageable = PageRequest.of(page, size);
-        return new ResponseDto<>(postService.getPostsPreview(searchKeyword, category, pageable, likeOrder, latestOrder));
+//        Pageable pageable = PageRequest.of(page, size);
+        return new ResponseDto<>(postService.getPostsPreview(searchKeyword, category, page, size, likeOrder));
     }
 
     @PostMapping("/community/scrap/{postId}")
@@ -103,26 +101,24 @@ public class PostController {
     public ResponseDto<Map<String, Object>> getPostsByUserLike(
             @Valid @RequestParam(value = "userId", required = false) Long userId, //JWT 수정필요
             @Valid @RequestParam(value = "category", required = false) String category,
-            @Valid @RequestParam(value = "latest", defaultValue = "desc") String latestOrder,
-            @Valid @RequestParam(value = "like", defaultValue = "desc") String likeOrder,
+            @Valid @RequestParam(value = "like", required = false) String likeOrder,
             @Valid @RequestParam(value = "page", defaultValue = "0") int page,
             @Valid @RequestParam(value = "size", defaultValue = "9") int size
     ){
         Pageable pageable = PageRequest.of(page, size);
-        return new ResponseDto<>(postService.getPostsByUserLikes(userId, category, pageable, likeOrder, latestOrder));
+        return new ResponseDto<>(postService.getPostsByUserLikes(userId, category, page, size, likeOrder));
     }
 
     @GetMapping("/community/my-distribute")
     public ResponseDto<Map<String, Object>> getPostsByUserDistribute(
             @Valid @RequestParam(value = "userId", required = false) Long userId, //JWT 수정필요
             @Valid @RequestParam(value = "category", required = false) String category,
-            @Valid @RequestParam(value = "latest", defaultValue = "desc") String latestOrder,
-            @Valid @RequestParam(value = "like", defaultValue = "desc") String likeOrder,
+            @Valid @RequestParam(value = "like", required = false) String likeOrder,
             @Valid @RequestParam(value = "page", defaultValue = "0") int page,
             @Valid @RequestParam(value = "size", defaultValue = "9") int size
     ){
-        Pageable pageable = PageRequest.of(page, size);
-        return new ResponseDto<>(postService.getPostsByUserDistribute(userId, category, pageable, likeOrder, latestOrder));
+
+        return new ResponseDto<>(postService.getPostsByUserDistribute(userId, category, page, size, likeOrder));
     }
 
     @PatchMapping("/community/my-distribute/patch/{postId}")
