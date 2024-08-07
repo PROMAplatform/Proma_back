@@ -16,7 +16,6 @@ import org.springframework.data.domain.Sort;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,6 +30,38 @@ public class PostService {
     private final PromptBlockRepository promptBlockRepository;
     private final BlockRepository blockRepository;
 
+
+    private User findUserById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+    }
+
+    private Post findPostById(Long postId) {
+        return postRepository.findById(postId)
+                .orElseThrow(() -> new ApiException(ErrorDefine.POST_NOT_FOUND));
+    }
+
+    private Pageable createPageable(int page, int size, String likeOrder) {
+        if ("desc".equals(likeOrder)) {
+            return PageRequest.of(page, size);
+        } else {
+            Sort sort = Sort.by(Sort.Order.desc("createAt"));
+            return PageRequest.of(page, size, sort);
+        }
+    }
+
+    private List<PostResponseDto> createPostResponseDtos(Page<Post> posts, User user) {
+        return posts.stream()
+                .map(post -> new PostResponseDto(post, likeRepository.countByPostId(post.getId()), likeRepository.existsByPostAndUser(post, user)))
+                .collect(Collectors.toList());
+    }
+
+    private Map<String, Object> createResponse(Page<Post> posts, List<PostResponseDto> postResponseDtos) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("selectPrompt", postResponseDtos);
+        response.put("pageInfo", new PageInfo(posts));
+        return response;
+    }
 
     public Map<String, List<PromptTitleList>> promptTitleList(Long userId) {
         User user = userRepository.findById(userId)
@@ -82,183 +113,56 @@ public class PostService {
 
     public Map<String, Object> getPosts(Long userId, String searchKeyword, String category, int page, int size, String likeOrder) {
 
-       User user = userRepository.findById(userId).orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+        User user = findUserById(userId);
 
-        if(likeOrder.equals("desc")){
-            Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = createPageable(page, size, likeOrder);
 
-            Page<Post> posts = postRepository.findAllBySearchKeywordAndCategory(searchKeyword, PromptCategory.fromValue(category), pageable);
+        Page<Post> posts = postRepository.findAllBySearchKeywordAndCategory(searchKeyword, PromptCategory.fromValue(category), pageable);
 
-            List<PostResponseDto> sortedPostResponseDtos = posts.stream()// posts를 Stream으로 변환
-                .map(post -> new PostResponseDto(post, likeRepository.countByPostId(post.getId()), likeRepository.existsByPostAndUser(post,user)))
-                    .sorted((dto1, dto2) -> Sort.Direction.fromString(likeOrder).isAscending()
-                            ? Integer.compare(dto1.getLikeCount(), dto2.getLikeCount())
-                            : Integer.compare(dto2.getLikeCount(), dto1.getLikeCount()))
-                    .collect(Collectors.toList());
+        List<PostResponseDto> postResponseDtos = createPostResponseDtos(posts, user);
 
-            Map<String, Object> response = new HashMap<>();
-            response.put("selectPrompt", sortedPostResponseDtos);
-            response.put("pageInfo", new PageInfo(posts));
-
-            return response;
-
-        }else {
-            Sort.Order orderByCreatedAt = Sort.Order.desc("createAt");
-            Sort sort = Sort.by(orderByCreatedAt);
-
-            // 페이징 정보 설정
-            Pageable pageable = PageRequest.of(page, size, sort);
-            Page<Post> posts = postRepository.findAllBySearchKeywordAndCategory(
-                    searchKeyword, PromptCategory.fromValue(category), pageable
-            );
-
-            List<PostResponseDto> postResponseDtos = posts.stream()
-                    .map(post -> new PostResponseDto(post, likeRepository.countByPostId(post.getId()), likeRepository.existsByPostAndUser(post,user)))
-                    .collect(Collectors.toList());
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("selectPrompt", postResponseDtos);
-            response.put("pageInfo", new PageInfo(posts));
-            return response;
-        }
+        return createResponse(posts, postResponseDtos);
     }
 
 
     public Map<String, Object> getPostsPreview(String searchKeyword, String category,int page, int size, String likeOrder) {
 
-        if(likeOrder.equals("desc")){
-            Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = createPageable(page, size, likeOrder);
 
-            Page<Post> posts = postRepository.findAllBySearchKeywordAndCategory(searchKeyword, PromptCategory.fromValue(category), pageable);
+        Page<Post> posts = postRepository.findAllBySearchKeywordAndCategory(searchKeyword, PromptCategory.fromValue(category), pageable);
 
-            List<PostResponseDto> sortedPostResponseDtos = posts.stream()// posts를 Stream으로 변환
-                    .map(post -> new PostResponseDto(post, likeRepository.countByPostId(post.getId()), likeRepository.existsByPost(post)))
-                    .sorted((dto1, dto2) -> Sort.Direction.fromString(likeOrder).isAscending()
-                            ? Integer.compare(dto1.getLikeCount(), dto2.getLikeCount())
-                            : Integer.compare(dto2.getLikeCount(), dto1.getLikeCount()))
-                    .collect(Collectors.toList());
+        List<PostResponseDto> postResponseDtos = posts.stream()
+                .map(post -> new PostResponseDto(post, likeRepository.countByPostId(post.getId()), likeRepository.existsByPost(post)))
+                .collect(Collectors.toList());
 
-            Map<String, Object> response = new HashMap<>();
-            response.put("selectPrompt", sortedPostResponseDtos);
-            response.put("pageInfo", new PageInfo(posts));
-
-            return response;
-
-        }else {
-            Sort.Order orderByCreatedAt = Sort.Order.desc("createAt");
-            Sort sort = Sort.by(orderByCreatedAt);
-
-            // 페이징 정보 설정
-            Pageable pageable = PageRequest.of(page, size, sort);
-            Page<Post> posts = postRepository.findAllBySearchKeywordAndCategory(
-                    searchKeyword, PromptCategory.fromValue(category), pageable
-            );
-
-            List<PostResponseDto> postResponseDtos = posts.stream()
-                    .map(post -> new PostResponseDto(post, likeRepository.countByPostId(post.getId()), likeRepository.existsByPost(post)))
-                    .collect(Collectors.toList());
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("selectPrompt", postResponseDtos);
-            response.put("pageInfo", new PageInfo(posts));
-            return response;
-        }
-
+        return createResponse(posts, postResponseDtos);
     }
 
     public Map<String, Object> getPostsByUserLikes(Long userId, String category, int page, int size, String likeOrder) {
-        userRepository.findById(userId).orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+
+        User user = findUserById(userId);
 
         List<Long> postIds = likeRepository.findPostIdsByUserId(userId);
 
+        Pageable pageable = createPageable(page, size, likeOrder);
 
-        User user = userRepository.findById(userId).orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+        Page<Post> posts = postRepository.findAllByPostIdInAndPostCategory(PromptCategory.fromValue(category), postIds, pageable);
 
-        if(likeOrder.equals("desc")){
-            Pageable pageable = PageRequest.of(page, size);
+        List<PostResponseDto> postResponseDtos = createPostResponseDtos(posts, user);
 
-//            Page<Post> posts = postRepository.findAllByCategory(PromptCategory.fromValue(category), pageable);
-            Page<Post> posts = postRepository.findAllByPostIdInAndPostCategory(PromptCategory.fromValue(category), postIds, pageable);
-
-            List<PostResponseDto> sortedPostResponseDtos = posts.stream()// posts를 Stream으로 변환
-                    .map(post -> new PostResponseDto(post, likeRepository.countByPostId(post.getId()), likeRepository.existsByPostAndUser(post,user)))
-                    .sorted((dto1, dto2) -> Sort.Direction.fromString(likeOrder).isAscending()
-                            ? Integer.compare(dto1.getLikeCount(), dto2.getLikeCount())
-                            : Integer.compare(dto2.getLikeCount(), dto1.getLikeCount()))
-                    .collect(Collectors.toList());
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("selectPrompt", sortedPostResponseDtos);
-            response.put("pageInfo", new PageInfo(posts));
-
-            return response;
-
-        }else {
-            Sort.Order orderByCreatedAt = Sort.Order.desc("createAt");
-            Sort sort = Sort.by(orderByCreatedAt);
-
-            // 페이징 정보 설정
-            Pageable pageable = PageRequest.of(page, size, sort);
-            Page<Post> posts = postRepository.findAllByPostIdInAndPostCategory(PromptCategory.fromValue(category), postIds, pageable);
-
-
-            List<PostResponseDto> postResponseDtos = posts.stream()
-                    .map(post -> new PostResponseDto(post, likeRepository.countByPostId(post.getId()), likeRepository.existsByPostAndUser(post,user)))
-                    .collect(Collectors.toList());
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("selectPrompt", postResponseDtos);
-            response.put("pageInfo", new PageInfo(posts));
-            return response;
-        }
+        return createResponse(posts, postResponseDtos);
     }
     public Map<String, Object> getPostsByUserDistribute(Long userId, String category, int page, int size, String likeOrder) {
-        userRepository.findById(userId).orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
 
-//        List<Long> postIds = likeRepository.findPostIdsByUserId(userId);
+        User user = findUserById(userId);
 
-//        Page<Post> posts = postRepository.findAllByPromptUserIdAndPostCategory(userId, PromptCategory.fromValue(category), pageable);
+        Pageable pageable = createPageable(page, size, likeOrder);
 
-        User user = userRepository.findById(userId).orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+        Page<Post> posts = postRepository.findAllByPromptUserIdAndPostCategoryAndIsScrapShared(userId, PromptCategory.fromValue(category), pageable);
 
+        List<PostResponseDto> postResponseDtos = createPostResponseDtos(posts, user);
 
-        if(likeOrder.equals("desc")){
-            Pageable pageable = PageRequest.of(page, size);
-
-//            Page<Post> posts = postRepository.findAllByCategory(PromptCategory.fromValue(category), pageable);
-            Page<Post> posts = postRepository.findAllByPromptUserIdAndPostCategoryAndIsScrapShared(userId, PromptCategory.fromValue(category), pageable);
-
-            List<PostResponseDto> sortedPostResponseDtos = posts.stream()// posts를 Stream으로 변환
-                    .map(post -> new PostResponseDto(post, likeRepository.countByPostId(post.getId()), likeRepository.existsByPostAndUser(post,user)))
-                    .sorted((dto1, dto2) -> Sort.Direction.fromString(likeOrder).isAscending()
-                            ? Integer.compare(dto1.getLikeCount(), dto2.getLikeCount())
-                            : Integer.compare(dto2.getLikeCount(), dto1.getLikeCount()))
-                    .collect(Collectors.toList());
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("selectPrompt", sortedPostResponseDtos);
-            response.put("pageInfo", new PageInfo(posts));
-
-            return response;
-
-        }else {
-            Sort.Order orderByCreatedAt = Sort.Order.desc("createAt");
-            Sort sort = Sort.by(orderByCreatedAt);
-
-            // 페이징 정보 설정
-            Pageable pageable = PageRequest.of(page, size, sort);
-            Page<Post> posts = postRepository.findAllByPromptUserIdAndPostCategoryAndIsScrapShared(userId, PromptCategory.fromValue(category), pageable);
-
-
-            List<PostResponseDto> postResponseDtos = posts.stream()
-                    .map(post -> new PostResponseDto(post, likeRepository.countByPostId(post.getId()), likeRepository.existsByPostAndUser(post,user)))
-                    .collect(Collectors.toList());
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("selectPrompt", postResponseDtos);
-            response.put("pageInfo", new PageInfo(posts));
-            return response;
-        }
+        return createResponse(posts, postResponseDtos);
     }
 
     public Boolean scrapPrompt(Long postId, Long userId) {
