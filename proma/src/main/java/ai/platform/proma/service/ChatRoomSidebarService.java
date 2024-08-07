@@ -103,7 +103,7 @@ public class ChatRoomSidebarService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
 
-        List<Prompt> prompts = promptRepository.findByUser(user);
+        List<Prompt> prompts = promptRepository.findByUserAndScrap(user);
 
         Map<String, List<PromptListResponseDto>> promptMap = new HashMap<>();
 

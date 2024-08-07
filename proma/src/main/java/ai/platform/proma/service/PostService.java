@@ -8,10 +8,7 @@ import ai.platform.proma.exception.ApiException;
 import ai.platform.proma.exception.ErrorDefine;
 import ai.platform.proma.repositroy.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,7 +34,7 @@ public class PostService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
 
-        List<Prompt> prompts = promptRepository.findByUser(user);
+        List<Prompt> prompts = promptRepository.findByUserAndScrap(user);
 
         Map<String, List<PromptTitleList>> response = new HashMap<>();
 

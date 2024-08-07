@@ -19,7 +19,8 @@ public enum BlockCategory {
     ROLE("역할"), //역할
     CHARACTER("성격"), // 성격
     BACKGROUND_KNOWLEDGE("배경지식"), // 배경지식
-    RULE("규칙"); // 규칙
+    RULE("규칙"), // 규칙
+    FREE("자유"); // 자유형 규격
 
     private final String displayName;
 
