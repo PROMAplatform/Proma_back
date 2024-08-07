@@ -77,7 +77,7 @@
 #         cd proma
 #         gradle wrapper 
 #         chmod +x gradlew
-#         ./gradlew clean build 
+#         ./gradlew build 
         
 #     # - name: Grant execute permission for gradlew
 #     #   run: chmod +x proma/gradlew
