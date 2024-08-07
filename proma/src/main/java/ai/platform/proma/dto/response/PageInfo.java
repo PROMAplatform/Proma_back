@@ -14,7 +14,7 @@ public class PageInfo {
     private int currentItems;
 
     public PageInfo(Page<?> page) {
-        this.currentPage = page.getNumber() + 1;
+        this.currentPage = page.getNumber();
         this.totalPages = page.getTotalPages();
         this.pageSize = page.getSize();
         this.totalItems = page.getTotalElements();
