@@ -60,3 +60,8 @@ tasks.named('test') {
 jar {
 	enabled = false
 }
+
+bootJar {
+	archiveFileName = 'proma-0.0.1-SNAPSHOT.jar'
+	mainClassName = 'ai.platform.proma.PromaApplication'
+}
