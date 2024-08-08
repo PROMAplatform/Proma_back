@@ -1,37 +1,65 @@
 package ai.platform.proma.controller;
 
+import ai.platform.proma.domain.User;
+import ai.platform.proma.domain.enums.Role;
+import ai.platform.proma.domain.enums.UserLoginMethod;
 import ai.platform.proma.dto.request.UserRequestDto;
+import ai.platform.proma.dto.response.LoginResponseDto;
 import ai.platform.proma.dto.response.ResponseDto;
 import ai.platform.proma.dto.response.UserResponseDto;
+import ai.platform.proma.security.LoginUser;
 import ai.platform.proma.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/user")
+@RequestMapping("/oauth/user")
 public class UserController {
 
     private final UserService userService;
 
-//    @GetMapping("/name")
-//    public ResponseDto<UserResponseDto> findUserName(
-//            @Valid @RequestBody UserRequestDto userRequestDto){
-//        return new ResponseDto<>(userService.findById(userRequestDto));
-//    }
-//
-//    @GetMapping("/secession")
-//    public ResponseDto<Boolean> userSecession(
-//            @Valid @RequestBody UserRequestDto userRequestDto){
-//        return new ResponseDto<>(userService.userSecession(userRequestDto));
-//    }
+    @PostMapping("/kakao")
+    public ResponseDto<LoginResponseDto> byKakao(
+            @RequestParam("code") String code) {
+        return new ResponseDto<>(userService.socialSignIn(code, UserLoginMethod.KAKAO));
+    }
 
+    @PostMapping("/naver")
+    public ResponseDto<LoginResponseDto> byNaver(
+            @RequestParam("code") String code) {
+        return new ResponseDto<>(userService.socialSignIn(code, UserLoginMethod.NAVER));
+    }
 
+    @PostMapping("/google")
+    public ResponseDto<LoginResponseDto> byGoogle(
+            @RequestParam("code") String code) {
+        return new ResponseDto<>(userService.socialSignIn(code, UserLoginMethod.GOOGLE));
+    }
+
+    @PostMapping("/signout")
+    public ResponseDto<Boolean> signOut(
+            @LoginUser User user
+    ){
+        return new ResponseDto<>(userService.signOut(user));
+    }
+
+    @PostMapping("/reissue")
+    public ResponseDto<Map<String, String>> reissueUser(HttpServletRequest request) {
+        return new ResponseDto<>(userService.reissueToken(request, Role.USER));
+    }
+
+    @PatchMapping("/resign")
+    public ResponseDto<Boolean> resignUser(
+            @LoginUser User user
+    ){
+        return new ResponseDto<>(userService.resignUser(user));
+    }
 
 }

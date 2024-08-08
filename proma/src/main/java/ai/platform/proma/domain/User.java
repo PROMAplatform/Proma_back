@@ -67,16 +67,38 @@ public class User {
     private List<Block> blocks;
 
     @Builder
-    public User(Long id, String userLoginId, String userName, UserLoginMethod userLoginMethod, LocalDate createAt, Boolean userOngoing) {
-        this.id = id;
+    public User(String userLoginId, String userName, UserLoginMethod userLoginMethod, String socialId) {
         this.userLoginId = userLoginId;
         this.userName = userName;
         this.userLoginMethod = userLoginMethod;
-        this.createAt = createAt;
-        this.userOngoing = userOngoing;
+        this.createAt = LocalDate.now();
+        this.userOngoing = true;
+        this.isLogin = true;
+        this.refreshToken = null;
+        this.socialId = socialId;
+        this.role = Role.USER;
     }
 
-    public void secession(){
+    public static User toEntity(String userLoginId, String userName, UserLoginMethod userLoginMethod, String socialId){
+        return User.builder()
+                .userLoginId(userLoginId)
+                .userName(userName)
+                .userLoginMethod(userLoginMethod)
+                .socialId(socialId)
+                .build();
+    }
+
+    public void signIn(String refreshToken) {
+        this.refreshToken = refreshToken;
+        this.isLogin = true;
+    }
+
+    public void signOut(){
+        this.refreshToken = null;
+        this.isLogin = false;
+    }
+
+    public void resign(){
         this.userOngoing = false;
     }
 
