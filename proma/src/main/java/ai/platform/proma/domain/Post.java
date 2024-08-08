@@ -40,7 +40,7 @@ public class Post {
 
 // --------------------------------------------------------------------
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinColumn(name = "prompt_id", nullable = false)
     private Prompt prompt;
 

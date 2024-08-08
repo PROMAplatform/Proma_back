@@ -86,9 +86,10 @@ public class PostService {
 
         Prompt prompt1 = promptRepository.save(Prompt.distributePrompt(prompt, user));
 
-        postRepository.save(postDistributeRequestDto.toEntity(prompt, postDistributeRequestDto));
+        postRepository.save(postDistributeRequestDto.toEntity(prompt1, postDistributeRequestDto));
 
         List<PromptBlock> promptBlocks = promptBlockRepository.findByPrompt(prompt);
+
         List<PromptBlock> newPromptBlocks = promptBlocks.stream()
                 .map(promptBlock -> PromptBlock.scrapPromptBlock(prompt1, promptBlock.getBlock()))
                 .toList();
