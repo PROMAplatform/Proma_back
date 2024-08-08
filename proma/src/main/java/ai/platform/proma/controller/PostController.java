@@ -72,7 +72,6 @@ public class PostController {
             @Valid @RequestParam(value = "size", defaultValue = "9") int size
     ) {
 
-//        Pageable pageable = PageRequest.of(page, size);
         return new ResponseDto<>(postService.getPostsPreview(searchKeyword, category, page, size, likeOrder));
     }
 
@@ -105,7 +104,6 @@ public class PostController {
             @Valid @RequestParam(value = "page", defaultValue = "0") int page,
             @Valid @RequestParam(value = "size", defaultValue = "9") int size
     ){
-        Pageable pageable = PageRequest.of(page, size);
         return new ResponseDto<>(postService.getPostsByUserLikes(userId, category, page, size, likeOrder));
     }
 

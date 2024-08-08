@@ -30,39 +30,26 @@ public class PostService {
     private final PromptBlockRepository promptBlockRepository;
     private final BlockRepository blockRepository;
 
-
-    private User findUserById(Long userId) {
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
-    }
-
-    private Post findPostById(Long postId) {
-        return postRepository.findById(postId)
-                .orElseThrow(() -> new ApiException(ErrorDefine.POST_NOT_FOUND));
-    }
-
-    private Pageable createPageable(int page, int size, String likeOrder) {
-        if ("desc".equals(likeOrder)) {
-            return PageRequest.of(page, size);
+    private Sort getSortOrder(String likeOrder) {
+        if ("desc".equalsIgnoreCase(likeOrder)) {
+            return Sort.by(
+                    new Sort.Order(Sort.Direction.DESC, "likeCount"),
+                    new Sort.Order(Sort.Direction.DESC, "createAt"));
         } else {
-            Sort sort = Sort.by(Sort.Order.desc("createAt"));
-            return PageRequest.of(page, size, sort);
+            return Sort.by(
+                    new Sort.Order(Sort.Direction.DESC, "createAt"),
+                    new Sort.Order(Sort.Direction.DESC, "likeCount"));
         }
     }
 
-    private List<PostResponseDto> createPostResponseDtos(Page<Post> posts, User user) {
-        return posts.stream()
-                .map(post -> new PostResponseDto(post, likeRepository.countByPostId(post.getId()), likeRepository.existsByPostAndUser(post, user)))
-                .collect(Collectors.toList());
+    private Map<String, Object> createResultMap(Page<SortInfo> sortInfoPage, User user) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("posts", sortInfoPage.getContent().stream()
+                .map(sortInfo -> new PostResponseDto(sortInfo.getPost(), sortInfo.getLikeCount(), likeRepository.existsByPostAndUser(sortInfo.getPost(), user)))
+                .collect(Collectors.toList()));
+        result.put("totalPages", sortInfoPage.getTotalPages());
+        return result;
     }
-
-    private Map<String, Object> createResponse(Page<Post> posts, List<PostResponseDto> postResponseDtos) {
-        Map<String, Object> response = new HashMap<>();
-        response.put("selectPrompt", postResponseDtos);
-        response.put("pageInfo", new PageInfo(posts));
-        return response;
-    }
-
     public Map<String, List<PromptTitleList>> promptTitleList(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
@@ -113,56 +100,63 @@ public class PostService {
 
     public Map<String, Object> getPosts(Long userId, String searchKeyword, String category, int page, int size, String likeOrder) {
 
-        User user = findUserById(userId);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+        Sort sort = getSortOrder(likeOrder);
 
-        Pageable pageable = createPageable(page, size, likeOrder);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<SortInfo> sortInfoPage = postRepository.findAllBySearchKeywordAndCategory(searchKeyword, PromptCategory.fromValue(category), pageable);
 
-        Page<Post> posts = postRepository.findAllBySearchKeywordAndCategory(searchKeyword, PromptCategory.fromValue(category), pageable);
-
-        List<PostResponseDto> postResponseDtos = createPostResponseDtos(posts, user);
-
-        return createResponse(posts, postResponseDtos);
+        return createResultMap(sortInfoPage, user);
     }
 
 
     public Map<String, Object> getPostsPreview(String searchKeyword, String category,int page, int size, String likeOrder) {
 
-        Pageable pageable = createPageable(page, size, likeOrder);
+        Sort sort = getSortOrder(likeOrder);
 
-        Page<Post> posts = postRepository.findAllBySearchKeywordAndCategory(searchKeyword, PromptCategory.fromValue(category), pageable);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<SortInfo> sortInfoPage = postRepository.findAllBySearchKeywordAndCategory(searchKeyword, PromptCategory.fromValue(category), pageable);
 
-        List<PostResponseDto> postResponseDtos = posts.stream()
-                .map(post -> new PostResponseDto(post, likeRepository.countByPostId(post.getId()), likeRepository.existsByPost(post)))
-                .collect(Collectors.toList());
+        Map<String, Object> result = new HashMap<>();
 
-        return createResponse(posts, postResponseDtos);
+        result.put("posts", sortInfoPage.getContent().stream()
+                .map(sortInfo -> new PostResponseDto(sortInfo.getPost(), sortInfo.getLikeCount(), false))
+                .collect(Collectors.toList()));
+        result.put("totalPages", sortInfoPage.getTotalPages());
+
+        return result;
     }
 
     public Map<String, Object> getPostsByUserLikes(Long userId, String category, int page, int size, String likeOrder) {
 
-        User user = findUserById(userId);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
 
         List<Long> postIds = likeRepository.findPostIdsByUserId(userId);
 
-        Pageable pageable = createPageable(page, size, likeOrder);
+        Sort sort = getSortOrder(likeOrder);
 
-        Page<Post> posts = postRepository.findAllByPostIdInAndPostCategory(PromptCategory.fromValue(category), postIds, pageable);
+        Pageable pageable = PageRequest.of(page, size, sort);
 
-        List<PostResponseDto> postResponseDtos = createPostResponseDtos(posts, user);
+        Page<SortInfo> sortInfoPage = postRepository.findAllByPostIdInAndPostCategory(PromptCategory.fromValue(category), postIds, pageable);
 
-        return createResponse(posts, postResponseDtos);
+        return createResultMap(sortInfoPage, user);
+
     }
     public Map<String, Object> getPostsByUserDistribute(Long userId, String category, int page, int size, String likeOrder) {
 
-        User user = findUserById(userId);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
 
-        Pageable pageable = createPageable(page, size, likeOrder);
+        Sort sort = getSortOrder(likeOrder);
 
-        Page<Post> posts = postRepository.findAllByPromptUserIdAndPostCategoryAndIsScrapShared(userId, PromptCategory.fromValue(category), pageable);
+        Pageable pageable = PageRequest.of(page, size, sort);
 
-        List<PostResponseDto> postResponseDtos = createPostResponseDtos(posts, user);
+        Page<SortInfo> sortInfoPage = postRepository.findAllByUserIdAndPostCategoryAndIsScrapShared(userId, PromptCategory.fromValue(category), pageable);
 
-        return createResponse(posts, postResponseDtos);
+        return createResultMap(sortInfoPage, user);
+
     }
 
     public Boolean scrapPrompt(Long postId, Long userId) {
