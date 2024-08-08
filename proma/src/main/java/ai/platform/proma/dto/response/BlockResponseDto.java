@@ -10,13 +10,13 @@ import lombok.ToString;
 public class BlockResponseDto {
 
     private final Long blockId;
-    private final String blockTitle;
+    private final String blockValue;
     private final String blockCategory;
 
 
     public BlockResponseDto(Block block) {
         this.blockId = block.getId();
-        this.blockTitle = block.getBlockValue();
+        this.blockValue = block.getBlockValue();
         this.blockCategory = block.getBlockCategory().toString();
     }
 }
