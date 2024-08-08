@@ -82,7 +82,7 @@ public class PostController {
         return new ResponseDto<>(postService.scrapPrompt(postId, userId));
     }
 
-    @GetMapping("/detail/{postId}")
+    @GetMapping("/block/{postId}")
     public ResponseDto<Map<String, Object>> getPromptBlocksByPostId(
             @Valid @PathVariable("postId") Long postId
     ) {
