@@ -43,7 +43,7 @@ public class UserController {
         return new ResponseDto<>(userService.socialSignIn(code, UserLoginMethod.GOOGLE));
     }
 
-    @PostMapping("/signout")
+    @PatchMapping("/signout")
     public ResponseDto<Boolean> signOut(
             @LoginUser User user
     ){
