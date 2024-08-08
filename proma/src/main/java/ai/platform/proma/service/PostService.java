@@ -123,7 +123,7 @@ public class PostService {
         result.put("selectPrompt", sortInfoPage.getContent().stream()
                 .map(sortInfo -> PostResponseDto.of(sortInfo, false))
                 .collect(Collectors.toList()));
-        result.put("pageInfo", sortInfoPage);
+        result.put("pageInfo", new PageInfo(sortInfoPage));
 
         return result;
     }
