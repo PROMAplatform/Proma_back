@@ -14,6 +14,7 @@ public enum ErrorDefine {
     INVALID_PROMPT_METHOD("4002", HttpStatus.BAD_REQUEST, "Bad Request: Invalid PromptMethod"),
     INVALID_BLOCK_CATEGORY("4003", HttpStatus.BAD_REQUEST, "Bad Request: Invalid BlockCategory"),
     INVALID_BLOCK_METHOD("4004", HttpStatus.BAD_REQUEST, "Bad Request: Invalid BlockMethod"),
+    INVALID_LIKE_ORDER("4005", HttpStatus.BAD_REQUEST,"Bad Request: Invalid like parameter"),
     // Not Found
     USER_NOT_FOUND("4040", HttpStatus.NOT_FOUND, "Not Found: User Not Found"),
     COMMUNICATION_METHOD_NOT_FOUND("4041", HttpStatus.NOT_FOUND, "Not Found: Communication Method Not Found"),

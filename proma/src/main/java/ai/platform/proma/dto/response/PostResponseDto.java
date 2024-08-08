@@ -50,5 +50,14 @@ public class PostResponseDto {
         this.likeState = likeState;
     }
 
+    public static PostResponseDto of(SortInfo sortInfo, Boolean likeState) {
+        return PostResponseDto.builder()
+                .post(sortInfo.getPost())
+                .likeCount(sortInfo.getLikeCount())
+                .likeState(likeState)
+                .build();
+    }
+
+
 
 }
