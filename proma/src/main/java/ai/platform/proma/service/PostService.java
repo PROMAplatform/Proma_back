@@ -31,23 +31,23 @@ public class PostService {
     private final BlockRepository blockRepository;
 
     private Sort getSortOrder(String likeOrder) {
-        if ("desc".equalsIgnoreCase(likeOrder)) {
-            return Sort.by(
+        return switch (likeOrder != null ? likeOrder.toLowerCase() : "") {
+            case "desc" -> Sort.by(
                     new Sort.Order(Sort.Direction.DESC, "likeCount"),
                     new Sort.Order(Sort.Direction.DESC, "createAt"));
-        } else {
-            return Sort.by(
+            case "" -> Sort.by(
                     new Sort.Order(Sort.Direction.DESC, "createAt"),
                     new Sort.Order(Sort.Direction.DESC, "likeCount"));
-        }
+            default -> throw new ApiException(ErrorDefine.INVALID_LIKE_ORDER);
+        };
     }
 
     private Map<String, Object> createResultMap(Page<SortInfo> sortInfoPage, User user) {
         Map<String, Object> result = new HashMap<>();
-        result.put("posts", sortInfoPage.getContent().stream()
-                .map(sortInfo -> new PostResponseDto(sortInfo.getPost(), sortInfo.getLikeCount(), likeRepository.existsByPostAndUser(sortInfo.getPost(), user)))
+        result.put("selectPrompt", sortInfoPage.getContent().stream()
+                .map(sortInfo -> PostResponseDto.of(sortInfo, likeRepository.existsByPostAndUser(sortInfo.getPost(), user)))
                 .collect(Collectors.toList()));
-        result.put("totalPages", sortInfoPage.getTotalPages());
+        result.put("pageInfo", new PageInfo(sortInfoPage));
         return result;
     }
     public Map<String, List<PromptTitleList>> promptTitleList(Long userId) {
@@ -102,9 +102,9 @@ public class PostService {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
-        Sort sort = getSortOrder(likeOrder);
 
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = PageRequest.of(page, size, getSortOrder(likeOrder));
+
         Page<SortInfo> sortInfoPage = postRepository.findAllBySearchKeywordAndCategory(searchKeyword, PromptCategory.fromValue(category), pageable);
 
         return createResultMap(sortInfoPage, user);
@@ -120,10 +120,10 @@ public class PostService {
 
         Map<String, Object> result = new HashMap<>();
 
-        result.put("posts", sortInfoPage.getContent().stream()
+        result.put("selectPrompt", sortInfoPage.getContent().stream()
                 .map(sortInfo -> new PostResponseDto(sortInfo.getPost(), sortInfo.getLikeCount(), false))
                 .collect(Collectors.toList()));
-        result.put("totalPages", sortInfoPage.getTotalPages());
+        result.put("pageInfo", sortInfoPage);
 
         return result;
     }
