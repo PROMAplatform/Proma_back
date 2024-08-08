@@ -121,7 +121,7 @@ public class PostService {
         Map<String, Object> result = new HashMap<>();
 
         result.put("selectPrompt", sortInfoPage.getContent().stream()
-                .map(sortInfo -> new PostResponseDto(sortInfo.getPost(), sortInfo.getLikeCount(), false))
+                .map(sortInfo -> PostResponseDto.of(sortInfo, false))
                 .collect(Collectors.toList()));
         result.put("pageInfo", sortInfoPage);
 
