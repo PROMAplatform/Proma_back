@@ -30,11 +30,6 @@ public class UserService {
     private final OauthUtil oauthUtil;
     private final JwtProvider jwtProvider;
 
-    public User getUserBySocialId(String socialId) {
-        return userRepository.findBySocialIdAndRefreshTokenIsNotNullAndIsLoginIsTrue(socialId)
-                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
-    }
-
     public LoginResponseDto socialSignIn(String authCode, UserLoginMethod userLoginMethod) {
         String socialId = null;
         String socialName = null;

@@ -4,9 +4,10 @@ import ai.platform.proma.security.JwtToken;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@AllArgsConstructor
+@NoArgsConstructor
 public class LoginResponseDto {
     private String userName;
     private String accessToken;
