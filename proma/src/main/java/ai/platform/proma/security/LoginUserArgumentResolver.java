@@ -1,6 +1,7 @@
 package ai.platform.proma.security;
 
 import ai.platform.proma.domain.User;
+import ai.platform.proma.service.AcountsService;
 import ai.platform.proma.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
@@ -17,7 +18,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Transactional
 public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private final UserService userService;
+    private final AcountsService acountsService;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -35,7 +36,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
         String socialId = ((CustomUserDetail) userDetails).getUsername();
 
         if (parameter.hasParameterAnnotation(LoginUser.class)) {
-            return userService.getUserBySocialId(socialId);
+            return acountsService.getUserBySocialId(socialId);
         }
         return null;
     }
