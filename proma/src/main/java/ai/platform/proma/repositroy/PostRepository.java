@@ -21,7 +21,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "FROM Post p " +
             "LEFT JOIN Like l ON p.id = l.post.id " +
             "WHERE (:searchKeyword IS NULL OR p.postTitle LIKE %:searchKeyword% OR p.postDescription LIKE %:searchKeyword%) " +
-            "AND (:category IS NULL OR p.postCategory = :category)")
+            "AND (:category IS NULL OR p.postCategory = :category)"+
+            "GROUP BY p")
     Page<SortInfo> findAllBySearchKeywordAndCategory( // 게시글 미리보기 로그인 x
             @Param("searchKeyword") String searchKeyword,
             @Param("category") PromptCategory category,
