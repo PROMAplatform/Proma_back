@@ -31,8 +31,8 @@ public class User {
     @Column(nullable = false)
     private String socialId;
 
-    @Column
     @Lob
+    @Column(columnDefinition = "TEXT")
     private String refreshToken;
 
     @Column(nullable = false)
