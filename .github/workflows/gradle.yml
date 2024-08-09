@@ -1,10 +1,3 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
-
 name: Java CI with Gradle
 
 on:
@@ -20,7 +13,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -36,22 +29,40 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-            
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
 
+      - name: Create .env file
+        run: |
+          tee .env <<EOF
+          DB_URL=${{ secrets.DB_URL }}
+          DB_USERNAME=${{ secrets.DB_USERNAME }}
+          DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+          GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
+          GOOGLE_REDIRECT_URI=${{ secrets.GOOGLE_REDIRECT_URI }}
+          NAVER_CLIENT_ID=${{ secrets.NAVER_CLIENT_ID }}
+          NAVER_CLIENT_SECRET=${{ secrets.NAVER_CLIENT_SECRET }}
+          NAVER_REDIRECT_URI=${{ secrets.NAVER_REDIRECT_URI }}
+          KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }}
+          KAKAO_CLIENT_SECRET=${{ secrets.KAKAO_CLIENT_SECRET }}
+          KAKAO_REDIRECT_URI=${{ secrets.KAKAO_REDIRECT_URI }}
+          JWT_SECRET=${{ secrets.JWT_SECRET }}
+          EOF
+
       - name: Create application.yml
         run: |
-          mkdir -p proma/src/main/resources  # 필요한 디렉토리 생성
+          mkdir -p proma/src/main/resources
           tee proma/src/main/resources/application.yml <<EOF
           server:
             port: 8080
           spring:
             datasource:
               driver-class-name: com.mysql.cj.jdbc.Driver
-              url: ${{ secrets.DB_URL }}
-              username: ${{ secrets.DB_USERNAME }}
-              password: ${{ secrets.DB_PASSWORD }}
+              url: ${DB_URL}
+              username: ${DB_USERNAME}
+              password: ${DB_PASSWORD}
               hikari:
                 pool-name: jpa-hikari-pool
                 maximum-pool-size: 5
@@ -77,18 +88,18 @@ jobs:
                 client:
                   registration:
                     google:
-                      client-id: ${{ secrets.GOOGLE_CLIENT_ID }}
-                      client-secret: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-                      redirect-uri: ${{ secrets.GOOGLE_REDIRECT_URI }}
+                      client-id: ${GOOGLE_CLIENT_ID}
+                      client-secret: ${GOOGLE_CLIENT_SECRET}
+                      redirect-uri: ${GOOGLE_REDIRECT_URI}
                       authorization-grant-type: authorization_code
                       scope:
                         - profile
                         - email
                         - openid
                     naver:
-                      client-id: ${{ secrets.NAVER_CLIENT_ID }}
-                      client-secret: ${{ secrets.NAVER_CLIENT_SECRET }}
-                      redirect-uri: ${{ secrets.NAVER_REDIRECT_URI }}
+                      client-id: ${NAVER_CLIENT_ID}
+                      client-secret: ${NAVER_CLIENT_SECRET}
+                      redirect-uri: ${NAVER_REDIRECT_URI}
                       scope:
                         - name
                         - email
@@ -97,9 +108,9 @@ jobs:
                       client-name: PROMA
                       provider: naver
                     kakao:
-                      client-id: ${{ secrets.KAKAO_CLIENT_ID }}
-                      client-secret: ${{ secrets.KAKAO_CLIENT_SECRET }}
-                      redirect-uri: ${{ secrets.KAKAO_REDIRECT_URI }}
+                      client-id: ${KAKAO_CLIENT_ID}
+                      client-secret: ${KAKAO_CLIENT_SECRET}
+                      redirect-uri: ${KAKAO_REDIRECT_URI}
                       scope: profile_nickname, profile_image, account_email
                       authorization-grant-type: authorization_code
                       client-name: PROMA
@@ -119,38 +130,48 @@ jobs:
                     token-uri: "https://kauth.kakao.com/oauth/token"
                     user-info-uri: "https://kapi.kakao.com/v2/user/me"
           jwt:
-            secret: ${{ secrets.JWT_SECRET }}
+            secret: ${JWT_SECRET}
             accessExpiredMs: 2592000000
             refreshExpiredMs: 12960000000
           EOF
+        env:
+          DB_URL: ${{ secrets.DB_URL }}
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          GOOGLE_REDIRECT_URI: ${{ secrets.GOOGLE_REDIRECT_URI }}
+          NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
+          NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
+          NAVER_REDIRECT_URI: ${{ secrets.NAVER_REDIRECT_URI }}
+          KAKAO_CLIENT_ID: ${{ secrets.KAKAO_CLIENT_ID }}
+          KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
+          KAKAO_REDIRECT_URI: ${{ secrets.KAKAO_REDIRECT_URI }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
       - name: Grant Execute Permission For Gradlew & Build gradle
         run: |
           cd proma
-          gradle wrapper 
+          gradle wrapper
           chmod +x gradlew
-          ./gradlew build --warning-mode all # clean 빼기
+          ./gradlew build
           
       - name: Set JAR_FILE environment variable
         run: | 
-          mkdir -p proma/build/libs  # build/libs 디렉토리 생성
+          mkdir -p proma/build/libs
           JAR_FILE=$(ls proma/build/libs/*.jar | head -n 1)
           echo "JAR_FILE=$JAR_FILE" >> $GITHUB_ENV
-          
+
       - name: Create Dockerfile
         run: |
           tee Dockerfile <<EOF
           FROM openjdk:17-jdk
-          # Jar 파일의 위치
           ARG JAR_FILE=proma/build/libs/proma-0.0.1-SNAPSHOT.jar
-          # app.jar는 경우에 따라 이름 변경
-          COPY ${JAR_FILE} app.jar 
-          # 생략 가능 - 해당 컨테이너는 8080 port 를 사용한다는 의미.
+          COPY ${JAR_FILE} app.jar
           EXPOSE 8080
-          # docker run 시 실행할 필수 명령어
           ENTRYPOINT ["java", "-jar", "/app.jar"]
           EOF
-          
+
       - name: docker image build
         run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/proma .
 
@@ -170,7 +191,6 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script: |
-            # 실행 중인 proma 컨테이너가 있는지 확인
             if [ $(sudo docker ps -q -f name=proma) ]; then
               echo "Stopping and removing existing proma container"
               sudo docker stop proma
