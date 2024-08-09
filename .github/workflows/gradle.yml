@@ -5,7 +5,6 @@
 # This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
 
-
 name: Java CI with Gradle
 
 on:
@@ -21,6 +20,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -49,9 +49,9 @@ jobs:
           spring:
             datasource:
               driver-class-name: com.mysql.cj.jdbc.Driver
-              url: ${DB_URL}
-              username: ${DB_USERNAME}
-              password: ${DB_PASSWORD}
+              url: ${{ secrets.DB_URL }}
+              username: ${{ secrets.DB_USERNAME }}
+              password: ${{ secrets.DB_PASSWORD }}
               hikari:
                 pool-name: jpa-hikari-pool
                 maximum-pool-size: 5
@@ -77,18 +77,18 @@ jobs:
                 client:
                   registration:
                     google:
-                      client-id: ${GOOGLE_CLIENT_ID}
-                      client-secret: ${GOOGLE_CLIENT_SECRET}
-                      redirect-uri: ${GOOGLE_REDIRECT_URI}
+                      client-id: ${{ secrets.GOOGLE_CLIENT_ID }}
+                      client-secret: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+                      redirect-uri: ${{ secrets.GOOGLE_REDIRECT_URI }}
                       authorization-grant-type: authorization_code
                       scope:
                         - profile
                         - email
                         - openid
                     naver:
-                      client-id: ${NAVER_CLIENT_ID}
-                      client-secret: ${NAVER_CLIENT_SECRET}
-                      redirect-uri: ${NAVER_REDIRECT_URI}
+                      client-id: ${{ secrets.NAVER_CLIENT_ID }}
+                      client-secret: ${{ secrets.NAVER_CLIENT_SECRET }}
+                      redirect-uri: ${{ secrets.NAVER_REDIRECT_URI }}
                       scope:
                         - name
                         - email
@@ -97,9 +97,9 @@ jobs:
                       client-name: PROMA
                       provider: naver
                     kakao:
-                      client-id: ${KAKAO_CLIENT_ID}
-                      client-secret: ${KAKAO_CLIENT_SECRET}
-                      redirect-uri: ${KAKAO_REDIRECT_URI}
+                      client-id: ${{ secrets.KAKAO_CLIENT_ID }}
+                      client-secret: ${{ secrets.KAKAO_CLIENT_SECRET }}
+                      redirect-uri: ${{ secrets.KAKAO_REDIRECT_URI }}
                       scope: profile_nickname, profile_image, account_email
                       authorization-grant-type: authorization_code
                       client-name: PROMA
@@ -119,21 +119,24 @@ jobs:
                     token-uri: "https://kauth.kakao.com/oauth/token"
                     user-info-uri: "https://kapi.kakao.com/v2/user/me"
           jwt:
-            secret: ${JWT_SECRET}
+            secret: ${{ secrets.JWT_SECRET }}
             accessExpiredMs: 2592000000
             refreshExpiredMs: 12960000000
           EOF
+
       - name: Grant Execute Permission For Gradlew & Build gradle
         run: |
           cd proma
           gradle wrapper 
           chmod +x gradlew
           ./gradlew build  # clean 빼기
+          
       - name: Set JAR_FILE environment variable
         run: | 
           mkdir -p proma/build/libs  # build/libs 디렉토리 생성
           JAR_FILE=$(ls proma/build/libs/*.jar | head -n 1)
           echo "JAR_FILE=$JAR_FILE" >> $GITHUB_ENV
+          
       - name: Create Dockerfile
         run: |
           tee Dockerfile <<EOF
@@ -147,6 +150,7 @@ jobs:
           # docker run 시 실행할 필수 명령어
           ENTRYPOINT ["java", "-jar", "/app.jar"]
           EOF
+          
       - name: docker image build
         run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/proma .
 
