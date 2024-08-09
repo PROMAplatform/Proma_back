@@ -23,12 +23,12 @@ public class MessageListResponseDto {
     @Builder
     public MessageListResponseDto(Message message, ChatRoom chatRoom){
         this.messageId = message.getId();
-        this.promptId = message.getPrompt().getId();
+        this.promptId = message.getPrompt() != null? message.getPrompt().getId() : null;
         this.chatRoomId = chatRoom.getId();
         this.messageQuestion = message.getMessageQuestion();
         this.messageAnswer = message.getMessageAnswer();
         this.messageCreateAt = message.getMessageCreateAt();
-        this.messageFile = message.getMessageFile();
+        this.messageFile = message.getMessageFile() != null ? message.getMessageFile() : null;
     }
 
     public static MessageListResponseDto of(Message message, ChatRoom chatRoom){
