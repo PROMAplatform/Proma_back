@@ -129,7 +129,7 @@ jobs:
           cd proma
           gradle wrapper 
           chmod +x gradlew
-          ./gradlew build  # clean 빼기
+          ./gradlew build --warning-mode all # clean 빼기
           
       - name: Set JAR_FILE environment variable
         run: | 
