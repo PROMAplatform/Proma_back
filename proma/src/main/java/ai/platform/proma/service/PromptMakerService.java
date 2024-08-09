@@ -28,9 +28,7 @@ public class PromptMakerService {
     private final CommunicationMethodRepository communicationMethodRepository;
     private final PromptBlockRepository promptBlockRepository;
 
-    public Boolean makeBlock(BlockSaveRequestDto blockSaveRequestDto, Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+    public Boolean makeBlock(BlockSaveRequestDto blockSaveRequestDto, User user) {
 
         PromptMethods promptMethods = communicationMethodRepository.findByPromptMethod(PromptMethod.fromValue(blockSaveRequestDto.getPromptMethod()))
                 .orElseThrow(() -> new ApiException(ErrorDefine.COMMUNICATION_METHOD_NOT_FOUND));
@@ -56,9 +54,7 @@ public class PromptMakerService {
     }
 
 
-    public Boolean makePrompt(PromptSaveRequestDto promptSaveRequestDto, Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+    public Boolean makePrompt(PromptSaveRequestDto promptSaveRequestDto, User user) {
 
         PromptMethods promptMethods = communicationMethodRepository.findByPromptMethod(PromptMethod.fromValue(promptSaveRequestDto.getPromptMethod()))
                 .orElseThrow(() -> new ApiException(ErrorDefine.COMMUNICATION_METHOD_NOT_FOUND));
