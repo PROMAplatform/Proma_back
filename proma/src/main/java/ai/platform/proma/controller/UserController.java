@@ -20,7 +20,7 @@ import java.util.Map;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/oauth/user/")
+@RequestMapping("/oauth/user")
 public class UserController {
 
     private final UserService userService;
