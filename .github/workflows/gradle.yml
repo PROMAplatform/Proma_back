@@ -54,14 +54,14 @@ jobs:
       - name: Create application.yml
         run: |
           mkdir -p proma/src/main/resources
-          echo "${{ secrets.APPLICATION_YML }}" | base64 --decode > proma/src/main/resources/application.yml
+          echo "${{ secrets.APPLICATION_PROPERTIES }}" | base64 --decode > proma/src/main/resources/application.properties
 
       - name: Grant Execute Permission For Gradlew & Build gradle
         run: |
           cd proma
           gradle wrapper
           chmod +x gradlew
-          ./gradlew build
+          ./gradlew clean build
           
       - name: Set JAR_FILE environment variable
         run: | 
