@@ -43,7 +43,8 @@ public class SecurityConfig {
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/**").permitAll()
+                        .requestMatchers("/oauth/user/social/**").permitAll()
+                        .requestMatchers("/community/preview").permitAll()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2 // OAuth2 로그인 설정
                         .loginPage("/oauth2/authorization/messaging-client-oidc")

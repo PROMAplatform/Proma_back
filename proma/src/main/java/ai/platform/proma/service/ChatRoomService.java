@@ -26,9 +26,7 @@ public class ChatRoomService {
     private final BlockRepository blockRepository;
     private final PromptBlockRepository promptBlockRepository;
 
-    public Map<String, List<MessageListResponseDto>> enterChatRoom(Long chatRoomId, Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+    public Map<String, List<MessageListResponseDto>> enterChatRoom(Long chatRoomId, User user) {
 
         ChatRoom chatRoom = chatRoomRepository.findByIdAndUser(chatRoomId, user)
                 .orElseThrow(() -> new ApiException(ErrorDefine.CHAT_ROOM_NOT_FOUND));
@@ -46,10 +44,7 @@ public class ChatRoomService {
         return response;
     }
 
-    public boolean updatePromptBlock(List<ListPromptAtom> listPromptAtoms, Long promptId, Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
-
+    public boolean updatePromptBlock(List<ListPromptAtom> listPromptAtoms, Long promptId, User user) {
         Prompt prompt = promptRepository.findByIdAndUser(promptId, user)
                 .orElseThrow(() -> new ApiException(ErrorDefine.PROMPT_NOT_FOUND));
 

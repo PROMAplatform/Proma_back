@@ -1,8 +1,10 @@
 package ai.platform.proma.controller;
 
+import ai.platform.proma.domain.User;
 import ai.platform.proma.dto.request.ListPromptAtom;
 import ai.platform.proma.dto.response.MessageListResponseDto;
 import ai.platform.proma.dto.response.ResponseDto;
+import ai.platform.proma.security.LoginUser;
 import ai.platform.proma.service.ChatRoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -19,17 +21,17 @@ public class ChatRoomController {
     @GetMapping("/{chatRoomId}")
     public ResponseDto<Map<String, List<MessageListResponseDto>>> enterChatRoom(
             @PathVariable("chatRoomId") Long chatRoomId,
-            @RequestParam("userId") Long userId
+            @LoginUser User user
     ) {
-        return new ResponseDto<>(chatRoomService.enterChatRoom(chatRoomId, userId));
+        return new ResponseDto<>(chatRoomService.enterChatRoom(chatRoomId, user));
     }
 
     @PatchMapping("/prompt/block/{promptId}")
     public ResponseDto<Boolean> blockPrompt(
             @PathVariable("promptId") Long promptId,
-            @RequestParam("userId") Long userId,
+            @LoginUser User user,
             @RequestBody List<ListPromptAtom> listPromptAtoms
             ) {
-        return new ResponseDto<>(chatRoomService.updatePromptBlock(listPromptAtoms, promptId, userId));
+        return new ResponseDto<>(chatRoomService.updatePromptBlock(listPromptAtoms, promptId, user));
     }
 }
