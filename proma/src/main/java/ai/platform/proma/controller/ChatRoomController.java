@@ -16,7 +16,7 @@ import java.util.Map;
 public class ChatRoomController {
     private final ChatRoomService chatRoomService;
 
-    @GetMapping("/room/{chatRoomId}")
+    @GetMapping("/{chatRoomId}")
     public ResponseDto<Map<String, List<MessageListResponseDto>>> enterChatRoom(
             @PathVariable("chatRoomId") Long chatRoomId,
             @RequestParam("userId") Long userId

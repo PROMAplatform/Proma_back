@@ -2,12 +2,14 @@ package ai.platform.proma.controller;
 
 
 import ai.platform.proma.domain.PromptMethods;
+import ai.platform.proma.domain.User;
 import ai.platform.proma.domain.enums.BlockCategory;
 import ai.platform.proma.domain.enums.PromptMethod;
 import ai.platform.proma.dto.request.BlockSaveRequestDto;
 import ai.platform.proma.dto.request.PromptSaveRequestDto;
 import ai.platform.proma.dto.response.ResponseDto;
 import ai.platform.proma.dto.response.SelectBlockDto;
+import ai.platform.proma.security.LoginUser;
 import ai.platform.proma.service.PromptMakerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,10 +35,10 @@ public class PromptMakerController {
 
     @GetMapping("/block")
     public ResponseDto<Map<String, List<SelectBlockDto>>> searchBlock(
-         @Valid @RequestParam("userId") Long userId,
-         @Valid @RequestParam("promptMethod") String promptMethod
+            @LoginUser User user,
+            @Valid @RequestParam("promptMethod") String promptMethod
     ) {
-        return new ResponseDto<>(promptMakerService.searchBlock(userId, promptMethod));
+        return new ResponseDto<>(promptMakerService.searchBlock(user, promptMethod));
     }
 
     @PostMapping("/save")
