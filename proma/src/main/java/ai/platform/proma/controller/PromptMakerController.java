@@ -28,9 +28,9 @@ public class PromptMakerController {
     @PostMapping("/block/save")
     public ResponseDto<Boolean> makeBlock(
             @Valid @RequestBody BlockSaveRequestDto blockSaveRequestDto,
-            @Valid @RequestParam("userId") Long userId
-            ) {
-        return new ResponseDto<>(promptMakerService.makeBlock(blockSaveRequestDto, userId));
+            @LoginUser User user
+    ) {
+        return new ResponseDto<>(promptMakerService.makeBlock(blockSaveRequestDto, user));
     }
 
     @GetMapping("/block")
@@ -44,8 +44,8 @@ public class PromptMakerController {
     @PostMapping("/save")
     public ResponseDto<Boolean> makePrompt(
         @Valid @RequestBody PromptSaveRequestDto promptSaveRequestDto,
-        @Valid @RequestParam("userId") Long userId
+        @LoginUser User user
     ) {
-        return new ResponseDto<>(promptMakerService.makePrompt(promptSaveRequestDto, userId));
+        return new ResponseDto<>(promptMakerService.makePrompt(promptSaveRequestDto, user));
     }
 }
