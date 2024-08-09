@@ -20,24 +20,24 @@ import java.util.Map;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/oauth/user")
+@RequestMapping("/oauth/user/")
 public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/kakao")
+    @PostMapping("/social/kakao")
     public ResponseDto<LoginResponseDto> byKakao(
             @RequestParam("code") String code) {
         return new ResponseDto<>(userService.socialSignIn(code, UserLoginMethod.KAKAO));
     }
 
-    @PostMapping("/naver")
+    @PostMapping("/social/naver")
     public ResponseDto<LoginResponseDto> byNaver(
             @RequestParam("code") String code) {
         return new ResponseDto<>(userService.socialSignIn(code, UserLoginMethod.NAVER));
     }
 
-    @PostMapping("/google")
+    @PostMapping("/social/google")
     public ResponseDto<LoginResponseDto> byGoogle(
             @RequestParam("code") String code) {
         return new ResponseDto<>(userService.socialSignIn(code, UserLoginMethod.GOOGLE));
@@ -50,7 +50,7 @@ public class UserController {
         return new ResponseDto<>(userService.signOut(user));
     }
 
-    @PostMapping("/reissue")
+    @PostMapping("/social/reissue")
     public ResponseDto<Map<String, String>> reissueUser(HttpServletRequest request) {
         return new ResponseDto<>(userService.reissueToken(request, Role.USER));
     }

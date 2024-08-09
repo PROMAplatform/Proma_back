@@ -1,5 +1,6 @@
 package ai.platform.proma.controller;
 
+import ai.platform.proma.domain.User;
 import ai.platform.proma.dto.request.ChatRoomSaveRequestDto;
 import ai.platform.proma.dto.request.UpdateEmojiRequestDto;
 import ai.platform.proma.dto.request.PromptDetailUpdateRequestDto;
@@ -7,6 +8,7 @@ import ai.platform.proma.dto.response.ChatRoomListResponseDto;
 import ai.platform.proma.dto.response.ChatRoomIdResponseDto;
 import ai.platform.proma.dto.response.PromptListResponseDto;
 import ai.platform.proma.dto.response.ResponseDto;
+import ai.platform.proma.security.LoginUser;
 import ai.platform.proma.service.ChatRoomSidebarService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -24,67 +26,66 @@ public class ChatRoomSidebarController {
     @PostMapping("/room/save")
     public ResponseDto<ChatRoomIdResponseDto> saveChatRoom(
         @RequestBody ChatRoomSaveRequestDto chatRoomSaveRequestDto,
-        @RequestParam("userId") Long userId
+        @LoginUser User user
     ) {
-        return new ResponseDto<>(chatRoomSidebarService.saveChatRoom(chatRoomSaveRequestDto, userId));
+        return new ResponseDto<>(chatRoomSidebarService.saveChatRoom(chatRoomSaveRequestDto, user));
     }
 
     @GetMapping("/room/list")
     public ResponseDto<Map<String, List<ChatRoomListResponseDto>>> chatRoomList(
-            @RequestParam("userId") Long userId
+            @LoginUser User user
     ) {
-        return new ResponseDto<>(chatRoomSidebarService.getChatRoomList(userId));
+        return new ResponseDto<>(chatRoomSidebarService.getChatRoomList(user));
     }
 
     @PatchMapping("/room/emoji/{chatRoomId}")
     public ResponseDto<ChatRoomIdResponseDto> updateChatRoomEmoji(
             @PathVariable("chatRoomId") Long chatRoomId,
             @RequestBody UpdateEmojiRequestDto updateEmojiRequestDto,
-            @RequestParam("userId") Long userId
-
+            @LoginUser User user
             ) {
-        return new ResponseDto<>(chatRoomSidebarService.updateChatRoomEmoji(chatRoomId, updateEmojiRequestDto, userId));
+        return new ResponseDto<>(chatRoomSidebarService.updateChatRoomEmoji(chatRoomId, updateEmojiRequestDto, user));
     }
 
     @DeleteMapping("/room/{chatRoomId}")
     public ResponseDto<Boolean> deleteChatRoom(
             @PathVariable("chatRoomId") Long chatRoomId,
-            @RequestParam("userId") Long userId
+            @LoginUser User user
     ) {
-        return new ResponseDto<>(chatRoomSidebarService.deleteChatRoom(chatRoomId, userId));
+        return new ResponseDto<>(chatRoomSidebarService.deleteChatRoom(chatRoomId, user));
     }
 
     @PatchMapping("/prompt/{promptId}")
     public ResponseDto<Boolean> updatePromptDetail(
             @RequestBody PromptDetailUpdateRequestDto promptDetailUpdateRequestDto,
             @PathVariable("promptId") Long promptId,
-            @RequestParam("userId") Long userId
+            @LoginUser User user
     ) {
-        return new ResponseDto<>(chatRoomSidebarService.updatePromptDetail(promptDetailUpdateRequestDto, promptId, userId));
+        return new ResponseDto<>(chatRoomSidebarService.updatePromptDetail(promptDetailUpdateRequestDto, promptId, user));
     }
 
     @DeleteMapping("/prompt/{promptId}")
     public ResponseDto<Boolean> deletePrompt(
             @PathVariable("promptId") Long promptId,
-            @RequestParam("userId") Long userId
+            @LoginUser User user
     ) {
-        return new ResponseDto<>(chatRoomSidebarService.deletePrompt(promptId, userId));
+        return new ResponseDto<>(chatRoomSidebarService.deletePrompt(promptId, user));
     }
 
     @GetMapping("/prompt/list")
     public ResponseDto<Map<String, List<PromptListResponseDto>>> promptList(
-            @RequestParam("userId") Long userId
+            @LoginUser User user
     ) {
-        return new ResponseDto<>(chatRoomSidebarService.getPromptList(userId));
+        return new ResponseDto<>(chatRoomSidebarService.getPromptList(user));
     }
 
     @PatchMapping("/prompt/emoji/{promptId}")
     public ResponseDto<ChatRoomIdResponseDto> updatePromptEmoji(
             @PathVariable("promptId") Long promptId,
             @RequestBody UpdateEmojiRequestDto updateEmojiRequestDto,
-            @RequestParam("userId") Long userId
+            @LoginUser User user
     ) {
-        return new ResponseDto<>(chatRoomSidebarService.updatePromptEmoji(promptId, updateEmojiRequestDto, userId));
+        return new ResponseDto<>(chatRoomSidebarService.updatePromptEmoji(promptId, updateEmojiRequestDto, user));
     }
 
 }

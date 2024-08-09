@@ -28,20 +28,13 @@ public class ChatRoomSidebarService {
     private final UserRepository userRepository;
     private final PromptRepository promptRepository;
 
-    public ChatRoomIdResponseDto saveChatRoom(ChatRoomSaveRequestDto chatRoomSaveRequestDto, Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
-
+    public ChatRoomIdResponseDto saveChatRoom(ChatRoomSaveRequestDto chatRoomSaveRequestDto, User user) {
         ChatRoom chatRoom = chatRoomSaveRequestDto.toEntity(chatRoomSaveRequestDto, user);
         chatRoomRepository.save(chatRoom);
 
         return ChatRoomIdResponseDto.of(chatRoom.getId());
     }
-    public Map<String, List<ChatRoomListResponseDto>> getChatRoomList(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
-
-
+    public Map<String, List<ChatRoomListResponseDto>> getChatRoomList(User user) {
         List<ChatRoom> chatRooms = chatRoomRepository.findByUser(user);
 
         Map<String, List<ChatRoomListResponseDto>> chatRoomMap = new HashMap<>();
@@ -54,9 +47,7 @@ public class ChatRoomSidebarService {
         return chatRoomMap;
     }
 
-    public ChatRoomIdResponseDto updateChatRoomEmoji(Long chatRoomId, UpdateEmojiRequestDto chatRoomUpdateEmojiRequestDto, Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+    public ChatRoomIdResponseDto updateChatRoomEmoji(Long chatRoomId, UpdateEmojiRequestDto chatRoomUpdateEmojiRequestDto, User user) {
         ChatRoom chatRoom = chatRoomRepository.findByIdAndUser(chatRoomId, user)
                 .orElseThrow(() -> new ApiException(ErrorDefine.CHAT_ROOM_NOT_FOUND));
 
@@ -65,9 +56,7 @@ public class ChatRoomSidebarService {
         return ChatRoomIdResponseDto.of(chatRoom.getId());
     }
 
-    public Boolean deleteChatRoom(Long chatRoomId, Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+    public Boolean deleteChatRoom(Long chatRoomId, User user) {
         ChatRoom chatRoom = chatRoomRepository.findByIdAndUser(chatRoomId, user)
                 .orElseThrow(() -> new ApiException(ErrorDefine.CHAT_ROOM_NOT_FOUND));
 
@@ -76,9 +65,7 @@ public class ChatRoomSidebarService {
         return true;
     }
 
-    public Boolean updatePromptDetail(PromptDetailUpdateRequestDto promptDetailUpdateRequestDto, Long promptId, Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+    public Boolean updatePromptDetail(PromptDetailUpdateRequestDto promptDetailUpdateRequestDto, Long promptId, User user) {
         Prompt prompt = promptRepository.findByIdAndUser(promptId,user)
                 .orElseThrow(() -> new ApiException(ErrorDefine.PROMPT_NOT_FOUND));
 
@@ -87,9 +74,7 @@ public class ChatRoomSidebarService {
         return true;
     }
 
-    public Boolean deletePrompt(Long promptId, Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+    public Boolean deletePrompt(Long promptId, User user) {
         Prompt prompt = promptRepository.findByIdAndUser(promptId, user)
                 .orElseThrow(() -> new ApiException(ErrorDefine.PROMPT_NOT_FOUND));
 
@@ -98,11 +83,7 @@ public class ChatRoomSidebarService {
         return true;
     }
 
-    public Map<String, List<PromptListResponseDto>> getPromptList(Long userId) {
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
-
+    public Map<String, List<PromptListResponseDto>> getPromptList(User user) {
         List<Prompt> prompts = promptRepository.findByUserAndScrap(user);
 
         Map<String, List<PromptListResponseDto>> promptMap = new HashMap<>();
@@ -118,9 +99,7 @@ public class ChatRoomSidebarService {
         return promptMap;
     }
 
-    public ChatRoomIdResponseDto updatePromptEmoji(Long promptId, UpdateEmojiRequestDto updateEmojiRequestDto, Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+    public ChatRoomIdResponseDto updatePromptEmoji(Long promptId, UpdateEmojiRequestDto updateEmojiRequestDto, User user) {
         Prompt prompt = promptRepository.findByIdAndUser(promptId, user)
                 .orElseThrow(() -> new ApiException(ErrorDefine.PROMPT_NOT_FOUND));
 
