@@ -60,6 +60,7 @@ public class Block {
                 .blockValue(promptBlock.getBlock().getBlockValue())
                 .blockDescription(promptBlock.getBlock().getBlockDescription())
                 .blockCategory(promptBlock.getBlock().getBlockCategory())
+                .promptMethods(promptBlock.getBlock().getPromptMethods())
                 .user(user)
                 .build();
     }
