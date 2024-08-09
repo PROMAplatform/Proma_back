@@ -40,9 +40,7 @@ public class PromptMakerService {
         return true;
     }
 
-    public Map<String, List<SelectBlockDto>> searchBlock(Long userId, String promptMethod) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+    public Map<String, List<SelectBlockDto>> searchBlock(User user, String promptMethod) {
 
         PromptMethods promptMethods = communicationMethodRepository.findByPromptMethod(PromptMethod.fromValue(promptMethod))
                 .orElseThrow(() -> new ApiException(ErrorDefine.COMMUNICATION_METHOD_NOT_FOUND));
