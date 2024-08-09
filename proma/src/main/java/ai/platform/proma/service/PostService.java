@@ -7,6 +7,7 @@ import ai.platform.proma.dto.response.*;
 import ai.platform.proma.exception.ApiException;
 import ai.platform.proma.exception.ErrorDefine;
 import ai.platform.proma.repositroy.*;
+import ai.platform.proma.security.LoginUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -50,9 +51,7 @@ public class PostService {
         result.put("pageInfo", new PageInfo(sortInfoPage));
         return result;
     }
-    public Map<String, List<PromptTitleList>> promptTitleList(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+    public Map<String, List<PromptTitleList>> promptTitleList(User user) {
 
         List<Prompt> prompts = promptRepository.findByUserAndScrap(user);
 
@@ -65,9 +64,7 @@ public class PostService {
         return response;
     }
 
-    public PromptListResponseDto promptDetail(Long promptId, Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+    public PromptListResponseDto promptDetail(Long promptId, User user) {
 
         Prompt prompt = promptRepository.findByIdAndUser(promptId, user)
                 .orElseThrow(() -> new ApiException(ErrorDefine.PROMPT_NOT_FOUND));
@@ -76,9 +73,7 @@ public class PostService {
                 .map(promptBlock -> SelectBlockDto.of(promptBlock.getBlock()))
                 .collect(Collectors.toList()));
     }
-    public Boolean distributePrompt(Long userId, Long promptId, PostDistributeRequestDto postDistributeRequestDto) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+    public Boolean distributePrompt(User user, Long promptId, PostDistributeRequestDto postDistributeRequestDto) {
 
         Prompt prompt = promptRepository.findById(promptId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.PROMPT_NOT_FOUND));
@@ -99,10 +94,7 @@ public class PostService {
         return true;
     }
 
-    public Map<String, Object> getPosts(Long userId, String searchKeyword, String category, int page, int size, String likeOrder) {
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+    public Map<String, Object> getPosts(User user, String searchKeyword, String category, int page, int size, String likeOrder) {
 
         Pageable pageable = PageRequest.of(page, size, getSortOrder(likeOrder));
 
@@ -129,10 +121,9 @@ public class PostService {
         return result;
     }
 
-    public Map<String, Object> getPostsByUserLikes(Long userId, String category, int page, int size, String likeOrder) {
+    public Map<String, Object> getPostsByUserLikes(User user, String category, int page, int size, String likeOrder) {
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+        Long userId = user.getId();
 
         List<Long> postIds = likeRepository.findPostIdsByUserId(userId);
 
@@ -145,10 +136,9 @@ public class PostService {
         return createResultMap(sortInfoPage, user);
 
     }
-    public Map<String, Object> getPostsByUserDistribute(Long userId, String category, int page, int size, String likeOrder) {
+    public Map<String, Object> getPostsByUserDistribute(User user, String category, int page, int size, String likeOrder) {
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+        Long userId = user.getId();
 
         Sort sort = getSortOrder(likeOrder);
 
@@ -160,12 +150,11 @@ public class PostService {
 
     }
 
-    public Boolean scrapPrompt(Long postId, Long userId) {
+    public Boolean scrapPrompt(Long postId, User user) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.POST_NOT_FOUND));
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+        Long userId = user.getId();
 
         Prompt prompt = Prompt.scrapPost(post, user);
         promptRepository.save(prompt);
@@ -210,12 +199,9 @@ public class PostService {
         return response;
     }
 
-    public Boolean postLike(Long postId, Long userId){
+    public Boolean postLike(Long postId, User user){
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.POST_NOT_FOUND));
-
-        User user = userRepository.findById(userId) // post -> prompt -> userId
-                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
 
         // 좋아요를 눌렀는지 확인
         boolean isLiked = likeRepository.existsByPostAndUser(post, user);
@@ -231,12 +217,11 @@ public class PostService {
             return true; // 좋아요 추가 결과 반환
         }
     }
-    public Boolean updatePost(Long userId, Long postId, PostRequestDto postRequestDto){
+    public Boolean updatePost(User user, Long postId, PostRequestDto postRequestDto){
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.POST_NOT_FOUND));
 
-        userRepository.findById(userId)
-                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+        Long userId = user.getId();
 
         if (!post.getPrompt().getUser().getId().equals(userId)) {
             throw new ApiException(ErrorDefine.UNAUTHORIZED_USER);
@@ -246,11 +231,11 @@ public class PostService {
         return true;
     }
 
-    public Boolean deletePost(Long userId, Long postId){
+    public Boolean deletePost(User user, Long postId){
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.POST_NOT_FOUND));
-        userRepository.findById(userId)
-                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+
+        Long userId = user.getId();
 
         if (!post.getPrompt().getUser().getId().equals(userId)) {
             throw new ApiException(ErrorDefine.UNAUTHORIZED_USER);
