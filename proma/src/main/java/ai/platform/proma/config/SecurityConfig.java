@@ -45,6 +45,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/oauth/user/social/**").permitAll()
                         .requestMatchers("/community/preview").permitAll()
+                        .requestMatchers("/community/block/**").permitAll()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2 // OAuth2 로그인 설정
                         .loginPage("/oauth2/authorization/messaging-client-oidc")
