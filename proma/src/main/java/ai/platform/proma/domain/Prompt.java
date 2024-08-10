@@ -29,7 +29,7 @@ public class Prompt {
     @Column(nullable = false)
     private String promptDescription;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String promptPreview;
 
     @Column(nullable = false)
