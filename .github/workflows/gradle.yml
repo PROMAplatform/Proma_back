@@ -94,7 +94,7 @@ jobs:
           EOF
 
       - name: docker image build
-        run: docker build -t ${{ secrets.DOCKERHUB_USERNAEM }}/proma .
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/proma .
 
       - name: docker login
         uses: docker/login-action@v2
