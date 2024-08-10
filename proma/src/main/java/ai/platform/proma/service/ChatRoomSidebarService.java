@@ -27,6 +27,7 @@ public class ChatRoomSidebarService {
     private final ChatRoomRepository chatRoomRepository;
     private final UserRepository userRepository;
     private final PromptRepository promptRepository;
+    private final MessageRepository messageRepository;
 
     public ChatRoomIdResponseDto saveChatRoom(ChatRoomSaveRequestDto chatRoomSaveRequestDto, User user) {
         ChatRoom chatRoom = chatRoomSaveRequestDto.toEntity(chatRoomSaveRequestDto, user);
@@ -77,6 +78,9 @@ public class ChatRoomSidebarService {
     public Boolean deletePrompt(Long promptId, User user) {
         Prompt prompt = promptRepository.findByIdAndUser(promptId, user)
                 .orElseThrow(() -> new ApiException(ErrorDefine.PROMPT_NOT_FOUND));
+        List<Message> messages = messageRepository.findAllByPromptId(promptId);
+
+        messages.forEach(Message::update);
 
         promptRepository.delete(prompt);
 

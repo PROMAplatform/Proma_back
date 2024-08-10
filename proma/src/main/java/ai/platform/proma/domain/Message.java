@@ -40,5 +40,9 @@ public class Message {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "chatroom_id", nullable = false)
     private ChatRoom chatRoom;
+
+    public void update(){
+        this.prompt = null;
+    }
 }
 
