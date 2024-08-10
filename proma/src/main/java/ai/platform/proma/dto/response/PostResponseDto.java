@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.ToString;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Getter
 @ToString
 public class PostResponseDto {
@@ -19,7 +21,7 @@ public class PostResponseDto {
 
     private final String postDescription;
 
-    private final LocalDate createAt;
+    private final LocalDateTime createAt;
 
     private final String userName;
 

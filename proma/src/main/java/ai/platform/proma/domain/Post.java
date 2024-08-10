@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class Post {
     private String postDescription;
 
     @Column(nullable = false)
-    private LocalDate createAt;
+    private LocalDateTime createAt;
 
     @Column(name = "postCategory",nullable = false)
     @Enumerated(EnumType.STRING)
@@ -51,7 +52,7 @@ public class Post {
     public Post(String postTitle, String postDescription, PromptCategory postCategory, Prompt prompt) {
         this.postTitle = postTitle;
         this.postDescription = postDescription;
-        this.createAt = LocalDate.now();
+        this.createAt = LocalDateTime.now();
         this.postCategory = postCategory;
         this.prompt = prompt;
     }
