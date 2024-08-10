@@ -19,16 +19,16 @@ public class Message {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String messageQuestion;
 
-    @Column(nullable = true)
+    @Column(nullable = true, columnDefinition = "TEXT")
     private String messageFile;
 
     @Column(nullable = false)
     private LocalDate messageCreateAt;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String messageAnswer;
 
     // --------------------------------------------------------------------

@@ -26,10 +26,10 @@ public class Post {
     private Long id;
 
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String postTitle;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String postDescription;
 
     @Column(nullable = false)

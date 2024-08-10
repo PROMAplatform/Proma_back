@@ -22,13 +22,13 @@ public class ChatRoom {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = true)
+    @Column(nullable = true, columnDefinition = "TEXT")
     private String chatRoomTitle;
 
     @Column(nullable = false)
     private LocalDate createAt;
 
-    @Column(nullable = true)
+    @Column(nullable = true, columnDefinition = "TEXT")
     private String emoji;
 
 // --------------------------------------------------------------------
