@@ -23,16 +23,16 @@ public class Prompt {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String promptTitle;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String promptDescription;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String promptPreview;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String emoji;
 
     @Column(name = "prompt_category",nullable = false)
