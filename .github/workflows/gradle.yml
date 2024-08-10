@@ -22,7 +22,7 @@ jobs:
         ports:
           - 3306:3306
         options: >-
-          --health-cmd="mysqladmin ping"
+          --health-cmd="mysqladmin ping --silent"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=3
@@ -52,9 +52,9 @@ jobs:
       - name: Create .env file
         run: |
           tee .env <<EOF
-          DB_URL=${{ secrets.DB_URL }}
-          DB_USERNAME=${{ secrets.DB_USERNAME }}
-          DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+          DB_URL=jdbc:mysql://localhost:3306/admin
+          DB_USERNAME=admin
+          DB_PASSWORD=root
           GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
           GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
           GOOGLE_REDIRECT_URI=${{ secrets.GOOGLE_REDIRECT_URI }}
@@ -70,7 +70,21 @@ jobs:
       - name: Create application.yml
         run: |
           mkdir -p proma/src/main/resources
-          echo "${{ secrets.APPLICATION_PROPERTIES }}" | base64 --decode > proma/src/main/resources/application.properties
+          tee proma/src/main/resources/application.yml <<EOF
+          spring:
+            datasource:
+              url: jdbc:mysql://localhost:3306/admin
+              username: admin
+              password: root
+              driver-class-name: com.mysql.cj.jdbc.Driver
+            jpa:
+              hibernate:
+                ddl-auto: update
+              show-sql: true
+              properties:
+                hibernate:
+                  dialect: org.hibernate.dialect.MySQL8Dialect
+          EOF
 
       - name: Grant Execute Permission For Gradlew & Build gradle
         run: |
