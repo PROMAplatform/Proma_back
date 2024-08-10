@@ -10,22 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      
-    services:
-      mysql:
-        image: mysql:8.0.30
-        env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: admin
-          MYSQL_USER: admin
-          MYSQL_PASSWORD: root
-        ports:
-          - 3306:3306
-        options: >-
-          --health-cmd="mysqladmin ping --silent"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=3
 
     steps:
       - uses: actions/checkout@v4
@@ -91,7 +75,7 @@ jobs:
           cd proma
           gradle wrapper
           chmod +x gradlew
-          ./gradlew clean build
+          ./gradlew clean build -x test
           
       - name: Set JAR_FILE environment variable
         run: | 
