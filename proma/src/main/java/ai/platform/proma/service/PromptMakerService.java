@@ -75,4 +75,11 @@ public class PromptMakerService {
 
         return true;
     }
+
+    public Boolean deleteBlock(Long blockId, User user) {
+        Block block = blockRepository.findByIdAndUser(blockId, user)
+                .orElseThrow(() -> new ApiException(ErrorDefine.BLOCK_NOT_FOUND));
+        blockRepository.delete(block);
+        return true;
+    }
 }

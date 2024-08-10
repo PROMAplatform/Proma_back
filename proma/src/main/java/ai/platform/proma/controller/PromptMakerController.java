@@ -13,6 +13,7 @@ import ai.platform.proma.security.LoginUser;
 import ai.platform.proma.service.PromptMakerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,6 +40,14 @@ public class PromptMakerController {
             @Valid @RequestParam("promptMethod") String promptMethod
     ) {
         return new ResponseDto<>(promptMakerService.searchBlock(user, promptMethod));
+    }
+
+    @DeleteMapping("/block/delete/{blockId}")
+    public ResponseDto<Boolean> deleteBlock(
+            @PathVariable Long blockId,
+            @LoginUser User user
+    ) {
+        return new ResponseDto<>(promptMakerService.deleteBlock(blockId, user));
     }
 
     @PostMapping("/save")
