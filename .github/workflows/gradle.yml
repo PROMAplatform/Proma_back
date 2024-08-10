@@ -110,10 +110,6 @@ jobs:
           echo "${{ secrets.EC2_SSH_KEY }}" > promaKey.pem
           chmod 600 promaKey.pem
 
-      - name: Deploy JAR file to EC2
-        run: |
-          scp -i promaKey.pem -o StrictHostKeyChecking=no build/libs/proma-0.0.1-SNAPSHOT.jar ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }}:/home/${{ secrets.EC2_USERNAME }}/proma.jar
-
       - name: Deploy Docker container to EC2
         run: |
           ssh -i promaKey.pem -o StrictHostKeyChecking=no ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
