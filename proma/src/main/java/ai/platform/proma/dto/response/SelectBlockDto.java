@@ -2,6 +2,8 @@ package ai.platform.proma.dto.response;
 
 import ai.platform.proma.domain.Block;
 import ai.platform.proma.domain.enums.BlockCategory;
+import ai.platform.proma.domain.enums.BlockDescription;
+import ai.platform.proma.domain.enums.BlockValue;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,8 +23,8 @@ public class SelectBlockDto {
     public static SelectBlockDto of(Block block) {
          return SelectBlockDto.builder()
                 .blockId(block.getId())
-                .blockValue(block.getBlockValue())
-                .blockDescription(block.getBlockDescription())
+                .blockValue(BlockValue.fromValue(block.getBlockValue()))
+                .blockDescription(BlockDescription.fromValue(block.getBlockDescription()))
                 .blockCategory(block.getBlockCategory().toString())
                 .build();
     }
