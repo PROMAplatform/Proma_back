@@ -1,7 +1,7 @@
 package ai.platform.proma.dto.response;
 
 import ai.platform.proma.domain.Block;
-import ai.platform.proma.domain.enums.BlockCategory;
+import ai.platform.proma.domain.enums.BlockValue;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -16,7 +16,7 @@ public class BlockResponseDto {
 
     public BlockResponseDto(Block block) {
         this.blockId = block.getId();
-        this.blockValue = block.getBlockValue();
+        this.blockValue = BlockValue.fromValue(block.getBlockValue());
         this.blockCategory = block.getBlockCategory().toString();
     }
 }
