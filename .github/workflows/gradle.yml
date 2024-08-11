@@ -112,7 +112,7 @@ jobs:
 
       - name: Deploy Docker container to EC2
         run: |
-          ssh -i promaKey.pem -o StrictHostKeyChecking=no ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
+          ssh -tt -i promaKey.pem -o StrictHostKeyChecking=no ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
             # Stop and remove the existing Docker container if it exists
             if sudo docker ps -q -f name=proma > /dev/null; then
               echo "Stopping and removing existing proma container"
