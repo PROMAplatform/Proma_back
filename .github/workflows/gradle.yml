@@ -111,7 +111,7 @@ jobs:
       #     chmod 600 promaKey.pem
       - name: Set up SSH key
         run: |
-          echo "${{ secrets.EC2_PRIVATE_KEY }}" > promaKey.pem
+          echo "${{ secrets.EC2_SSH_KEY }}" > promaKey.pem
           chmod 600 promaKey.pem
                 
       - name: pull private repository
@@ -119,7 +119,7 @@ jobs:
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
-          key: promaKey.pem
+          key: ${{ secrets.EC2_SSH_KEY }}
           port: ${{ secrets.EC2_PORT }}
           script_stop: true
           script: |
