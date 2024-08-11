@@ -128,8 +128,8 @@ jobs:
             sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/proma
             sudo docker run -d -p 8080:8080 --name proma ${{ secrets.DOCKERHUB_USERNAME }}/proma
             sudo docker system prune -f
-            pgrep java | xargs kill -9 || true
-            nohup java -jar /home/${{ secrets.EC2_USERNAME }}/proma.jar > app.log 2>&1 &
+            # pgrep java | xargs kill -9 || true
+            # nohup java -jar /home/${{ secrets.EC2_USERNAME }}/proma.jar > app.log 2>&1 &
 
       # - name: Deploy Docker container to EC2
       #   run: |
