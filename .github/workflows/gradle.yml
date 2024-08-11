@@ -117,9 +117,9 @@ jobs:
       - name: pull private repository
         uses: appleboy/ssh-action@v0.1.10
         with:
+          key: ${{ secrets.EC2_SSH_KEY }}
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.EC2_SSH_KEY }}
           port: ${{ secrets.EC2_PORT }}
           script_stop: true
           script: |
