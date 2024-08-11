@@ -104,11 +104,11 @@ jobs:
 
       - name: Docker Hub push
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/proma
-
+        
       - name: Set up SSH key
         run: |
-          echo "${{ secrets.EC2_SSH_KEY }}" > promaKey.pem
-          chmod 777 promaKey.pem
+          echo "${{ secrets.EC2_SSH_KEY }}" | base64 -d > promaKey.pem
+          chmod 600 promaKey.pem
 
       - name: Deploy Docker container to EC2
         run: |
