@@ -160,7 +160,3 @@ jobs:
       #       echo "Running new Java application"
       #       nohup java -jar /home/${{ secrets.EC2_USERNAME }}/proma.jar > app.log 2>&1 &
       #     EOF
-
-      - name: Clean up SSH key
-        run: |
-          rm -f promaKey.pem
