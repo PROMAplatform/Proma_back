@@ -10,4 +10,5 @@ public class PromptDetailUpdateRequestDto {
     private String promptTitle;
     private String promptDescription;
     private String promptCategory;
+    private String promptPreview;
 }

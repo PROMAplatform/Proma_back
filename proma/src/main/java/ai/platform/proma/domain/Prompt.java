@@ -105,10 +105,11 @@ public class Prompt {
         this.promptCategory = promptCategory;
     }
 
-    public void updatePromptDetail(String promptTitle, String promptDescription, PromptCategory promptCategory){
+    public void updatePromptDetail(String promptTitle, String promptDescription, PromptCategory promptCategory, String promptPreview){
         this.promptTitle = promptTitle;
         this.promptDescription = promptDescription;
         this.promptCategory = promptCategory;
+        this.promptPreview = promptPreview;
     }
 
     public void updateEmoji(String emoji){

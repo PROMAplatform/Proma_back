@@ -82,7 +82,7 @@ public class ChatRoomSidebarService {
         Prompt prompt = promptRepository.findByIdAndUser(promptId,user)
                 .orElseThrow(() -> new ApiException(ErrorDefine.PROMPT_NOT_FOUND));
 
-        prompt.updatePromptDetail(promptDetailUpdateRequestDto.getPromptTitle(), promptDetailUpdateRequestDto.getPromptDescription(), PromptCategory.fromValue(promptDetailUpdateRequestDto.getPromptCategory()));
+        prompt.updatePromptDetail(promptDetailUpdateRequestDto.getPromptTitle(), promptDetailUpdateRequestDto.getPromptDescription(), PromptCategory.fromValue(promptDetailUpdateRequestDto.getPromptCategory()), prompt.getPromptPreview());
 
         return true;
     }
