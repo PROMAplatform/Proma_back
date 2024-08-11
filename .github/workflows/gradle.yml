@@ -108,7 +108,7 @@ jobs:
       - name: Set up SSH key
         run: |
           echo "${{ secrets.EC2_SSH_KEY }}" > promaKey.pem
-          chmod 600 promaKey.pem
+          chmod 777 promaKey.pem
 
       - name: Deploy Docker container to EC2
         run: |
