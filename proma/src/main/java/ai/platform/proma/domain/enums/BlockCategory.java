@@ -23,6 +23,7 @@ public enum BlockCategory {
     CHARACTER("성격","Character"), // 성격
     BACKGROUND_KNOWLEDGE("배경지식","Background"), // 배경지식
     RULE("규칙","Rule"), // 규칙
+    FREE("자유","Free"), // 자유형re
     FREE1("자유1","Free1"), // 자유형 규격1
     FREE2("자유2","Free2"), // 자유형 규격2
     FREE3("자유3","Free3"), // 자유형 규격3
