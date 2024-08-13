@@ -100,8 +100,11 @@ public class PostService {
 
         Pageable pageable = PageRequest.of(page, size, getSortOrder(likeOrder));
 
-        PromptMethods promptMethods = communicationMethodRepository.findByPromptMethod(PromptMethod.fromValue(method))
-                .orElseThrow(() -> new ApiException(ErrorDefine.COMMUNICATION_METHOD_NOT_FOUND));
+        PromptMethods promptMethods = null;
+        if(!method.isEmpty()) {
+            promptMethods = communicationMethodRepository.findByPromptMethod(PromptMethod.fromValue(method))
+                    .orElseThrow(() -> new ApiException(ErrorDefine.COMMUNICATION_METHOD_NOT_FOUND));
+        }
 
         Page<SortInfo> sortInfoPage = postRepository.findAllBySearchKeywordAndCategory(searchKeyword, PromptCategory.fromValue(category), promptMethods, pageable);
 
@@ -112,8 +115,12 @@ public class PostService {
     public Map<String, Object> getPostsPreview(String searchKeyword, String category,int page, int size, String likeOrder, String method) {
 
         Sort sort = getSortOrder(likeOrder);
-        PromptMethods promptMethods = communicationMethodRepository.findByPromptMethod(PromptMethod.fromValue(method))
-                .orElseThrow(() -> new ApiException(ErrorDefine.COMMUNICATION_METHOD_NOT_FOUND));
+
+        PromptMethods promptMethods = null;
+        if(!method.isEmpty()) {
+            promptMethods = communicationMethodRepository.findByPromptMethod(PromptMethod.fromValue(method))
+                    .orElseThrow(() -> new ApiException(ErrorDefine.COMMUNICATION_METHOD_NOT_FOUND));
+        }
 
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<SortInfo> sortInfoPage = postRepository.findAllBySearchKeywordAndCategory(searchKeyword, PromptCategory.fromValue(category), promptMethods, pageable);
@@ -134,8 +141,11 @@ public class PostService {
 
         List<Long> postIds = likeRepository.findPostIdsByUserId(userId);
 
-        PromptMethods promptMethods = communicationMethodRepository.findByPromptMethod(PromptMethod.fromValue(method))
-                .orElseThrow(() -> new ApiException(ErrorDefine.COMMUNICATION_METHOD_NOT_FOUND));
+        PromptMethods promptMethods = null;
+        if(!method.isEmpty()) {
+            promptMethods = communicationMethodRepository.findByPromptMethod(PromptMethod.fromValue(method))
+                    .orElseThrow(() -> new ApiException(ErrorDefine.COMMUNICATION_METHOD_NOT_FOUND));
+        }
 
         Sort sort = getSortOrder(likeOrder);
 
@@ -150,8 +160,11 @@ public class PostService {
 
         Long userId = user.getId();
 
-        PromptMethods promptMethods = communicationMethodRepository.findByPromptMethod(PromptMethod.fromValue(method))
-                .orElseThrow(() -> new ApiException(ErrorDefine.COMMUNICATION_METHOD_NOT_FOUND));
+        PromptMethods promptMethods = null;
+        if(!method.isEmpty()) {
+            promptMethods = communicationMethodRepository.findByPromptMethod(PromptMethod.fromValue(method))
+                    .orElseThrow(() -> new ApiException(ErrorDefine.COMMUNICATION_METHOD_NOT_FOUND));
+        }
 
         Sort sort = getSortOrder(likeOrder);
 
