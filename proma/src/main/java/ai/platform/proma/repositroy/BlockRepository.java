@@ -14,8 +14,8 @@ import java.util.Optional;
 
 @Repository
 public interface BlockRepository extends JpaRepository<Block, Long> {
-    @Query("SELECT b FROM Block b WHERE b.promptMethods = :promptMethods AND (b.user = :user OR b.user IS NULL)")
-    List<Block> findByUserOrUserIsNullAndPromptMethods(@Param("user") User user, @Param("promptMethods") PromptMethods promptMethods);
+    @Query("SELECT b FROM Block b WHERE b.promptMethods = :promptMethods AND (b.user = :user OR b.user IS NULL) And b.onGoing = true")
+    List<Block> findByUserOrUserIsNullAndPromptMethodsAndOnGoingIsTrue(@Param("user") User user, @Param("promptMethods") PromptMethods promptMethods);
 
     Optional<Block> findByBlockValueAndBlockDescriptionAndBlockCategoryAndUserId(String title, String blockDescription, BlockCategory blockCategory, Long userId);
 
