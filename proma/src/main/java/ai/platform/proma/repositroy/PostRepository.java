@@ -2,9 +2,11 @@ package ai.platform.proma.repositroy;
 
 import ai.platform.proma.domain.Post;
 import ai.platform.proma.domain.Prompt;
+import ai.platform.proma.domain.PromptMethods;
 import ai.platform.proma.domain.User;
 import ai.platform.proma.domain.enums.PromptCategory;
 
+import ai.platform.proma.domain.enums.PromptMethod;
 import ai.platform.proma.dto.response.SortInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,12 +22,15 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("SELECT p AS post, COALESCE(COUNT(l.id), 0) AS likeCount " +
             "FROM Post p " +
             "LEFT JOIN Like l ON p.id = l.post.id " +
+            "LEFT JOIN Prompt pr ON p.prompt.id = pr.id " +
             "WHERE (:searchKeyword IS NULL OR p.postTitle LIKE %:searchKeyword% OR p.postDescription LIKE %:searchKeyword%) " +
             "AND (:category IS NULL OR p.postCategory = :category)"+
+            "AND (:method IS NULL OR pr.promptMethods = :method)"+
             "GROUP BY p")
     Page<SortInfo> findAllBySearchKeywordAndCategory( // 게시글 미리보기 로그인 x
             @Param("searchKeyword") String searchKeyword,
             @Param("category") PromptCategory category,
+            @Param("method") PromptMethods method,
             Pageable pageable
     );
 
@@ -34,21 +39,26 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "LEFT JOIN Like l ON p.id = l.post.id " +
             "WHERE (pr.user.id = :userId) " +
             "AND (:category IS NULL OR p.postCategory = :category) " +
+            "AND (:method IS NULL OR pr.promptMethods = :method)"+
             "AND pr.isScrap IN (ai.platform.proma.domain.enums.Scrap.SHARED)"+
             "GROUP BY p")
     Page<SortInfo> findAllByUserIdAndPostCategoryAndIsScrapShared( // 내가 공유한 프롬프트 조회
             @Param("userId") Long userId,
             @Param("category") PromptCategory promptCategory,
+            @Param("method") PromptMethods method,
             Pageable pageable);
 
     @Query("SELECT p AS post, COALESCE(COUNT(l.id), 0) AS likeCount " +
             "FROM Post p " +
+            "LEFT JOIN Prompt pr ON p.prompt.id = pr.id " +
             "LEFT JOIN Like l ON p.id = l.post.id " +
             "WHERE p.id IN :postIds " +
             "AND (:category IS NULL OR p.postCategory = :category)" +
+            "AND (:method IS NULL OR pr.promptMethods = :method)"+
             "GROUP BY p")
     Page<SortInfo> findAllByPostIdInAndPostCategory( // 좋아요 한 게시글 리스트 조회
            @Param("category") PromptCategory category,
+           @Param("method") PromptMethods method,
            @Param("postIds") List<Long> postIds,
            Pageable pageable
     );
