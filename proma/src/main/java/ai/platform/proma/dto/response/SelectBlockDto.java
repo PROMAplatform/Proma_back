@@ -18,6 +18,7 @@ public class SelectBlockDto {
     private String blockValue;
     private String blockDescription;
     private String blockCategory;
+    private Boolean isDefault;
 
 
     public static SelectBlockDto of(Block block) {
@@ -26,6 +27,16 @@ public class SelectBlockDto {
                 .blockValue(BlockValue.fromValue(block.getBlockValue()))
                 .blockDescription(BlockDescription.fromValue(block.getBlockDescription()))
                 .blockCategory(block.getBlockCategory().toString())
+                .build();
+    }
+
+    public static SelectBlockDto ofDefault(Block block, Boolean isDefault) {
+        return SelectBlockDto.builder()
+                .blockId(block.getId())
+                .blockValue(BlockValue.fromValue(block.getBlockValue()))
+                .blockDescription(BlockDescription.fromValue(block.getBlockDescription()))
+                .blockCategory(block.getBlockCategory().toString())
+                .isDefault(isDefault)
                 .build();
     }
 }

@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +24,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PromptMakerService {
     private final BlockRepository blockRepository;
-    private final UserRepository userRepository;
     private final PromptRepository promptRepository;
     private final CommunicationMethodRepository communicationMethodRepository;
     private final PromptBlockRepository promptBlockRepository;
@@ -43,12 +43,17 @@ public class PromptMakerService {
         PromptMethods promptMethods = communicationMethodRepository.findByPromptMethod(PromptMethod.fromValue(promptMethod))
                 .orElseThrow(() -> new ApiException(ErrorDefine.COMMUNICATION_METHOD_NOT_FOUND));
 
-        List<Block> blocks = blockRepository.findByUserOrUserIsNullAndPromptMethods(user, promptMethods);
+        List<Block> blocks = blockRepository.findByUserOrUserIsNullAndPromptMethodsAndOnGoingIsTrue(user, promptMethods);
         Map<String, List<SelectBlockDto>> blockMap = new HashMap<>();
+        List<SelectBlockDto> blockDtos = new ArrayList<>();
 
-        blockMap.put("selectBlock", blocks.stream()
-                .map(SelectBlockDto::of)
-                .toList());
+        blocks.forEach(block -> {
+                    if(block.getUser() == null)
+                        blockDtos.add(SelectBlockDto.ofDefault(block, true));
+                    else
+                        blockDtos.add(SelectBlockDto.ofDefault(block, false));
+                });
+        blockMap.put("selectBlock", blockDtos);
 
         return blockMap;
     }
@@ -79,7 +84,9 @@ public class PromptMakerService {
     public Boolean deleteBlock(Long blockId, User user) {
         Block block = blockRepository.findByIdAndUser(blockId, user)
                 .orElseThrow(() -> new ApiException(ErrorDefine.BLOCK_NOT_FOUND));
-        blockRepository.delete(block);
+        if(block.getUser() == null)
+            throw new ApiException(ErrorDefine.BLOCK_NOT_DELETE);
+        block.updateBlock();
         return true;
     }
 }

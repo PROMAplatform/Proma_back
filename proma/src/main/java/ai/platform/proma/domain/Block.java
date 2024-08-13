@@ -32,6 +32,9 @@ public class Block {
     @Enumerated(EnumType.STRING)
     private BlockCategory blockCategory;
 
+    @Column(nullable = false)
+    private Boolean onGoing;
+
 // --------------------------------------------------------------------
 
     @ManyToOne(fetch = LAZY)
@@ -53,6 +56,7 @@ public class Block {
         this.blockDescription = blockDescription;
         this.blockCategory = blockCategory;
         this.promptMethods = promptMethods;
+        this.onGoing = true;
         this.user = user;
     }
     public static Block scrapBlock(PromptBlock promptBlock, User user){
@@ -63,6 +67,10 @@ public class Block {
                 .promptMethods(promptBlock.getBlock().getPromptMethods())
                 .user(user)
                 .build();
+    }
+
+    public void updateBlock(){
+        this.onGoing = false;
     }
 
 
