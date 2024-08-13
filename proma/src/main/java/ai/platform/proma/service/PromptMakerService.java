@@ -84,6 +84,8 @@ public class PromptMakerService {
     public Boolean deleteBlock(Long blockId, User user) {
         Block block = blockRepository.findByIdAndUser(blockId, user)
                 .orElseThrow(() -> new ApiException(ErrorDefine.BLOCK_NOT_FOUND));
+        if(block.getUser() == null)
+            throw new ApiException(ErrorDefine.BLOCK_NOT_DELETE);
         block.updateBlock();
         return true;
     }

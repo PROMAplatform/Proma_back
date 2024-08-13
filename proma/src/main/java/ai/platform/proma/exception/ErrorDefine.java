@@ -15,6 +15,7 @@ public enum ErrorDefine {
     INVALID_BLOCK_CATEGORY("4003", HttpStatus.BAD_REQUEST, "Bad Request: Invalid BlockCategory"),
     INVALID_BLOCK_METHOD("4004", HttpStatus.BAD_REQUEST, "Bad Request: Invalid BlockMethod"),
     INVALID_LIKE_ORDER("4005", HttpStatus.BAD_REQUEST,"Bad Request: Invalid like parameter"),
+
     // Not Found
     USER_NOT_FOUND("4040", HttpStatus.NOT_FOUND, "Not Found: User Not Found"),
     COMMUNICATION_METHOD_NOT_FOUND("4041", HttpStatus.NOT_FOUND, "Not Found: Communication Method Not Found"),
@@ -29,6 +30,7 @@ public enum ErrorDefine {
     UNAUTHORIZED_USER("4030", HttpStatus.FORBIDDEN, "Forbidden: Unauthorized User"),
     BLOCK_NOT_MATCH("4038", HttpStatus.FORBIDDEN, "Forbidden: Block Not Match"),
 
+
     // 소셜로그인 관련
     LOGIN_ACCESS_DENIED("4031", HttpStatus.FORBIDDEN, "Forbidden: Login Access Denied"),
     TOKEN_MALFORMED("4032", HttpStatus.FORBIDDEN, "Forbidden: Token Malformed"),
@@ -36,7 +38,10 @@ public enum ErrorDefine {
     TOKEN_EXPIRED("4034", HttpStatus.FORBIDDEN, "Forbidden: Token Expired"),
     TOKEN_UNSUPPORTED("4035", HttpStatus.FORBIDDEN, "Forbidden: Token Unsupported"),
     TOKEN_UNKNOWN("4036", HttpStatus.FORBIDDEN, "Forbidden: Token Unknown"),
-    TOKEN_INVALID("4037", HttpStatus.FORBIDDEN, "Forbidden: Token Invalid");
+    TOKEN_INVALID("4037", HttpStatus.FORBIDDEN, "Forbidden: Token Invalid"),
+
+
+    BLOCK_NOT_DELETE("4050", HttpStatus.METHOD_NOT_ALLOWED, "Method Not Allowed: Block Not Delete");
 
 
     private final String errorCode;
