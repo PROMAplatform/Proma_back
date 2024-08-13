@@ -53,25 +53,27 @@ public class PostController {
     public ResponseDto<Map<String, Object>> getPostsBySearchKeyWord(
             @LoginUser User user,
             @Valid @RequestParam(value = "search", required = false) String searchKeyword,
+            @Valid @RequestParam(value = "method", required = false) String method,
             @Valid @RequestParam(value = "category", required = false) String category,
             @Valid @RequestParam(value = "like", required = false) String likeOrder,
             @Valid @RequestParam(value = "page", defaultValue = "0") int page,
             @Valid @RequestParam(value = "size", defaultValue = "9") int size
     ) {
 
-        return new ResponseDto<>(postService.getPosts(user, searchKeyword, category, page, size, likeOrder));
+        return new ResponseDto<>(postService.getPosts(user, searchKeyword, category, page, size, likeOrder, method));
     }
 
     @GetMapping("/preview")
     public ResponseDto<Map<String, Object>> getPostsPreview(
             @Valid @RequestParam(value = "search", required = false) String searchKeyword,
+            @Valid @RequestParam(value = "method", required = false) String method,
             @Valid @RequestParam(value = "category", required = false) String category,
             @Valid @RequestParam(value = "like", required = false) String likeOrder,
             @Valid @RequestParam(value = "page", defaultValue = "0") int page,
             @Valid @RequestParam(value = "size", defaultValue = "9") int size
     ) {
 
-        return new ResponseDto<>(postService.getPostsPreview(searchKeyword, category, page, size, likeOrder));
+        return new ResponseDto<>(postService.getPostsPreview(searchKeyword, category, page, size, likeOrder, method));
     }
 
     @PostMapping("/scrap/{postId}")
@@ -99,23 +101,25 @@ public class PostController {
     public ResponseDto<Map<String, Object>> getPostsByUserLike(
             @LoginUser User user,
             @Valid @RequestParam(value = "category", required = false) String category,
+            @Valid @RequestParam(value = "method", required = false) String method,
             @Valid @RequestParam(value = "like", required = false) String likeOrder,
             @Valid @RequestParam(value = "page", defaultValue = "0") int page,
             @Valid @RequestParam(value = "size", defaultValue = "9") int size
     ){
-        return new ResponseDto<>(postService.getPostsByUserLikes(user, category, page, size, likeOrder));
+        return new ResponseDto<>(postService.getPostsByUserLikes(user, category, page, size, likeOrder, method));
     }
 
     @GetMapping("/my-distribute")
     public ResponseDto<Map<String, Object>> getPostsByUserDistribute(
             @LoginUser User user,
             @Valid @RequestParam(value = "category", required = false) String category,
+            @Valid @RequestParam(value = "method", required = false) String method,
             @Valid @RequestParam(value = "like", required = false) String likeOrder,
             @Valid @RequestParam(value = "page", defaultValue = "0") int page,
             @Valid @RequestParam(value = "size", defaultValue = "9") int size
     ){
 
-        return new ResponseDto<>(postService.getPostsByUserDistribute(user, category, page, size, likeOrder));
+        return new ResponseDto<>(postService.getPostsByUserDistribute(user, category, page, size, likeOrder, method));
     }
 
     @PatchMapping("/my-distribute/patch/{postId}")

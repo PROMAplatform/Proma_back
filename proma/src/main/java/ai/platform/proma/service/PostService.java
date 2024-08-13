@@ -1,6 +1,7 @@
 package ai.platform.proma.service;
 import ai.platform.proma.domain.*;
 import ai.platform.proma.domain.enums.PromptCategory;
+import ai.platform.proma.domain.enums.PromptMethod;
 import ai.platform.proma.dto.request.PostDistributeRequestDto;
 import ai.platform.proma.dto.request.PostRequestDto;
 import ai.platform.proma.dto.response.*;
@@ -30,6 +31,7 @@ public class PostService {
     private final PromptRepository promptRepository;
     private final PromptBlockRepository promptBlockRepository;
     private final BlockRepository blockRepository;
+    private final CommunicationMethodRepository communicationMethodRepository;
 
     private Sort getSortOrder(String likeOrder) {
         return switch (likeOrder != null ? likeOrder.toLowerCase() : "") {
@@ -94,22 +96,27 @@ public class PostService {
         return true;
     }
 
-    public Map<String, Object> getPosts(User user, String searchKeyword, String category, int page, int size, String likeOrder) {
+    public Map<String, Object> getPosts(User user, String searchKeyword, String category, int page, int size, String likeOrder, String method) {
 
         Pageable pageable = PageRequest.of(page, size, getSortOrder(likeOrder));
 
-        Page<SortInfo> sortInfoPage = postRepository.findAllBySearchKeywordAndCategory(searchKeyword, PromptCategory.fromValue(category), pageable);
+        PromptMethods promptMethods = communicationMethodRepository.findByPromptMethod(PromptMethod.fromValue(method))
+                .orElseThrow(() -> new ApiException(ErrorDefine.COMMUNICATION_METHOD_NOT_FOUND));
+
+        Page<SortInfo> sortInfoPage = postRepository.findAllBySearchKeywordAndCategory(searchKeyword, PromptCategory.fromValue(category), promptMethods, pageable);
 
         return createResultMap(sortInfoPage, user);
     }
 
 
-    public Map<String, Object> getPostsPreview(String searchKeyword, String category,int page, int size, String likeOrder) {
+    public Map<String, Object> getPostsPreview(String searchKeyword, String category,int page, int size, String likeOrder, String method) {
 
         Sort sort = getSortOrder(likeOrder);
+        PromptMethods promptMethods = communicationMethodRepository.findByPromptMethod(PromptMethod.fromValue(method))
+                .orElseThrow(() -> new ApiException(ErrorDefine.COMMUNICATION_METHOD_NOT_FOUND));
 
         Pageable pageable = PageRequest.of(page, size, sort);
-        Page<SortInfo> sortInfoPage = postRepository.findAllBySearchKeywordAndCategory(searchKeyword, PromptCategory.fromValue(category), pageable);
+        Page<SortInfo> sortInfoPage = postRepository.findAllBySearchKeywordAndCategory(searchKeyword, PromptCategory.fromValue(category), promptMethods, pageable);
 
         Map<String, Object> result = new HashMap<>();
 
@@ -121,30 +128,36 @@ public class PostService {
         return result;
     }
 
-    public Map<String, Object> getPostsByUserLikes(User user, String category, int page, int size, String likeOrder) {
+    public Map<String, Object> getPostsByUserLikes(User user, String category, int page, int size, String likeOrder, String method) {
 
         Long userId = user.getId();
 
         List<Long> postIds = likeRepository.findPostIdsByUserId(userId);
 
+        PromptMethods promptMethods = communicationMethodRepository.findByPromptMethod(PromptMethod.fromValue(method))
+                .orElseThrow(() -> new ApiException(ErrorDefine.COMMUNICATION_METHOD_NOT_FOUND));
+
         Sort sort = getSortOrder(likeOrder);
 
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        Page<SortInfo> sortInfoPage = postRepository.findAllByPostIdInAndPostCategory(PromptCategory.fromValue(category), postIds, pageable);
+        Page<SortInfo> sortInfoPage = postRepository.findAllByPostIdInAndPostCategory(PromptCategory.fromValue(category), promptMethods, postIds, pageable);
 
         return createResultMap(sortInfoPage, user);
 
     }
-    public Map<String, Object> getPostsByUserDistribute(User user, String category, int page, int size, String likeOrder) {
+    public Map<String, Object> getPostsByUserDistribute(User user, String category, int page, int size, String likeOrder, String method) {
 
         Long userId = user.getId();
+
+        PromptMethods promptMethods = communicationMethodRepository.findByPromptMethod(PromptMethod.fromValue(method))
+                .orElseThrow(() -> new ApiException(ErrorDefine.COMMUNICATION_METHOD_NOT_FOUND));
 
         Sort sort = getSortOrder(likeOrder);
 
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        Page<SortInfo> sortInfoPage = postRepository.findAllByUserIdAndPostCategoryAndIsScrapShared(userId, PromptCategory.fromValue(category), pageable);
+        Page<SortInfo> sortInfoPage = postRepository.findAllByUserIdAndPostCategoryAndIsScrapShared(userId, PromptCategory.fromValue(category), promptMethods, pageable);
 
         return createResultMap(sortInfoPage, user);
 
