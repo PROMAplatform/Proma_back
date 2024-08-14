@@ -72,9 +72,9 @@ jobs:
       - name: Set YML
         run: |
           mkdir -p src/main/resources
-          echo "${{ secrets.APPLICATION_YML }}" | base64 --decode > src/main/resources/application.yml
-          echo "${{ secrets.APPLICATION_DATASOURCE_YML }}" | base64 --decode > src/main/resources/application-datasource.yml
-          echo "${{ secrets.APPLICATION_JPA_YML }}" | base64 --decode > src/main/resources/application-jpa.yml
+          echo "${{ secrets.APPLICATION_YML }}" > src/main/resources/application.yml
+          echo "${{ secrets.APPLICATION_DATASOURCE_YML }}" > src/main/resources/application-datasource.yml
+          echo "${{ secrets.APPLICATION_JPA_YML }}" > src/main/resources/application-jpa.yml
           find src
 
       - name: Grant Execute Permission For Gradlew & Build gradle
