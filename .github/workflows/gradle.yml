@@ -56,9 +56,9 @@ jobs:
           spring:
             datasource:
               driver-class-name: com.mysql.cj.jdbc.Driver
-              url: ${DB_URL}
-              username: ${DB_USERNAME}
-              password: ${DB_PASSWORD}
+              url: ${env.DB_URL}
+              username: ${env.DB_USERNAME}
+              password: ${env.DB_PASSWORD}
               hikari:
                 pool-name: jpa-hikari-pool
                 maximum-pool-size: 5
@@ -84,18 +84,18 @@ jobs:
                 client:
                   registration:
                     google:
-                      client-id: ${GOOGLE_CLIENT_ID}
-                      client-secret: ${GOOGLE_CLIENT_SECRET}
-                      redirect-uri: ${GOOGLE_REDIRECT_URI}
+                      client-id: ${env.GOOGLE_CLIENT_ID}
+                      client-secret: ${env.GOOGLE_CLIENT_SECRET}
+                      redirect-uri: ${env.GOOGLE_REDIRECT_URI}
                       authorization-grant-type: authorization_code
                       scope:
                         - profile
                         - email
                         - openid
                     naver:
-                      client-id: ${NAVER_CLIENT_ID}
-                      client-secret: ${NAVER_CLIENT_SECRET}
-                      redirect-uri: ${NAVER_REDIRECT_URI}
+                      client-id: ${env.NAVER_CLIENT_ID}
+                      client-secret: ${env.NAVER_CLIENT_SECRET}
+                      redirect-uri: ${env.NAVER_REDIRECT_URI}
                       scope:
                         - name
                         - email
@@ -104,9 +104,9 @@ jobs:
                       client-name: PROMA
                       provider: naver
                     kakao:
-                      client-id: ${KAKAO_CLIENT_ID}
-                      client-secret: ${KAKAO_CLIENT_SECRET}
-                      redirect-uri: ${KAKAO_REDIRECT_URI}
+                      client-id: ${env.KAKAO_CLIENT_ID}
+                      client-secret: ${env.KAKAO_CLIENT_SECRET}
+                      redirect-uri: ${env.KAKAO_REDIRECT_URI}
                       scope: profile_nickname, profile_image, account_email
                       authorization-grant-type: authorization_code
                       client-name: PROMA
@@ -126,7 +126,7 @@ jobs:
                       token-uri: "https://kauth.kakao.com/oauth/token"
                       user-info-uri: "https://kapi.kakao.com/v2/user/me"
           jwt:
-            secret: ${JWT_SECRET}
+            secret: ${env.JWT_SECRET}
             accessExpiredMs: 2592000000
             refreshExpiredMs: 12960000000
           EOF
