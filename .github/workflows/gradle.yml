@@ -109,25 +109,37 @@ jobs:
       #   run: |
       #     echo "${{ secrets.EC2_SSH_KEY }}" | base64 -d > promaKey.pem
       #     chmod 600 promaKey.pem
-      - name: Set up SSH key
+      
+      # - name: Set up SSH key
+      #   run: |
+      #     echo "${{ secrets.EC2_PRIVATE_KEY }}" > promaKey.pem
+      #     chmod 600 promaKey.pem
+
+      - name: Deploy to EC2
         run: |
-          echo "${{ secrets.EC2_PRIVATE_KEY }}" > promaKey.pem
-          chmod 600 promaKey.pem
-                
-      - name: pull private repository
-        uses: appleboy/ssh-action@v0.1.10
-        with:
-          key: ${{ secrets.EC2_PRIVATE_KEY }}
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          port: ${{ secrets.EC2_PORT }}
-          script_stop: true
-          script: |
+         echo "${{ secrets.EC2_PRIVATE_KEY }}" > promaKey.pem
+         chmod 600 promaKey.pem
+         ssh -i promaKey.pem -o StrictHostKeyChecking=no ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} '
             sudo docker stop proma
             sudo docker rm proma
             sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/proma
             sudo docker run -d -p 8080:8080 --name proma ${{ secrets.DOCKERHUB_USERNAME }}/proma
             sudo docker system prune -f
+                
+      # - name: pull private repository
+      #   uses: appleboy/ssh-action@v0.1.10
+      #   with:
+      #     key: ${{ secrets.EC2_PRIVATE_KEY }}
+      #     host: ${{ secrets.EC2_HOST }}
+      #     username: ${{ secrets.EC2_USERNAME }}
+      #     port: ${{ secrets.EC2_PORT }}
+      #     script_stop: true
+      #     script: |
+            # sudo docker stop proma
+            # sudo docker rm proma
+            # sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/proma
+            # sudo docker run -d -p 8080:8080 --name proma ${{ secrets.DOCKERHUB_USERNAME }}/proma
+            # sudo docker system prune -f
             # pgrep java | xargs kill -9 || true
             # nohup java -jar /home/${{ secrets.EC2_USERNAME }}/proma.jar > app.log 2>&1 &
 
