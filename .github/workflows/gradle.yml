@@ -192,7 +192,7 @@ jobs:
           EOF
 
       - name: docker image build
-        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/proma .
+        run: docker build --build-arg DEPENDENCY=build/dependency -t ${{ secrets.DOCKERHUB_USERNAME }}/proma --platform linux/amd64 .
 
       - name: docker login
         uses: docker/login-action@v2
