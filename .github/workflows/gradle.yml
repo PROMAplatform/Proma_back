@@ -110,10 +110,10 @@ jobs:
          echo "${{ secrets.EC2_PRIVATE_KEY }}" > promaKey.pem
          chmod 600 promaKey.pem
          ssh -i promaKey.pem -o StrictHostKeyChecking=no -t ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
-         existing_container_id=$(sudo docker ps -q --filter "name=proma")
-         if [ ! -z "$existing_container_id" ]; then
-         sudo docker stop $existing_container_id
-         sudo docker rm $existing_container_id
+         CONTAINER_ID=$(sudo docker ps -q --filter "publish=8080-8080")
+         if [ ! -z "$CONTAINER_ID" ]; then
+           sudo docker stop $CONTAINER_ID
+           sudo docker rm $CONTAINER_ID
          fi
          sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/proma
          sudo docker run -d -p 8080:8080 --name proma ${{ secrets.DOCKERHUB_USERNAME }}/proma
