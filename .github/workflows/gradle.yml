@@ -119,12 +119,13 @@ jobs:
         run: |
          echo "${{ secrets.EC2_PRIVATE_KEY }}" > promaKey.pem
          chmod 600 promaKey.pem
-         ssh -i promaKey.pem -o StrictHostKeyChecking=no ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }}
-            sudo docker stop proma
-            sudo docker rm proma
-            sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/proma
-            sudo docker run -d -p 8080:8080 --name proma ${{ secrets.DOCKERHUB_USERNAME }}/proma
-            sudo docker system prune -f
+         ssh -i promaKey.pem -o StrictHostKeyChecking=no -t ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
+         sudo docker stop proma || true
+         sudo docker rm proma || true
+         sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/proma
+         sudo docker run -d -p 8080:8080 --name proma ${{ secrets.DOCKERHUB_USERNAME }}/proma
+         sudo docker system prune -f
+         EOF
                 
       # - name: pull private repository
       #   uses: appleboy/ssh-action@v0.1.10
