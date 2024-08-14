@@ -164,9 +164,9 @@ jobs:
           touch ./application.yml
           touch ./application-datasource.yml
           touch ./application-jpa.yml
-          echo "${{ secrets.APPLICATION_YML }}" > ./application.yml
-          echo "${{ secrets.APPLICATION_DATASOURCE_YML }}" > ./application-datasource.yml
-          echo "${{ secrets.APPLICATION_JPA_YML }}" > ./application-jpa.yml
+          echo ${{secrets.APPLICATION_YML}} | base64 --decode > ./src/main/resources/application.yml
+          echo ${{secrets.APPLICATION_DATASOURCE_YML}} | base64 --decode > ./application-datasource.yml
+          echo ${{secrets.APPLICATION_JPA_YML}} | base64 --decode > ./application-jpa.yml
 
       - name: Grant Execute Permission For Gradlew & Build gradle
         run: |
