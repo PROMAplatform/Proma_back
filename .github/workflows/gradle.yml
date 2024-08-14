@@ -35,9 +35,9 @@ jobs:
       - name: Create .env file
         run: |
           tee .env <<EOF
-          DB_URL=jdbc:mysql://localhost:3306/admin
-          DB_USERNAME=admin
-          DB_PASSWORD=root
+          DB_URL=${{ secrets.DB_URL }}
+          DB_USERNAME=${{ secrets.DB_USERNAME }}
+          DB_PASSWORD=${{ secrets.DB_PASSWORD }}
           GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
           GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
           GOOGLE_REDIRECT_URI=${{ secrets.GOOGLE_REDIRECT_URI }}
