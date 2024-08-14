@@ -164,6 +164,9 @@ jobs:
           touch ./application.yml
           touch ./application-datasource.yml
           touch ./application-jpa.yml
+          chmod 644 application.yml
+          chmod 644 application-datasource.yml
+          chmod 644 application-jpa.yml
           echo ${{secrets.APPLICATION_YML}} | base64 --decode > ./application.yml
           echo ${{secrets.APPLICATION_DATASOURCE_YML}} | base64 --decode > ./application-datasource.yml
           echo ${{secrets.APPLICATION_JPA_YML}} | base64 --decode > ./application-jpa.yml
@@ -186,6 +189,10 @@ jobs:
           tee Dockerfile <<EOF
           FROM openjdk:17-jdk
           ARG JAR_FILE=proma/build/libs/proma-0.0.1-SNAPSHOT.jar
+          COPY src/main/resources/application.yml application.yml
+          COPY src/main/resources/application-datasource.yml application-datasource.yml
+          COPY src/main/resources/application-jpa.yml application-jpa.yml
+          ENV SPRING_CONFIG_LOCATION=application.yml,application-datasource.yml,application-jpa.yml
           COPY ${JAR_FILE} app.jar
           EXPOSE 8080
           ENTRYPOINT ["java", "-jar", "/app.jar"]
