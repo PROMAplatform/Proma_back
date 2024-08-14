@@ -119,7 +119,7 @@ jobs:
         run: |
          echo "${{ secrets.EC2_PRIVATE_KEY }}" > promaKey.pem
          chmod 600 promaKey.pem
-         ssh -i promaKey.pem -o StrictHostKeyChecking=no ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} '
+         ssh -i promaKey.pem -o StrictHostKeyChecking=no ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }}
             sudo docker stop proma
             sudo docker rm proma
             sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/proma
