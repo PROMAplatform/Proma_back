@@ -18,8 +18,6 @@ public class CustomUserDetailService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-
-
     @Override
     public UserDetails loadUserByUsername(String username) {
         Collection<SimpleGrantedAuthority> roles = new ArrayList<>();

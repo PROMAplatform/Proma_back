@@ -115,4 +115,7 @@ public class Prompt {
     public void updateEmoji(String emoji){
         this.emoji = emoji;
     }
+    public void updatePreview(String promptPreview){
+        this.promptPreview = promptPreview;
+    }
 }

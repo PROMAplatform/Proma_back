@@ -1,6 +1,7 @@
 package ai.platform.proma.dto.response;
 
 import ai.platform.proma.security.JwtToken;
+import ai.platform.proma.security.openapi.OpenApiToken;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,6 +26,13 @@ public class LoginResponseDto {
                 .userName(userName)
                 .accessToken(jwtToken.getAccessToken())
                 .refreshToken(jwtToken.getRefreshToken())
+                .build();
+    }
+    public static  LoginResponseDto ofOpenApi(OpenApiToken openApiToken, String userName){
+        return LoginResponseDto.builder()
+                .userName(userName)
+                .accessToken(openApiToken.getAccessToken())
+                .refreshToken(openApiToken.getSecretKey())
                 .build();
     }
 }
