@@ -2,6 +2,7 @@ package ai.platform.proma.controller;
 
 import ai.platform.proma.domain.User;
 import ai.platform.proma.dto.request.ListPromptAtom;
+import ai.platform.proma.dto.request.PromptUpdateRequestDto;
 import ai.platform.proma.dto.response.MessageListResponseDto;
 import ai.platform.proma.dto.response.ResponseDto;
 import ai.platform.proma.security.LoginUser;
@@ -30,8 +31,8 @@ public class ChatRoomController {
     public ResponseDto<Boolean> blockPrompt(
             @PathVariable("promptId") Long promptId,
             @LoginUser User user,
-            @RequestBody List<ListPromptAtom> listPromptAtoms
+            @RequestBody PromptUpdateRequestDto promptUpdateRequestDto
             ) {
-        return new ResponseDto<>(chatRoomService.updatePromptBlock(listPromptAtoms, promptId, user));
+        return new ResponseDto<>(chatRoomService.updatePromptBlock(promptUpdateRequestDto, promptId, user));
     }
 }

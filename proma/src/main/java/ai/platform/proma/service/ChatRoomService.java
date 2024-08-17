@@ -2,6 +2,7 @@ package ai.platform.proma.service;
 
 import ai.platform.proma.domain.*;
 import ai.platform.proma.dto.request.ListPromptAtom;
+import ai.platform.proma.dto.request.PromptUpdateRequestDto;
 import ai.platform.proma.dto.response.MessageListResponseDto;
 import ai.platform.proma.exception.ApiException;
 import ai.platform.proma.exception.ErrorDefine;
@@ -44,14 +45,15 @@ public class ChatRoomService {
         return response;
     }
 
-    public boolean updatePromptBlock(List<ListPromptAtom> listPromptAtoms, Long promptId, User user) {
+    public boolean updatePromptBlock(PromptUpdateRequestDto promptUpdateRequestDto, Long promptId, User user) {
         Prompt prompt = promptRepository.findByIdAndUser(promptId, user)
                 .orElseThrow(() -> new ApiException(ErrorDefine.PROMPT_NOT_FOUND));
+        prompt.updatePreview(promptUpdateRequestDto.getPromptPreview());
 
         List<PromptBlock> promptBlock = promptBlockRepository.findByPrompt(prompt);
         promptBlockRepository.deleteAll(promptBlock);
 
-        List<Block> blocks = blockRepository.findAllById(listPromptAtoms.stream()
+        List<Block> blocks = blockRepository.findAllById(promptUpdateRequestDto.getListPromptAtom().stream()
                 .map(ListPromptAtom::getBlockId)
                 .collect(Collectors.toList()));
 
