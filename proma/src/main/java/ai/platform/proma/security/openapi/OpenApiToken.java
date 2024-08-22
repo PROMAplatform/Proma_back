@@ -13,6 +13,7 @@ public class OpenApiToken {
 
 
     public static OpenApiToken of(String accessToken, String secretKey) {
+        System.err.println("aas");
         return OpenApiToken.builder()
                 .accessToken(accessToken)
                 .secretKey(secretKey)

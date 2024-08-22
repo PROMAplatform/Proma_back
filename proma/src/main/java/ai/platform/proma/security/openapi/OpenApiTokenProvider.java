@@ -18,15 +18,15 @@ import java.util.Random;
 @Component
 public class OpenApiTokenProvider implements InitializingBean {
 
-    @Value("${jwt.accessExpiredMs}")
-    private Long accessExpiredMs;
-
-    @Value("${jwt.refreshExpiredMs}")
-    private Long refreshExpiredMs;
+    private Long accessExpiredMs = 31536000000L;
 
     private String secretKey;
     private Key key;
 
+    public OpenApiTokenProvider() {
+        this.secretKey = Base64.getEncoder().encodeToString(Keys.secretKeyFor(SignatureAlgorithm.HS256).getEncoded());
+        this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
+    }
     @Override
     public void afterPropertiesSet() {
         this.secretKey = Base64.getEncoder().encodeToString(Keys.secretKeyFor(SignatureAlgorithm.HS256).getEncoded());
@@ -48,12 +48,13 @@ public class OpenApiTokenProvider implements InitializingBean {
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setClaims(claims)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + (isAccess ? accessExpiredMs : refreshExpiredMs)))
+                .setExpiration(new Date(System.currentTimeMillis() + accessExpiredMs))
                 .signWith(getKey(secretKey), SignatureAlgorithm.HS256)
                 .compact();
     }
 
     public OpenApiToken createTotalToken(String id, Role role, Long promptId) {
+        System.err.println(secretKey);
         return OpenApiToken.of(
                 createToken(id, role, promptId, true),
                 secretKey
