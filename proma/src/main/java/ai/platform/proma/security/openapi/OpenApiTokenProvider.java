@@ -54,7 +54,6 @@ public class OpenApiTokenProvider implements InitializingBean {
     }
 
     public OpenApiToken createTotalToken(String id, Role role, Long promptId) {
-        System.err.println(secretKey);
         return OpenApiToken.of(
                 createToken(id, role, promptId, true),
                 secretKey

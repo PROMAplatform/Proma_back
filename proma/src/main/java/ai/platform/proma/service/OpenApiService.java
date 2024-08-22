@@ -23,7 +23,6 @@ public class OpenApiService {
         Prompt prompt = promptRepository.findByIdAndUser(promptId, user)
                 .orElseThrow(() -> new ApiException(ErrorDefine.PROMPT_NOT_FOUND));
         OpenApiTokenProvider openApiTokenProvider = new OpenApiTokenProvider();
-        System.err.println("Aa");
         return openApiTokenProvider.createTotalToken(user.getSocialId(), user.getRole(), prompt.getId());
     }
 }
