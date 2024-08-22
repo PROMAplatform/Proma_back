@@ -16,14 +16,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @RequiredArgsConstructor
 public class OpenApiService {
-    private PromptRepository promptRepository;
+    private final PromptRepository promptRepository;
 
     public OpenApiToken openApiSignup(User user, Long promptId) {
 
         Prompt prompt = promptRepository.findByIdAndUser(promptId, user)
                 .orElseThrow(() -> new ApiException(ErrorDefine.PROMPT_NOT_FOUND));
         OpenApiTokenProvider openApiTokenProvider = new OpenApiTokenProvider();
-
         return openApiTokenProvider.createTotalToken(user.getSocialId(), user.getRole(), prompt.getId());
     }
 }
