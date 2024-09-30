@@ -44,15 +44,41 @@ public class PostService {
             default -> throw new ApiException(ErrorDefine.INVALID_LIKE_ORDER);
         };
     }
+    public Map<Post, Boolean> existsByPostsAndUser(List<Post> posts, User user) {
+        // LikeRepository를 사용하여 좋아요된 Post ID를 가져옴
+        List<Long> likedPostIds = likeRepository.findLikedPostIdsByPostsAndUser(posts, user);
 
-    private Map<String, Object> createResultMap(Page<SortInfo> sortInfoPage, User user) {
-        Map<String, Object> result = new HashMap<>();
-        result.put("selectPrompt", sortInfoPage.getContent().stream()
-                .map(sortInfo -> PostResponseDto.of(sortInfo, likeRepository.existsByPostAndUser(sortInfo.getPost(), user)))
-                .collect(Collectors.toList()));
-        result.put("pageInfo", new PageInfo(sortInfoPage));
-        return result;
+        // 좋아요 여부를 확인하는 Map 생성
+        return posts.stream()
+                .collect(Collectors.toMap(post -> post, post -> likedPostIds.contains(post.getId())));
     }
+
+//    private Map<String, Object> createResultMap(Page<SortInfo> sortInfoPage, User user) {
+//        Map<String, Object> result = new HashMap<>();
+//        result.put("selectPrompt", sortInfoPage.getContent().stream()
+//                .map(sortInfo -> PostResponseDto.of(sortInfo, likeRepository.existsByPostAndUser(sortInfo.getPost(), user)))
+//                .collect(Collectors.toList()));
+//        result.put("pageInfo", new PageInfo(sortInfoPage));
+//        return result;
+//    }
+private Map<String, Object> createResultMap(Page<SortInfo> sortInfoPage, User user) {
+    List<Post> posts = sortInfoPage.getContent().stream()
+            .map(SortInfo::getPost)
+            .collect(Collectors.toList());
+
+    // 서비스 메서드를 통해 좋아요 여부를 확인
+    Map<Post, Boolean> likedPostsMap = existsByPostsAndUser(posts, user);
+
+    List<PostResponseDto> responseDtos = sortInfoPage.getContent().stream()
+            .map(sortInfo -> PostResponseDto.of(sortInfo, likedPostsMap.getOrDefault(sortInfo.getPost(), false)))
+            .collect(Collectors.toList());
+
+    Map<String, Object> result = new HashMap<>();
+    result.put("selectPrompt", responseDtos);
+    result.put("pageInfo", new PageInfo(sortInfoPage));
+
+    return result;
+}
     public Map<String, List<PromptTitleList>> promptTitleList(User user) {
 
         List<Prompt> prompts = promptRepository.findByUserAndScrap(user);
