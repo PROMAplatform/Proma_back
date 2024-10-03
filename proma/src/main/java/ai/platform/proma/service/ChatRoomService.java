@@ -6,7 +6,7 @@ import ai.platform.proma.dto.request.PromptUpdateRequestDto;
 import ai.platform.proma.dto.response.MessageListResponseDto;
 import ai.platform.proma.exception.ApiException;
 import ai.platform.proma.exception.ErrorDefine;
-import ai.platform.proma.repositroy.*;
+import ai.platform.proma.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 @Transactional
 public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
-    private final UserRepository userRepository;
     private final MessageRepository messageRepository;
     private final PromptRepository promptRepository;
     private final BlockRepository blockRepository;
@@ -45,7 +44,7 @@ public class ChatRoomService {
         return response;
     }
 
-    public boolean updatePromptBlock(PromptUpdateRequestDto promptUpdateRequestDto, Long promptId, User user) {
+    public Boolean updatePromptBlock(PromptUpdateRequestDto promptUpdateRequestDto, Long promptId, User user) {
         Prompt prompt = promptRepository.findByIdAndUser(promptId, user)
                 .orElseThrow(() -> new ApiException(ErrorDefine.PROMPT_NOT_FOUND));
         prompt.updatePreview(promptUpdateRequestDto.getPromptPreview());

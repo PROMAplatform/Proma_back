@@ -3,12 +3,8 @@ package ai.platform.proma.service;
 import ai.platform.proma.domain.User;
 import ai.platform.proma.domain.enums.Role;
 import ai.platform.proma.domain.enums.UserLoginMethod;
-import ai.platform.proma.dto.request.UserRequestDto;
 import ai.platform.proma.dto.response.LoginResponseDto;
-import ai.platform.proma.dto.response.UserResponseDto;
-import ai.platform.proma.exception.ApiException;
-import ai.platform.proma.exception.ErrorDefine;
-import ai.platform.proma.repositroy.UserRepository;
+import ai.platform.proma.repository.UserRepository;
 import ai.platform.proma.security.JwtProvider;
 import ai.platform.proma.security.JwtToken;
 import ai.platform.proma.util.OauthUtil;
@@ -18,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.Provider;
 import java.util.Map;
 
 @Service
