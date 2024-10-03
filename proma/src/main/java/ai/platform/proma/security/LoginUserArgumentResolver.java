@@ -1,8 +1,8 @@
 package ai.platform.proma.security;
 
+import ai.platform.proma.annotation.LoginUser;
 import ai.platform.proma.domain.User;
 import ai.platform.proma.service.AcountsService;
-import ai.platform.proma.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.context.SecurityContextHolder;
