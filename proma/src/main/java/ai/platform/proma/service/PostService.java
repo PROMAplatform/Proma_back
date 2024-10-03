@@ -1,5 +1,6 @@
 package ai.platform.proma.service;
 import ai.platform.proma.domain.*;
+import ai.platform.proma.domain.enums.BlockCategory;
 import ai.platform.proma.domain.enums.PromptCategory;
 import ai.platform.proma.domain.enums.PromptMethod;
 import ai.platform.proma.dto.request.PostDistributeRequestDto;
@@ -53,14 +54,6 @@ public class PostService {
                 .collect(Collectors.toMap(post -> post, post -> likedPostIds.contains(post.getId())));
     }
 
-//    private Map<String, Object> createResultMap(Page<SortInfo> sortInfoPage, User user) {
-//        Map<String, Object> result = new HashMap<>();
-//        result.put("selectPrompt", sortInfoPage.getContent().stream()
-//                .map(sortInfo -> PostResponseDto.of(sortInfo, likeRepository.existsByPostAndUser(sortInfo.getPost(), user)))
-//                .collect(Collectors.toList()));
-//        result.put("pageInfo", new PageInfo(sortInfoPage));
-//        return result;
-//    }
 private Map<String, Object> createResultMap(Page<SortInfo> sortInfoPage, User user) {
     List<Post> posts = sortInfoPage.getContent().stream()
             .map(SortInfo::getPost)
@@ -202,39 +195,87 @@ private Map<String, Object> createResultMap(Page<SortInfo> sortInfoPage, User us
 
     }
 
+//    public Boolean scrapPrompt(Long postId, User user) {
+//        Post post = postRepository.findById(postId)
+//                .orElseThrow(() -> new ApiException(ErrorDefine.POST_NOT_FOUND));
+//
+//        Long userId = user.getId();
+//
+//        Prompt prompt = Prompt.scrapPost(post, user);
+//        promptRepository.save(prompt);
+//
+//        List<PromptBlock> promptBlocks = promptBlockRepository.findByPrompt(post.getPrompt());
+//
+//        for (PromptBlock promptBlock : promptBlocks) {
+//            // 기존 Block 조회 (title, blockDescription, blockCategory 기준)
+//            Block existingBlock = blockRepository.findByBlockValueAndBlockDescriptionAndBlockCategoryAndUserId(
+//                    promptBlock.getBlock().getBlockValue(),
+//                    promptBlock.getBlock().getBlockDescription(),
+//                    promptBlock.getBlock().getBlockCategory(),
+//                    userId
+//            ).orElse(null);
+//
+//            // 기존 Block이 없으면 새로운 Block 생성
+//            if (existingBlock == null) {
+//                existingBlock = Block.scrapBlock(promptBlock, user);
+//                blockRepository.save(existingBlock);
+//            }
+//
+//            // PromptBlock 생성 및 저장
+//            PromptBlock newPromptBlock = PromptBlock.scrapPromptBlock(prompt, existingBlock);
+//            promptBlockRepository.save(newPromptBlock);
+//        }
+//
+//        return true;
+//    }
     public Boolean scrapPrompt(Long postId, User user) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.POST_NOT_FOUND));
 
         Long userId = user.getId();
 
+        // 새로운 Prompt 생성
         Prompt prompt = Prompt.scrapPost(post, user);
         promptRepository.save(prompt);
 
+        // 포스트에 대한 모든 PromptBlock 조회
         List<PromptBlock> promptBlocks = promptBlockRepository.findByPrompt(post.getPrompt());
 
-        for (PromptBlock promptBlock : promptBlocks) {
-            // 기존 Block 조회 (title, blockDescription, blockCategory 기준)
-            Block existingBlock = blockRepository.findByBlockValueAndBlockDescriptionAndBlockCategoryAndUserId(
-                    promptBlock.getBlock().getBlockValue(),
-                    promptBlock.getBlock().getBlockDescription(),
-                    promptBlock.getBlock().getBlockCategory(),
-                    userId
-            ).orElse(null);
+        // 사용자에 해당하는 모든 기존 블록을 한 번에 조회
+        List<Block> existingBlocks = blockRepository.findByUserId(userId);
 
-            // 기존 Block이 없으면 새로운 Block 생성
+        // 기존 블록 정보를 맵으로 저장하여 빠르게 조회 가능
+        Map<String, Block> blockMap = existingBlocks.stream()
+                .collect(Collectors.toMap(
+                        b -> b.getBlockValue() + b.getBlockDescription() + b.getBlockCategory(),
+                        b -> b
+                ));
+
+        // PromptBlock을 순회하면서 블록 처리
+        for (PromptBlock promptBlock : promptBlocks) {
+            String blockKey = promptBlock.getBlock().getBlockValue()
+                    + promptBlock.getBlock().getBlockDescription()
+                    + promptBlock.getBlock().getBlockCategory();
+
+            // 기존 블록이 존재하는지 확인
+            Block existingBlock = blockMap.get(blockKey);
+
+            // 기존 블록이 없으면 새로운 블록 생성 및 저장
             if (existingBlock == null) {
                 existingBlock = Block.scrapBlock(promptBlock, user);
                 blockRepository.save(existingBlock);
+                // 새로운 블록을 맵에 추가
+                blockMap.put(blockKey, existingBlock);
             }
 
-            // PromptBlock 생성 및 저장
+            // 새로운 PromptBlock 생성 및 저장
             PromptBlock newPromptBlock = PromptBlock.scrapPromptBlock(prompt, existingBlock);
             promptBlockRepository.save(newPromptBlock);
         }
 
         return true;
     }
+
 
     public Map<String, Object> getPromptBlocksByPostId(Long postId) {
         Post post = postRepository.findById(postId)

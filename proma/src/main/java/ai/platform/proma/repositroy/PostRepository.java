@@ -22,7 +22,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("SELECT p AS post, COALESCE(COUNT(l.id), 0) AS likeCount " +
             "FROM Post p " +
             "LEFT JOIN Like l ON p.id = l.post.id " +
-            "LEFT JOIN Prompt pr ON p.prompt.id = pr.id " +
+            "LEFT JOIN FETCH Prompt pr ON p.prompt.id = pr.id " +
             "WHERE (:searchKeyword IS NULL OR p.postTitle LIKE %:searchKeyword% OR p.postDescription LIKE %:searchKeyword%) " +
             "AND (:category IS NULL OR p.postCategory = :category)"+
             "AND (:method IS NULL OR pr.promptMethods = :method)"+
@@ -50,7 +50,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query("SELECT p AS post, COALESCE(COUNT(l.id), 0) AS likeCount " +
             "FROM Post p " +
-            "LEFT JOIN Prompt pr ON p.prompt.id = pr.id " +
+            "LEFT JOIN FETCH Prompt pr ON p.prompt.id = pr.id " +
             "LEFT JOIN Like l ON p.id = l.post.id " +
             "WHERE p.id IN :postIds " +
             "AND (:category IS NULL OR p.postCategory = :category)" +

@@ -22,4 +22,5 @@ public interface BlockRepository extends JpaRepository<Block, Long> {
     Optional<Block> findByIdAndPromptMethods(Long id, PromptMethods promptMethods);
 
     Optional<Block> findByIdAndUser(Long id, User user);
+    List<Block> findByUserId(Long id);
 }
