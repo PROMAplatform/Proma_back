@@ -1,12 +1,9 @@
-package ai.platform.proma.repositroy;
+package ai.platform.proma.repository;
 
 import ai.platform.proma.domain.Post;
-import ai.platform.proma.domain.Prompt;
 import ai.platform.proma.domain.PromptMethods;
-import ai.platform.proma.domain.User;
 import ai.platform.proma.domain.enums.PromptCategory;
 
-import ai.platform.proma.domain.enums.PromptMethod;
 import ai.platform.proma.dto.response.SortInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

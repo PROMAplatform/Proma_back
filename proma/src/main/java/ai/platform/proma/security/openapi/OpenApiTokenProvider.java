@@ -1,19 +1,15 @@
 package ai.platform.proma.security.openapi;
 
 import ai.platform.proma.domain.enums.Role;
-import ai.platform.proma.repositroy.UserRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
-import java.util.Random;
 
 @Component
 public class OpenApiTokenProvider implements InitializingBean {

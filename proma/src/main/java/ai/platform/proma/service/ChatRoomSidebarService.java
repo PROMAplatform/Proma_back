@@ -11,7 +11,7 @@ import ai.platform.proma.dto.response.PromptListResponseDto;
 import ai.platform.proma.dto.response.SelectBlockDto;
 import ai.platform.proma.exception.ApiException;
 import ai.platform.proma.exception.ErrorDefine;
-import ai.platform.proma.repositroy.*;
+import ai.platform.proma.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

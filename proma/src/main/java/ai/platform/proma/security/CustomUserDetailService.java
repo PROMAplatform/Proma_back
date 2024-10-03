@@ -2,7 +2,7 @@ package ai.platform.proma.security;
 
 import ai.platform.proma.exception.ApiException;
 import ai.platform.proma.exception.ErrorDefine;
-import ai.platform.proma.repositroy.UserRepository;
+import ai.platform.proma.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -3,7 +3,7 @@ package ai.platform.proma.security;
 import ai.platform.proma.domain.enums.Role;
 import ai.platform.proma.exception.ApiException;
 import ai.platform.proma.exception.ErrorDefine;
-import ai.platform.proma.repositroy.UserRepository;
+import ai.platform.proma.repository.UserRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;

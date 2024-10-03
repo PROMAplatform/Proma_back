@@ -1,4 +1,4 @@
-package ai.platform.proma.security;
+package ai.platform.proma.annotation;
 
 import io.swagger.v3.oas.annotations.Parameter;
 
