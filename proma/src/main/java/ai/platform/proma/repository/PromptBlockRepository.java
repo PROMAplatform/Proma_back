@@ -1,4 +1,4 @@
-package ai.platform.proma.repositroy;
+package ai.platform.proma.repository;
 
 import ai.platform.proma.domain.Block;
 import ai.platform.proma.domain.Prompt;
