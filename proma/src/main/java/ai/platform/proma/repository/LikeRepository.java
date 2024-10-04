@@ -1,9 +1,8 @@
-package ai.platform.proma.repositroy;
+package ai.platform.proma.repository;
 
 import ai.platform.proma.domain.Like;
 import ai.platform.proma.domain.Post;
 import ai.platform.proma.domain.User;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

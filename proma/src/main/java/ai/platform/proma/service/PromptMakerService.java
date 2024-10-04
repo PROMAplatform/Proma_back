@@ -8,7 +8,7 @@ import ai.platform.proma.dto.request.PromptSaveRequestDto;
 import ai.platform.proma.dto.response.SelectBlockDto;
 import ai.platform.proma.exception.ApiException;
 import ai.platform.proma.exception.ErrorDefine;
-import ai.platform.proma.repositroy.*;
+import ai.platform.proma.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
