@@ -30,9 +30,10 @@ public class PostGetPostsPreviewService implements PostGetPostsPreviewUseCase {
 
     private final PostRepository postRepository;
     private final CommunicationMethodRepository communicationMethodRepository;
+    private final SortOrderImpl sortOrder;
     public Map<String, Object> getPostsPreview(String searchKeyword, String category, int page, int size, String likeOrder, String method) {
 
-        Sort sort = getSortOrder(likeOrder);
+        Sort sort = sortOrder.execute(likeOrder);
 
         PromptMethods promptMethods = null;
         if(!method.isEmpty()) {
@@ -53,15 +54,4 @@ public class PostGetPostsPreviewService implements PostGetPostsPreviewUseCase {
         return result;
     }
 
-    private Sort getSortOrder(String likeOrder) {
-        return switch (likeOrder != null ? likeOrder.toLowerCase() : "") {
-            case "desc" -> Sort.by(
-                    new Sort.Order(Sort.Direction.DESC, "likeCount"),
-                    new Sort.Order(Sort.Direction.DESC, "createAt"));
-            case "" -> Sort.by(
-                    new Sort.Order(Sort.Direction.DESC, "createAt"),
-                    new Sort.Order(Sort.Direction.DESC, "likeCount"));
-            default -> throw new ApiException(ErrorDefine.INVALID_LIKE_ORDER);
-        };
-    }
 }

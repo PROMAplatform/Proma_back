@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -29,30 +31,34 @@ public class PostScrapPromptService implements PostScrapPromptUseCase {
 
         Long userId = user.getId();
 
+        // 새로운 Prompt 생성
         Prompt prompt = Prompt.scrapPost(post, user);
         promptRepository.save(prompt);
 
         List<PromptBlock> promptBlocks = promptBlockRepository.findByPrompt(post.getPrompt());
 
-        for (PromptBlock promptBlock : promptBlocks) {
-            // 기존 Block 조회 (title, blockDescription, blockCategory 기준)
-            Block existingBlock = blockRepository.findByBlockValueAndBlockDescriptionAndBlockCategoryAndUserId(
-                    promptBlock.getBlock().getBlockValue(),
-                    promptBlock.getBlock().getBlockDescription(),
-                    promptBlock.getBlock().getBlockCategory(),
-                    userId
-            ).orElse(null);
+        List<Block> existingBlocks = blockRepository.findByUserId(userId);
 
-            // 기존 Block이 없으면 새로운 Block 생성
-            if (existingBlock == null) {
-                existingBlock = Block.scrapBlock(promptBlock, user);
-                blockRepository.save(existingBlock);
-            }
+        Map<String, Block> blockMap = existingBlocks.stream()
+                .collect(Collectors.toMap(
+                        b -> b.getBlockValue() + b.getBlockDescription() + b.getBlockCategory(),
+                        b -> b
+                ));
 
-            // PromptBlock 생성 및 저장
+        promptBlocks.forEach(promptBlock -> {
+            String blockKey = promptBlock.getBlock().getBlockValue()
+                    + promptBlock.getBlock().getBlockDescription()
+                    + promptBlock.getBlock().getBlockCategory();
+
+            Block existingBlock = blockMap.computeIfAbsent(blockKey, k -> {
+                Block newBlock = Block.scrapBlock(promptBlock, user);
+                blockRepository.save(newBlock);
+                return newBlock;
+            });
+
             PromptBlock newPromptBlock = PromptBlock.scrapPromptBlock(prompt, existingBlock);
             promptBlockRepository.save(newPromptBlock);
-        }
+        });
 
         return true;
     }

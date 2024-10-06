@@ -44,33 +44,57 @@ public class PostService {
             default -> throw new ApiException(ErrorDefine.INVALID_LIKE_ORDER);
         };
     }
-    public Map<Post, Boolean> existsByPostsAndUser(List<Post> posts, User user) {
+//    public Map<Post, Boolean> existsByPostsAndUser(List<Post> posts, User user) {
+//        // LikeRepository를 사용하여 좋아요된 Post ID를 가져옴
+//        List<Long> likedPostIds = likeRepository.findLikedPostIdsByPostsAndUser(posts, user);
+//
+//        // 좋아요 여부를 확인하는 Map 생성
+//        return posts.stream()
+//                .collect(Collectors.toMap(post -> post, post -> likedPostIds.contains(post.getId())));
+//    }
+
+//    private Map<String, Object> createResultMap(Page<SortInfo> sortInfoPage, User user) {
+//        List<Post> posts = sortInfoPage.getContent().stream()
+//                .map(SortInfo::getPost)
+//                .collect(Collectors.toList());
+//
+//        // 서비스 메서드를 통해 좋아요 여부를 확인
+//        Map<Post, Boolean> likedPostsMap = existsByPostsAndUser(posts, user);
+//
+//        List<PostResponseDto> responseDtos = sortInfoPage.getContent().stream()
+//                .map(sortInfo -> PostResponseDto.of(sortInfo, likedPostsMap.getOrDefault(sortInfo.getPost(), false)))
+//                .collect(Collectors.toList());
+//
+//        Map<String, Object> result = new HashMap<>();
+//        result.put("selectPrompt", responseDtos);
+//        result.put("pageInfo", new PageInfo(sortInfoPage));
+//
+//        return result;
+//    }
+    public Map<String, Object> createResultMap(Page<SortInfo> sortInfoPage, User user) {
+
+        List<Post> posts = sortInfoPage.getContent().stream()
+                .map(SortInfo::getPost)
+                .collect(Collectors.toList());
+
         // LikeRepository를 사용하여 좋아요된 Post ID를 가져옴
         List<Long> likedPostIds = likeRepository.findLikedPostIdsByPostsAndUser(posts, user);
 
         // 좋아요 여부를 확인하는 Map 생성
-        return posts.stream()
+        Map<Post, Boolean> likedPostsMap = posts.stream()
                 .collect(Collectors.toMap(post -> post, post -> likedPostIds.contains(post.getId())));
+
+        List<PostResponseDto> responseDtos = sortInfoPage.getContent().stream()
+                .map(sortInfo -> PostResponseDto.of(sortInfo, likedPostsMap.getOrDefault(sortInfo.getPost(), false)))
+                .collect(Collectors.toList());
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("selectPrompt", responseDtos);
+        result.put("pageInfo", new PageInfo(sortInfoPage));
+
+        return result;
     }
 
-private Map<String, Object> createResultMap(Page<SortInfo> sortInfoPage, User user) {
-    List<Post> posts = sortInfoPage.getContent().stream()
-            .map(SortInfo::getPost)
-            .collect(Collectors.toList());
-
-    // 서비스 메서드를 통해 좋아요 여부를 확인
-    Map<Post, Boolean> likedPostsMap = existsByPostsAndUser(posts, user);
-
-    List<PostResponseDto> responseDtos = sortInfoPage.getContent().stream()
-            .map(sortInfo -> PostResponseDto.of(sortInfo, likedPostsMap.getOrDefault(sortInfo.getPost(), false)))
-            .collect(Collectors.toList());
-
-    Map<String, Object> result = new HashMap<>();
-    result.put("selectPrompt", responseDtos);
-    result.put("pageInfo", new PageInfo(sortInfoPage));
-
-    return result;
-}
     public Map<String, List<PromptTitleList>> promptTitleList(User user) {
 
         List<Prompt> prompts = promptRepository.findByUserAndScrap(user);
@@ -194,39 +218,6 @@ private Map<String, Object> createResultMap(Page<SortInfo> sortInfoPage, User us
 
     }
 
-//    public Boolean scrapPrompt(Long postId, User user) {
-//        Post post = postRepository.findById(postId)
-//                .orElseThrow(() -> new ApiException(ErrorDefine.POST_NOT_FOUND));
-//
-//        Long userId = user.getId();
-//
-//        Prompt prompt = Prompt.scrapPost(post, user);
-//        promptRepository.save(prompt);
-//
-//        List<PromptBlock> promptBlocks = promptBlockRepository.findByPrompt(post.getPrompt());
-//
-//        for (PromptBlock promptBlock : promptBlocks) {
-//            // 기존 Block 조회 (title, blockDescription, blockCategory 기준)
-//            Block existingBlock = blockRepository.findByBlockValueAndBlockDescriptionAndBlockCategoryAndUserId(
-//                    promptBlock.getBlock().getBlockValue(),
-//                    promptBlock.getBlock().getBlockDescription(),
-//                    promptBlock.getBlock().getBlockCategory(),
-//                    userId
-//            ).orElse(null);
-//
-//            // 기존 Block이 없으면 새로운 Block 생성
-//            if (existingBlock == null) {
-//                existingBlock = Block.scrapBlock(promptBlock, user);
-//                blockRepository.save(existingBlock);
-//            }
-//
-//            // PromptBlock 생성 및 저장
-//            PromptBlock newPromptBlock = PromptBlock.scrapPromptBlock(prompt, existingBlock);
-//            promptBlockRepository.save(newPromptBlock);
-//        }
-//
-//        return true;
-//    }
     public Boolean scrapPrompt(Long postId, User user) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.POST_NOT_FOUND));
@@ -250,27 +241,22 @@ private Map<String, Object> createResultMap(Page<SortInfo> sortInfoPage, User us
                         b -> b
                 ));
 
-        // PromptBlock을 순회하면서 블록 처리
-        for (PromptBlock promptBlock : promptBlocks) {
+        promptBlocks.forEach(promptBlock -> {
             String blockKey = promptBlock.getBlock().getBlockValue()
                     + promptBlock.getBlock().getBlockDescription()
                     + promptBlock.getBlock().getBlockCategory();
 
             // 기존 블록이 존재하는지 확인
-            Block existingBlock = blockMap.get(blockKey);
-
-            // 기존 블록이 없으면 새로운 블록 생성 및 저장
-            if (existingBlock == null) {
-                existingBlock = Block.scrapBlock(promptBlock, user);
-                blockRepository.save(existingBlock);
-                // 새로운 블록을 맵에 추가
-                blockMap.put(blockKey, existingBlock);
-            }
+            Block existingBlock = blockMap.computeIfAbsent(blockKey, k -> {
+                Block newBlock = Block.scrapBlock(promptBlock, user);
+                blockRepository.save(newBlock);
+                return newBlock; // 새로운 블록을 추가하여 반환
+            });
 
             // 새로운 PromptBlock 생성 및 저장
             PromptBlock newPromptBlock = PromptBlock.scrapPromptBlock(prompt, existingBlock);
             promptBlockRepository.save(newPromptBlock);
-        }
+        });
 
         return true;
     }
