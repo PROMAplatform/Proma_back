@@ -16,8 +16,9 @@ public class AcountsService {
     private final UserRepository userRepository;
 
 
-    public User getUserBySocialId(String socialId) {
-        return userRepository.findBySocialIdAndRefreshTokenIsNotNullAndIsLoginIsTrue(socialId)
+    public Long getUserBySocialId(String socialId) {
+        User user =  userRepository.findBySocialIdAndRefreshTokenIsNotNullAndIsLoginIsTrue(socialId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+        return user.getId();
     }
 }
