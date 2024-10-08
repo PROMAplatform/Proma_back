@@ -12,6 +12,7 @@ import ai.platform.proma.exception.ErrorDefine;
 import ai.platform.proma.repository.CommunicationMethodRepository;
 import ai.platform.proma.repository.LikeRepository;
 import ai.platform.proma.repository.PostRepository;
+import ai.platform.proma.repository.UserRepository;
 import ai.platform.proma.usecase.post.PostGetPostsByUserDistributeUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -34,10 +35,12 @@ public class PostGetPostsByUserDistributeService implements PostGetPostsByUserDi
     private final PostRepository postRepository;
     private final CreateResultMapImpl createResultMap;
     private final SortOrderImpl sortOrder;
+    private final UserRepository userRepository;
 
-    public Map<String, Object> getPostsByUserDistribute(User user, String category, int page, int size, String likeOrder, String method) {
+    public Map<String, Object> getPostsByUserDistribute(Long userId, String category, int page, int size, String likeOrder, String method) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
 
-        Long userId = user.getId();
 
         PromptMethods promptMethods = null;
         if(!method.isEmpty()) {
@@ -49,7 +52,7 @@ public class PostGetPostsByUserDistributeService implements PostGetPostsByUserDi
 
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        Page<SortInfo> sortInfoPage = postRepository.findAllByUserIdAndPostCategoryAndIsScrapShared(userId, PromptCategory.fromValue(category), promptMethods, pageable);
+        Page<SortInfo> sortInfoPage = postRepository.findAllByUserIdAndPostCategoryAndIsScrapShared(user.getId(), PromptCategory.fromValue(category), promptMethods, pageable);
 
         return createResultMap.execute(sortInfoPage, user);
 

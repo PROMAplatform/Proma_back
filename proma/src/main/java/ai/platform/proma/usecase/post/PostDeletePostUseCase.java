@@ -6,5 +6,5 @@ import ai.platform.proma.domain.User;
 @UseCase
 public interface PostDeletePostUseCase {
 
-    Boolean deletePost(User user, Long postId);
+    Boolean deletePost(Long userId, Long postId);
 }

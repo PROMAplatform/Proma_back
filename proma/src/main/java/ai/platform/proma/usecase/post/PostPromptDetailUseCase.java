@@ -6,5 +6,5 @@ import ai.platform.proma.dto.response.PromptListResponseDto;
 
 @UseCase
 public interface PostPromptDetailUseCase {
-    PromptListResponseDto promptDetail(Long promptId, User user);
+    PromptListResponseDto promptDetail(Long promptId, Long userId);
 }

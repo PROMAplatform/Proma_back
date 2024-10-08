@@ -4,7 +4,10 @@ import ai.platform.proma.domain.Prompt;
 import ai.platform.proma.domain.User;
 import ai.platform.proma.dto.response.PromptListResponseDto;
 import ai.platform.proma.dto.response.SelectBlockDto;
+import ai.platform.proma.exception.ApiException;
+import ai.platform.proma.exception.ErrorDefine;
 import ai.platform.proma.repository.PromptRepository;
+import ai.platform.proma.repository.UserRepository;
 import ai.platform.proma.usecase.chatroom.sidebar.SidebarGetPromptListUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,7 +24,11 @@ import java.util.stream.Collectors;
 public class SidbarGetPromptListService implements SidebarGetPromptListUseCase {
 
     private final PromptRepository promptRepository;
-    public Map<String, List<PromptListResponseDto>> getPromptList(User user) {
+    private final UserRepository userRepository;
+    public Map<String, List<PromptListResponseDto>> getPromptList(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+
         List<Prompt> prompts = promptRepository.findByUserAndScrap(user);
 
         Map<String, List<PromptListResponseDto>> promptMap = new HashMap<>();

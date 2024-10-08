@@ -6,10 +6,7 @@ import ai.platform.proma.dto.request.ListPromptAtom;
 import ai.platform.proma.dto.request.PromptSaveRequestDto;
 import ai.platform.proma.exception.ApiException;
 import ai.platform.proma.exception.ErrorDefine;
-import ai.platform.proma.repository.BlockRepository;
-import ai.platform.proma.repository.CommunicationMethodRepository;
-import ai.platform.proma.repository.PromptBlockRepository;
-import ai.platform.proma.repository.PromptRepository;
+import ai.platform.proma.repository.*;
 import ai.platform.proma.usecase.prompt.PromptMakePromptUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,7 +23,11 @@ public class PromptMakePromptService implements PromptMakePromptUseCase {
     private final PromptRepository promptRepository;
     private final CommunicationMethodRepository communicationMethodRepository;
     private final PromptBlockRepository promptBlockRepository;
-    public Boolean makePrompt(PromptSaveRequestDto promptSaveRequestDto, User user) {
+    private final UserRepository userRepository;
+    public Boolean makePrompt(PromptSaveRequestDto promptSaveRequestDto, Long userId) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
 
         PromptMethods promptMethods = communicationMethodRepository.findByPromptMethod(PromptMethod.fromValue(promptSaveRequestDto.getPromptMethod()))
                 .orElseThrow(() -> new ApiException(ErrorDefine.COMMUNICATION_METHOD_NOT_FOUND));

@@ -9,6 +9,7 @@ import ai.platform.proma.exception.ApiException;
 import ai.platform.proma.exception.ErrorDefine;
 import ai.platform.proma.repository.BlockRepository;
 import ai.platform.proma.repository.CommunicationMethodRepository;
+import ai.platform.proma.repository.UserRepository;
 import ai.platform.proma.usecase.prompt.PromptSearchBlockUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,9 +27,12 @@ public class PromptSearchBlockService implements PromptSearchBlockUseCase {
 
     private final CommunicationMethodRepository communicationMethodRepository;
     private final BlockRepository blockRepository;
+    private final UserRepository userRepository;
 
 
-    public Map<String, List<SelectBlockDto>> searchBlock(User user, String promptMethod) {
+    public Map<String, List<SelectBlockDto>> searchBlock(Long userId, String promptMethod) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
 
         PromptMethods promptMethods = communicationMethodRepository.findByPromptMethod(PromptMethod.fromValue(promptMethod))
                 .orElseThrow(() -> new ApiException(ErrorDefine.COMMUNICATION_METHOD_NOT_FOUND));

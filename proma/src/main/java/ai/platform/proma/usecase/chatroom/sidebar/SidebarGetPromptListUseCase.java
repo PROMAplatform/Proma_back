@@ -9,5 +9,5 @@ import java.util.Map;
 
 @UseCase
 public interface SidebarGetPromptListUseCase {
-    Map<String, List<PromptListResponseDto>> getPromptList(User user);
+    Map<String, List<PromptListResponseDto>> getPromptList(Long userId);
 }

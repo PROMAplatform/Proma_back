@@ -6,5 +6,5 @@ import ai.platform.proma.dto.request.PromptSaveRequestDto;
 
 @UseCase
 public interface PromptMakePromptUseCase {
-    Boolean makePrompt(PromptSaveRequestDto promptSaveRequestDto, User user);
+    Boolean makePrompt(PromptSaveRequestDto promptSaveRequestDto, Long userId);
 }

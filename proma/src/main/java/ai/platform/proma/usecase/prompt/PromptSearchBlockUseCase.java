@@ -9,5 +9,5 @@ import java.util.Map;
 
 @UseCase
 public interface PromptSearchBlockUseCase {
-    Map<String, List<SelectBlockDto>> searchBlock(User user, String promptMethod);
+    Map<String, List<SelectBlockDto>> searchBlock(Long userId, String promptMethod);
 }

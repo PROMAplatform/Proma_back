@@ -5,5 +5,5 @@ import ai.platform.proma.domain.User;
 
 @UseCase
 public interface PromptDeleteBlockUseCase {
-    Boolean deleteBlock(Long blockId, User user);
+    Boolean deleteBlock(Long blockId, Long userId);
 }

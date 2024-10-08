@@ -9,5 +9,5 @@ import java.util.Map;
 
 @UseCase
 public interface SidebarGetChatRoomListUseCase {
-    Map<String, List<ChatRoomListResponseDto>> getChatRoomList(User user);
+    Map<String, List<ChatRoomListResponseDto>> getChatRoomList(Long userId);
 }

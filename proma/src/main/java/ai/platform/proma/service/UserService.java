@@ -4,6 +4,8 @@ import ai.platform.proma.domain.User;
 import ai.platform.proma.domain.enums.Role;
 import ai.platform.proma.domain.enums.UserLoginMethod;
 import ai.platform.proma.dto.response.LoginResponseDto;
+import ai.platform.proma.exception.ApiException;
+import ai.platform.proma.exception.ErrorDefine;
 import ai.platform.proma.repository.UserRepository;
 import ai.platform.proma.security.JwtProvider;
 import ai.platform.proma.security.JwtToken;
@@ -66,7 +68,9 @@ public class UserService {
         return LoginResponseDto.of(jwtToken, user.getUserName());
     }
 
-    public Boolean signOut(User user){
+    public Boolean signOut(Long userId){
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
         user.signOut();
         return true;
     }
@@ -75,7 +79,9 @@ public class UserService {
         return Map.of("access_token", jwtProvider.reissueToken(request, role));
     }
 
-    public Boolean resignUser(User user){
+    public Boolean resignUser(Long userId){
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
         user.resign();
         return true;
     }

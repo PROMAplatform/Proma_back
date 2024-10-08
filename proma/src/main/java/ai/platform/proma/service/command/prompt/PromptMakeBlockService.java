@@ -9,6 +9,7 @@ import ai.platform.proma.exception.ApiException;
 import ai.platform.proma.exception.ErrorDefine;
 import ai.platform.proma.repository.BlockRepository;
 import ai.platform.proma.repository.CommunicationMethodRepository;
+import ai.platform.proma.repository.UserRepository;
 import ai.platform.proma.usecase.prompt.PromptMakeBlockUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,8 +22,11 @@ public class PromptMakeBlockService implements PromptMakeBlockUseCase {
 
     private final CommunicationMethodRepository communicationMethodRepository;
     private final BlockRepository blockRepository;
+    private final UserRepository userRepository;
 
-    public Boolean makeBlock(BlockSaveRequestDto blockSaveRequestDto, User user) {
+    public Boolean makeBlock(BlockSaveRequestDto blockSaveRequestDto, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
 
         PromptMethods promptMethods = communicationMethodRepository.findByPromptMethod(PromptMethod.fromValue(blockSaveRequestDto.getPromptMethod()))
                 .orElseThrow(() -> new ApiException(ErrorDefine.COMMUNICATION_METHOD_NOT_FOUND));

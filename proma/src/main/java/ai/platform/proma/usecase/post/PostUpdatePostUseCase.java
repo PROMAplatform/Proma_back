@@ -6,5 +6,5 @@ import ai.platform.proma.dto.request.PostRequestDto;
 
 @UseCase
 public interface PostUpdatePostUseCase {
-    Boolean updatePost(User user, Long postId, PostRequestDto postRequestDto);
+    Boolean updatePost(Long userId, Long postId, PostRequestDto postRequestDto);
 }
