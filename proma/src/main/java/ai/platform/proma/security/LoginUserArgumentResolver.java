@@ -23,7 +23,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         boolean isBuyer = parameter.hasParameterAnnotation(LoginUser.class) &&
-                parameter.getParameterType().isAssignableFrom(User.class);
+                parameter.getParameterType().isAssignableFrom(Long.class);
         return isBuyer;
     }
 

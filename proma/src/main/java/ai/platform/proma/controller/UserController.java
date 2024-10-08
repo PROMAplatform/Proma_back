@@ -42,9 +42,9 @@ public class UserController {
 
     @PatchMapping("/signout")
     public ResponseDto<Boolean> signOut(
-            @LoginUser User user
+            @LoginUser Long userId
     ){
-        return new ResponseDto<>(userService.signOut(user));
+        return new ResponseDto<>(userService.signOut(userId));
     }
 
     @PostMapping("/social/reissue")
@@ -54,9 +54,9 @@ public class UserController {
 
     @PatchMapping("/resign")
     public ResponseDto<Boolean> resignUser(
-            @LoginUser User user
+            @LoginUser Long userId
     ){
-        return new ResponseDto<>(userService.resignUser(user));
+        return new ResponseDto<>(userService.resignUser(userId));
     }
 
 }
