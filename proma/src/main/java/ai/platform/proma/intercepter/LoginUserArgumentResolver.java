@@ -7,6 +7,7 @@ import ai.platform.proma.exception.ErrorDefine;
 import ai.platform.proma.security.CustomUserDetail;
 import ai.platform.proma.service.AcountsService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Component
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver {
 
     private final AcountsService acountsService;
@@ -37,7 +39,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
                                   WebDataBinderFactory binderFactory) {
         final Object userDetails = webRequest.getAttribute("user_id", WebRequest.SCOPE_REQUEST);
 
-        return Long.parseLong(userDetails.toString());
+        return acountsService.getUserBySocialId(userDetails.toString());
 
     }
 }
