@@ -1,7 +1,10 @@
-package ai.platform.proma.security;
+package ai.platform.proma.intercepter;
 
 import ai.platform.proma.annotation.LoginUser;
 import ai.platform.proma.domain.User;
+import ai.platform.proma.exception.ApiException;
+import ai.platform.proma.exception.ErrorDefine;
+import ai.platform.proma.security.CustomUserDetail;
 import ai.platform.proma.service.AcountsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
@@ -10,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
@@ -22,9 +26,8 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        boolean isBuyer = parameter.hasParameterAnnotation(LoginUser.class) &&
+        return parameter.hasParameterAnnotation(LoginUser.class) &&
                 parameter.getParameterType().isAssignableFrom(Long.class);
-        return isBuyer;
     }
 
     @Override
@@ -32,12 +35,9 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
                                   ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest,
                                   WebDataBinderFactory binderFactory) {
-        Object userDetails = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String socialId = ((CustomUserDetail) userDetails).getUsername();
+        final Object userDetails = webRequest.getAttribute("userId", WebRequest.SCOPE_REQUEST);
 
-        if (parameter.hasParameterAnnotation(LoginUser.class)) {
-            return acountsService.getUserBySocialId(socialId);
-        }
-        return null;
+        return Long.parseLong(userDetails.toString());
+
     }
 }
