@@ -8,6 +8,7 @@ import ai.platform.proma.exception.ApiException;
 import ai.platform.proma.exception.ErrorDefine;
 import ai.platform.proma.repository.ChatRoomRepository;
 import ai.platform.proma.repository.MessageRepository;
+import ai.platform.proma.repository.UserRepository;
 import ai.platform.proma.usecase.chatroom.ChatRoomEnterChatRoomUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,8 +26,11 @@ public class ChatRoomEnterChatRoomService implements ChatRoomEnterChatRoomUseCas
 
     private final ChatRoomRepository chatRoomRepository;
     private final MessageRepository messageRepository;
+    private final UserRepository userRepository;
 
-    public Map<String, List<MessageListResponseDto>> enterChatRoom(Long chatRoomId, User user) {
+    public Map<String, List<MessageListResponseDto>> enterChatRoom(Long chatRoomId, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
 
         ChatRoom chatRoom = chatRoomRepository.findByIdAndUser(chatRoomId, user)
                 .orElseThrow(() -> new ApiException(ErrorDefine.CHAT_ROOM_NOT_FOUND));

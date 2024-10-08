@@ -12,6 +12,7 @@ import ai.platform.proma.exception.ErrorDefine;
 import ai.platform.proma.repository.CommunicationMethodRepository;
 import ai.platform.proma.repository.LikeRepository;
 import ai.platform.proma.repository.PostRepository;
+import ai.platform.proma.repository.UserRepository;
 import ai.platform.proma.usecase.post.PostGetPostsUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -34,8 +35,11 @@ public class PostGetPostsService implements PostGetPostsUseCase {
     private final CommunicationMethodRepository communicationMethodRepository;
     private final CreateResultMapImpl createResultMap;
     private final SortOrderImpl sortOrder;
+    private final UserRepository userRepository;
 
-    public Map<String, Object> getPosts(User user, String searchKeyword, String category, int page, int size, String likeOrder, String method) {
+    public Map<String, Object> getPosts(Long userId, String searchKeyword, String category, int page, int size, String likeOrder, String method) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
 
         Pageable pageable = PageRequest.of(page, size, sortOrder.execute(likeOrder));
 

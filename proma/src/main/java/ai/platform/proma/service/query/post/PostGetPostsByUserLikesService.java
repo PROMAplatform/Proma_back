@@ -12,6 +12,7 @@ import ai.platform.proma.exception.ErrorDefine;
 import ai.platform.proma.repository.CommunicationMethodRepository;
 import ai.platform.proma.repository.LikeRepository;
 import ai.platform.proma.repository.PostRepository;
+import ai.platform.proma.repository.UserRepository;
 import ai.platform.proma.usecase.post.PostGetPostsByUserLikesUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -36,11 +37,12 @@ public class PostGetPostsByUserLikesService implements PostGetPostsByUserLikesUs
     private final PostRepository postRepository;
     private final CreateResultMapImpl createResultMap;
     private final SortOrderImpl sortOrder;
-    public Map<String, Object> getPostsByUserLikes(User user, String category, int page, int size, String likeOrder, String method) {
+    private final UserRepository userRepository;
+    public Map<String, Object> getPostsByUserLikes(Long userId, String category, int page, int size, String likeOrder, String method) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
 
-        Long userId = user.getId();
-
-        List<Long> postIds = likeRepository.findPostIdsByUserId(userId);
+        List<Long> postIds = likeRepository.findPostIdsByUserId(user.getId());
 
         PromptMethods promptMethods = null;
         if(!method.isEmpty()) {

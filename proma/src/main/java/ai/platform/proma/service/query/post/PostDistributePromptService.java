@@ -9,6 +9,7 @@ import ai.platform.proma.exception.ErrorDefine;
 import ai.platform.proma.repository.PostRepository;
 import ai.platform.proma.repository.PromptBlockRepository;
 import ai.platform.proma.repository.PromptRepository;
+import ai.platform.proma.repository.UserRepository;
 import ai.platform.proma.usecase.post.PostDistributePromptUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,10 @@ public class PostDistributePromptService implements PostDistributePromptUseCase 
     private final PromptRepository promptRepository;
     private final PostRepository postRepository;
     private final PromptBlockRepository promptBlockRepository;
-    public Boolean distributePrompt(User user, Long promptId, PostDistributeRequestDto postDistributeRequestDto) {
+    private final UserRepository userRepository;
+    public Boolean distributePrompt(Long userId, Long promptId, PostDistributeRequestDto postDistributeRequestDto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
 
         Prompt prompt = promptRepository.findById(promptId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.PROMPT_NOT_FOUND));

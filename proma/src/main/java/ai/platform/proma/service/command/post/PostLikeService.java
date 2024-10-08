@@ -7,6 +7,7 @@ import ai.platform.proma.exception.ApiException;
 import ai.platform.proma.exception.ErrorDefine;
 import ai.platform.proma.repository.LikeRepository;
 import ai.platform.proma.repository.PostRepository;
+import ai.platform.proma.repository.UserRepository;
 import ai.platform.proma.usecase.post.PostLikeUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,11 @@ public class PostLikeService implements PostLikeUseCase {
 
     private final PostRepository postRepository;
     private final LikeRepository likeRepository;
-    public Boolean postLike(Long postId, User user){
+    private final UserRepository userRepository;
+    public Boolean postLike(Long postId, Long userId){
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
+
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.POST_NOT_FOUND));
 
