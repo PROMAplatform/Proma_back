@@ -35,7 +35,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
                                   ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest,
                                   WebDataBinderFactory binderFactory) {
-        final Object userDetails = webRequest.getAttribute("userId", WebRequest.SCOPE_REQUEST);
+        final Object userDetails = webRequest.getAttribute("user_id", WebRequest.SCOPE_REQUEST);
 
         return Long.parseLong(userDetails.toString());
 

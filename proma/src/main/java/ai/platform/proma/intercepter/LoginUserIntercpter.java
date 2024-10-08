@@ -28,7 +28,7 @@ public class LoginUserIntercpter implements HandlerInterceptor {
         if(authentication == null || !authentication.isAuthenticated()) {
             throw new ApiException(ErrorDefine.INVALID_HEADER_ERROR);
         }
-        request.setAttribute("userId", authentication.getName());
+        request.setAttribute("user_id", authentication.getName());
 
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }
