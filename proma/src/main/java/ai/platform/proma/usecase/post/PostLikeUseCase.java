@@ -5,5 +5,5 @@ import ai.platform.proma.domain.User;
 
 @UseCase
 public interface PostLikeUseCase {
-    Boolean postLike(Long postId, User user);
+    Boolean postLike(Long postId, Long userId);
 }

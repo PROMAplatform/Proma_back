@@ -7,5 +7,5 @@ import ai.platform.proma.dto.response.ChatRoomIdResponseDto;
 
 @UseCase
 public interface SidebarSaveChatRoomUseCase {
-    ChatRoomIdResponseDto saveChatRoom(ChatRoomSaveRequestDto chatRoomSaveRequestDto, User user);
+    ChatRoomIdResponseDto saveChatRoom(ChatRoomSaveRequestDto chatRoomSaveRequestDto, Long userId);
 }

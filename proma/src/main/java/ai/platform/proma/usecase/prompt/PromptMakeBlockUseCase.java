@@ -6,5 +6,5 @@ import ai.platform.proma.dto.request.BlockSaveRequestDto;
 
 @UseCase
 public interface PromptMakeBlockUseCase {
-    Boolean makeBlock(BlockSaveRequestDto blockSaveRequestDto, User user);
+    Boolean makeBlock(BlockSaveRequestDto blockSaveRequestDto, Long userId);
 }

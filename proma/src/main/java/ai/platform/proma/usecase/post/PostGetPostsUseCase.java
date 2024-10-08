@@ -7,5 +7,5 @@ import java.util.Map;
 
 @UseCase
 public interface PostGetPostsUseCase {
-    Map<String, Object> getPosts(User user, String searchKeyword, String category, int page, int size, String likeOrder, String method);
+    Map<String, Object> getPosts(Long userId, String searchKeyword, String category, int page, int size, String likeOrder, String method);
 }

@@ -9,5 +9,5 @@ import java.util.Map;
 
 @UseCase
 public interface PostPromptTitleListUseCase {
-    Map<String, List<PromptTitleList>> promptTitleList(User user);
+    Map<String, List<PromptTitleList>> promptTitleList(Long userId);
 }

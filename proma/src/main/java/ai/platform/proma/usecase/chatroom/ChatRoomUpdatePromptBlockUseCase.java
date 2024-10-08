@@ -6,5 +6,5 @@ import ai.platform.proma.dto.request.PromptUpdateRequestDto;
 
 @UseCase
 public interface ChatRoomUpdatePromptBlockUseCase {
-    Boolean updatePromptBlock(PromptUpdateRequestDto promptUpdateRequestDto, Long promptId, User user);
+    Boolean updatePromptBlock(PromptUpdateRequestDto promptUpdateRequestDto, Long promptId, Long userId);
 }

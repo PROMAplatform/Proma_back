@@ -5,5 +5,5 @@ import ai.platform.proma.domain.User;
 
 @UseCase
 public interface SidebarDeletePromptUseCase {
-    Boolean deletePrompt(Long promptId, User user);
+    Boolean deletePrompt(Long promptId, Long userId);
 }

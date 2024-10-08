@@ -6,5 +6,5 @@ import ai.platform.proma.dto.request.PromptDetailUpdateRequestDto;
 
 @UseCase
 public interface SidebarUpdatePromptDetailUseCase {
-    Boolean updatePromptDetail(PromptDetailUpdateRequestDto promptDetailUpdateRequestDto, Long promptId, User user);
+    Boolean updatePromptDetail(PromptDetailUpdateRequestDto promptDetailUpdateRequestDto, Long promptId, Long userId);
 }

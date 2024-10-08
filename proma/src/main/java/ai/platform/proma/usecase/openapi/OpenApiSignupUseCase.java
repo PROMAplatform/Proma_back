@@ -4,5 +4,5 @@ import ai.platform.proma.domain.User;
 import ai.platform.proma.security.openapi.OpenApiToken;
 
 public interface OpenApiSignupUseCase {
-    OpenApiToken openApiSignup(User user, Long promptId);
+    OpenApiToken openApiSignup(Long userId, Long promptId);
 }

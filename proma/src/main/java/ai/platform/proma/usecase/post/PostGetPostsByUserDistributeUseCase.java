@@ -7,5 +7,5 @@ import java.util.Map;
 
 @UseCase
 public interface PostGetPostsByUserDistributeUseCase {
-    Map<String, Object> getPostsByUserDistribute(User user, String category, int page, int size, String likeOrder, String method);
+    Map<String, Object> getPostsByUserDistribute(Long userId, String category, int page, int size, String likeOrder, String method);
 }

@@ -6,5 +6,5 @@ import ai.platform.proma.domain.User;
 @UseCase
 public interface PostScrapPromptUseCase {
 
-    Boolean scrapPrompt(Long postId, User user);
+    Boolean scrapPrompt(Long postId, Long userId);
 }

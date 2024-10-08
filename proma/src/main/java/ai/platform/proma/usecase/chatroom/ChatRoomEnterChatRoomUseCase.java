@@ -9,5 +9,5 @@ import java.util.Map;
 
 @UseCase
 public interface ChatRoomEnterChatRoomUseCase {
-    Map<String, List<MessageListResponseDto>> enterChatRoom(Long chatRoomId, User user);
+    Map<String, List<MessageListResponseDto>> enterChatRoom(Long chatRoomId, Long userId);
 }

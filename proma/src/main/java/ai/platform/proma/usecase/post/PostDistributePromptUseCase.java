@@ -4,5 +4,5 @@ import ai.platform.proma.domain.User;
 import ai.platform.proma.dto.request.PostDistributeRequestDto;
 
 public interface PostDistributePromptUseCase {
-    Boolean distributePrompt(User user, Long promptId, PostDistributeRequestDto postDistributeRequestDto);
+    Boolean distributePrompt(Long userId, Long promptId, PostDistributeRequestDto postDistributeRequestDto);
 }

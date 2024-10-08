@@ -5,5 +5,5 @@ import ai.platform.proma.domain.User;
 
 @UseCase
 public interface SidebarDeleteChatRoomUseCase {
-    Boolean deleteChatRoom(Long chatRoomId, User user);
+    Boolean deleteChatRoom(Long chatRoomId, Long userId);
 }

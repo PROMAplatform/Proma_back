@@ -7,5 +7,5 @@ import ai.platform.proma.dto.response.ChatRoomIdResponseDto;
 
 @UseCase
 public interface SidebarUpdateChatRoomEmojiUseCase {
-    ChatRoomIdResponseDto updateChatRoomEmoji(Long chatRoomId, UpdateEmojiRequestDto chatRoomUpdateEmojiRequestDto, User user);
+    ChatRoomIdResponseDto updateChatRoomEmoji(Long chatRoomId, UpdateEmojiRequestDto chatRoomUpdateEmojiRequestDto, Long userId);
 }
