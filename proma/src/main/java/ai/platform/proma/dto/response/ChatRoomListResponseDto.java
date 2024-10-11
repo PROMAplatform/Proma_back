@@ -1,8 +1,6 @@
 package ai.platform.proma.dto.response;
 
 import ai.platform.proma.domain.ChatRoom;
-import ai.platform.proma.domain.Prompt;
-import ai.platform.proma.domain.enums.PromptCategory;
 import lombok.*;
 
 

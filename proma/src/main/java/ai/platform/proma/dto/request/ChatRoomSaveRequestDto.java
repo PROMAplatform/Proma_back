@@ -2,11 +2,12 @@ package ai.platform.proma.dto.request;
 
 import ai.platform.proma.domain.ChatRoom;
 import ai.platform.proma.domain.User;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import jakarta.validation.constraints.NotNull;
+
 
 
 public record ChatRoomSaveRequestDto(
+        @NotNull(message = "roomTitle must not be null")
         String roomTitle,
         String emoji) {
 

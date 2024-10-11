@@ -1,7 +1,6 @@
 package ai.platform.proma.dto.response;
 
 import ai.platform.proma.domain.Block;
-import ai.platform.proma.domain.enums.BlockValue;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;

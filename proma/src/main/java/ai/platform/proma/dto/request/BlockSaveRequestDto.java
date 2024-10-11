@@ -5,32 +5,23 @@ import ai.platform.proma.domain.PromptMethods;
 import ai.platform.proma.domain.User;
 import ai.platform.proma.domain.enums.BlockCategory;
 import ai.platform.proma.domain.enums.PromptMethod;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import ai.platform.proma.validation.ValidEnum;
+import jakarta.validation.constraints.NotNull;
 
-//@Getter
-//@AllArgsConstructor
-//public class BlockSaveRequestDto {
-//    private String blockValue;
-//    private String blockDescription;
-//    private String blockCategory;
-//    private String promptMethod;
-//
-//    public Block toEntity(PromptMethods promptMethods, User user, BlockSaveRequestDto blockSaveRequestDto) {
-//        return Block.builder()
-//                .user(user)
-//                .blockValue(blockSaveRequestDto.getBlockValue())
-//                .blockDescription(blockSaveRequestDto.getBlockDescription())
-//                .blockCategory(BlockCategory.fromValue(blockSaveRequestDto.getBlockCategory()))
-//                .promptMethods(promptMethods)
-//                .build();
-//    }
-//}
 
 public record BlockSaveRequestDto(
+        @NotNull(message = "blockValue must not be null")
         String blockValue,
+
+        @NotNull(message = "blockDescription must not be null")
         String blockDescription,
+
+        @NotNull(message = "BlockCategory must not be null")
+        @ValidEnum(enumClass = BlockCategory.class, message = "Invalid block category")
         String blockCategory,
+
+        @NotNull(message = "PromptMethod must not be null")
+        @ValidEnum(enumClass = PromptMethod.class, message = "Invalid prompt method")
         String promptMethod
 ) {
     public Block toEntity(PromptMethods promptMethods, User user) {

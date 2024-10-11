@@ -2,15 +2,12 @@ package ai.platform.proma.dto.response;
 
 import ai.platform.proma.domain.Prompt;
 import ai.platform.proma.domain.PromptMethods;
-import ai.platform.proma.domain.enums.PromptMethod;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.data.relational.core.sql.Select;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+
 
 @Getter
 @AllArgsConstructor

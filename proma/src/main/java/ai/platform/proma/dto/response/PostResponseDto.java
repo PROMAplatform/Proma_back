@@ -2,8 +2,6 @@ package ai.platform.proma.dto.response;
 
 
 import ai.platform.proma.domain.Post;
-import ai.platform.proma.domain.enums.PromptCategory;
-import ai.platform.proma.domain.enums.PromptMethod;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
