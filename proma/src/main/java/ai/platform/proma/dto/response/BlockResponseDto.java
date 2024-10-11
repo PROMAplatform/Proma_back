@@ -19,7 +19,7 @@ public class BlockResponseDto {
         return BlockResponseDto.builder()
                 .blockId(block.getId())
                 .blockValue(block.getBlockValue())
-                .blockCategory(block.getBlockValue())
+                .blockCategory(block.getBlockCategory().toString())
                 .build();
     }
 }
