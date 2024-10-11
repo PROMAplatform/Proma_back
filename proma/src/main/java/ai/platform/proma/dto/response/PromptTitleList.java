@@ -15,6 +15,7 @@ public class PromptTitleList {
     public static PromptTitleList of(Prompt prompt) {
         return PromptTitleList.builder()
                 .promptId(prompt.getId())
+                .promptTitle(prompt.getPromptTitle())
                 .build();
     }
 }
