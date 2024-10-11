@@ -5,6 +5,7 @@ import ai.platform.proma.dto.response.ResponseDto;
 import ai.platform.proma.annotation.LoginUser;
 import ai.platform.proma.usecase.chatroom.ChatRoomEnterChatRoomUseCase;
 import ai.platform.proma.usecase.chatroom.ChatRoomUpdatePromptBlockUseCase;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +29,7 @@ public class ChatRoomController {
     public ResponseDto<Boolean> blockPrompt(
             @PathVariable("promptId") Long promptId,
             @LoginUser Long userId,
-            @RequestBody PromptUpdateRequestDto promptUpdateRequestDto
+            @Valid @RequestBody PromptUpdateRequestDto promptUpdateRequestDto
             ) {
         return new ResponseDto<>(chatRoomUpdatePromptBlockUseCase.updatePromptBlock(promptUpdateRequestDto, promptId, userId));
     }
