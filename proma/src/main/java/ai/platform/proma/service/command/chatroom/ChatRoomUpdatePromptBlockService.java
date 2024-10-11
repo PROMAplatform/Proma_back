@@ -36,13 +36,13 @@ public class ChatRoomUpdatePromptBlockService implements ChatRoomUpdatePromptBlo
         Prompt prompt = promptRepository.findByIdAndUser(promptId, user)
                 .orElseThrow(() -> new ApiException(ErrorDefine.PROMPT_NOT_FOUND));
 
-        prompt.updatePreview(promptUpdateRequestDto.getPromptPreview());
+        prompt.updatePreview(promptUpdateRequestDto.promptPreview());
 
         List<PromptBlock> promptBlock = promptBlockRepository.findByPrompt(prompt);
         promptBlockRepository.deleteAll(promptBlock);
 
-        List<Block> blocks = blockRepository.findAllById(promptUpdateRequestDto.getListPromptAtom().stream()
-                .map(ListPromptAtom::getBlockId)
+        List<Block> blocks = blockRepository.findAllById(promptUpdateRequestDto.listPromptAtom().stream()
+                .map(ListPromptAtom::blockId)
                 .collect(Collectors.toList()));
 
         List<PromptBlock> savePromptBlocks = blocks.stream()

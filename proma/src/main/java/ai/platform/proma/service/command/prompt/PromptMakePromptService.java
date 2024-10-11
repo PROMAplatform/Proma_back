@@ -29,14 +29,14 @@ public class PromptMakePromptService implements PromptMakePromptUseCase {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
 
-        PromptMethods promptMethods = communicationMethodRepository.findByPromptMethod(PromptMethod.fromValue(promptSaveRequestDto.getPromptMethod()))
+        PromptMethods promptMethods = communicationMethodRepository.findByPromptMethod(PromptMethod.fromValue(promptSaveRequestDto.promptMethod()))
                 .orElseThrow(() -> new ApiException(ErrorDefine.COMMUNICATION_METHOD_NOT_FOUND));
 
-        Prompt savePrompt = promptSaveRequestDto.toEntity(user, promptMethods, promptSaveRequestDto);
+        Prompt savePrompt = promptSaveRequestDto.toEntity(user, promptMethods);
         promptRepository.save(savePrompt);
 
-        List<Block> blocks = promptSaveRequestDto.getListPromptAtom().stream()
-                .map(listPromptAtom -> blockRepository.findByIdAndPromptMethods(listPromptAtom.getBlockId(), promptMethods)
+        List<Block> blocks = promptSaveRequestDto.listPromptAtom().stream()
+                .map(listPromptAtom -> blockRepository.findByIdAndPromptMethods(listPromptAtom.blockId(), promptMethods)
                         .orElseThrow(() -> new ApiException(ErrorDefine.BLOCK_NOT_FOUND)))
                 .toList();
 

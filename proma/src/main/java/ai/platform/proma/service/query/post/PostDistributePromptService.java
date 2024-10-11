@@ -36,7 +36,7 @@ public class PostDistributePromptService implements PostDistributePromptUseCase 
 
         Prompt prompt1 = promptRepository.save(Prompt.distributePrompt(prompt, user));
 
-        postRepository.save(postDistributeRequestDto.toEntity(prompt1, postDistributeRequestDto));
+        postRepository.save(postDistributeRequestDto.toEntity(prompt1));
 
         List<PromptBlock> promptBlocks = promptBlockRepository.findByPrompt(prompt);
 
