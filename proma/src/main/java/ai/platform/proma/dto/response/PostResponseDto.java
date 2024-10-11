@@ -13,48 +13,40 @@ import java.time.LocalDateTime;
 
 @Getter
 @ToString
+@Builder
 public class PostResponseDto {
 
-    private final Long postId;
+    private Long postId;
 
-    private final String postTitle;
+    private String postTitle;
 
-    private final String postDescription;
+    private String postDescription;
 
-    private final LocalDateTime createAt;
+    private LocalDateTime createAt;
 
-    private final String userName;
+    private String userName;
 
-    private final Long promptId;
+    private Long promptId;
 
-    private final int likeCount;
+    private int likeCount;
 
-    private final String promptMethod;
+    private String promptMethod;
 
-    private final String promptPreview;
+    private String promptPreview;
 
-    private final String postCategory;
+    private String postCategory;
 
-    private final Boolean likeState;
-
-    @Builder
-    public PostResponseDto(Post post, int likeCount, Boolean likeState) {
-        this.postId = post.getId();
-        this.postTitle = post.getPostTitle();
-        this.postDescription = post.getPostDescription();
-        this.userName = post.getPrompt().getUser().getUserName();
-        this.createAt = post.getCreateAt();
-        this.promptId = post.getPrompt().getId();
-        this.likeCount = likeCount;
-        this.promptMethod = post.getPrompt().getPromptMethods().getPromptMethod().toString();
-        this.postCategory = post.getPostCategory().toString();
-        this.promptPreview = post.getPrompt().getPromptPreview();
-        this.likeState = likeState;
-    }
+    private Boolean likeState;
 
     public static PostResponseDto of(SortInfo sortInfo, Boolean likeState) {
+        Post post = sortInfo.getPost();
         return PostResponseDto.builder()
-                .post(sortInfo.getPost())
+                .postId(post.getId())
+                .postTitle(post.getPostTitle())
+                .postDescription(post.getPostDescription())
+                .userName(post.getPrompt().getUser().getUserName())
+                .createAt(post.getCreateAt())
+                .promptId(post.getPrompt().getId())
                 .likeCount(sortInfo.getLikeCount())
                 .likeState(likeState)
                 .build();

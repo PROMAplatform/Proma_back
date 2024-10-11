@@ -7,19 +7,14 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
+@Builder
 public class PromptTitleList {
     private Long promptId;
     private String promptTitle;
 
-    @Builder
-    public PromptTitleList(Prompt prompt) {
-        this.promptId = prompt.getId();
-        this.promptTitle = prompt.getPromptTitle();
-    }
-
     public static PromptTitleList of(Prompt prompt) {
         return PromptTitleList.builder()
-                .prompt(prompt)
+                .promptId(prompt.getId())
                 .build();
     }
 }

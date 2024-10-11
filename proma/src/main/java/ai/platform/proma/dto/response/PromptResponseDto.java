@@ -10,6 +10,7 @@ import lombok.ToString;
 
 @Getter
 @ToString
+@Builder
 public class PromptResponseDto {
     private final Long id;
     private final String promptTitle;
@@ -19,18 +20,18 @@ public class PromptResponseDto {
     private final Scrap isScrap;
     private final String userName;
     private final Long userId;
-    private final PromptMethods promptMethodsName;
-
-    @Builder
-    public PromptResponseDto(Prompt prompt) {
-        this.id = prompt.getId();
-        this.promptTitle = prompt.getPromptTitle();
-        this.promptDescription = prompt.getPromptDescription();
-        this.promptPreview = prompt.getPromptPreview();
-        this.promptCategory = prompt.getPromptCategory();
-        this.isScrap = Scrap.SCRAP;
-        this.userName = prompt.getUser().getUserName();
-        this.userId = prompt.getUser().getId();
-        this.promptMethodsName = prompt.getPromptMethods();
+    private final PromptMethods promptMethods;
+    public PromptResponseDto of(Prompt prompt){
+        return PromptResponseDto.builder()
+                .id(prompt.getId())
+                .promptTitle(promptTitle)
+                .promptDescription(promptDescription)
+                .promptPreview(promptPreview)
+                .promptCategory(promptCategory)
+                .isScrap(isScrap)
+                .userName(userName)
+                .userId(userId)
+                .promptMethods(promptMethods)
+                .build();
     }
 }

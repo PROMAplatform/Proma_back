@@ -27,7 +27,7 @@ public class SidebarUpdateChatRoomEomji implements SidebarUpdateChatRoomEmojiUse
         ChatRoom chatRoom = chatRoomRepository.findByIdAndUser(chatRoomId, user)
                 .orElseThrow(() -> new ApiException(ErrorDefine.CHAT_ROOM_NOT_FOUND));
 
-        chatRoom.updateEmoji(chatRoomUpdateEmojiRequestDto.getEmoji());
+        chatRoom.updateEmoji(chatRoomUpdateEmojiRequestDto.emoji());
 
         return ChatRoomIdResponseDto.of(chatRoom.getId());
     }

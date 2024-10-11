@@ -2,21 +2,23 @@ package ai.platform.proma.dto.response;
 
 import ai.platform.proma.domain.Block;
 import ai.platform.proma.domain.enums.BlockValue;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
 @Getter
 @ToString
+@Builder
 public class BlockResponseDto {
 
-    private final Long blockId;
-    private final String blockValue;
-    private final String blockCategory;
+    private Long blockId;
+    private String blockValue;
+    private String blockCategory;
 
-
-    public BlockResponseDto(Block block) {
-        this.blockId = block.getId();
-        this.blockValue = BlockValue.fromValue(block.getBlockValue());
-        this.blockCategory = block.getBlockCategory().toString();
+    public static BlockResponseDto of (Block block) {
+        return BlockResponseDto.builder()
+                .blockId(block.getId())
+                .blockValue(block.getBlockValue())
+                .build();
     }
 }
