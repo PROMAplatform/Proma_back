@@ -8,20 +8,37 @@ import ai.platform.proma.domain.enums.PromptMethod;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@Getter
-@AllArgsConstructor
-public class BlockSaveRequestDto {
-    private String blockValue;
-    private String blockDescription;
-    private String blockCategory;
-    private String promptMethod;
+//@Getter
+//@AllArgsConstructor
+//public class BlockSaveRequestDto {
+//    private String blockValue;
+//    private String blockDescription;
+//    private String blockCategory;
+//    private String promptMethod;
+//
+//    public Block toEntity(PromptMethods promptMethods, User user, BlockSaveRequestDto blockSaveRequestDto) {
+//        return Block.builder()
+//                .user(user)
+//                .blockValue(blockSaveRequestDto.getBlockValue())
+//                .blockDescription(blockSaveRequestDto.getBlockDescription())
+//                .blockCategory(BlockCategory.fromValue(blockSaveRequestDto.getBlockCategory()))
+//                .promptMethods(promptMethods)
+//                .build();
+//    }
+//}
 
-    public Block toEntity(PromptMethods promptMethods, User user, BlockSaveRequestDto blockSaveRequestDto) {
+public record BlockSaveRequestDto(
+        String blockValue,
+        String blockDescription,
+        String blockCategory,
+        String promptMethod
+) {
+    public Block toEntity(PromptMethods promptMethods, User user) {
         return Block.builder()
                 .user(user)
-                .blockValue(blockSaveRequestDto.getBlockValue())
-                .blockDescription(blockSaveRequestDto.getBlockDescription())
-                .blockCategory(BlockCategory.fromValue(blockSaveRequestDto.getBlockCategory()))
+                .blockValue(this.blockValue)
+                .blockDescription(this.blockDescription)
+                .blockCategory(BlockCategory.fromValue(this.blockCategory))
                 .promptMethods(promptMethods)
                 .build();
     }

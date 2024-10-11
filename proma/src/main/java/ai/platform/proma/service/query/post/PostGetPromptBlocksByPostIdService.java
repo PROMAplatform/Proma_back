@@ -31,7 +31,7 @@ public class PostGetPromptBlocksByPostIdService implements PostGetPromptBlocksBy
 
         List<PromptBlock> promptBlocks = promptBlockRepository.findByPrompt(post.getPrompt()); // PromptBlock 조회
         List<BlockResponseDto> blockResponseDtoList=  promptBlocks.stream()
-                .map(Block -> new BlockResponseDto(Block.getBlock())) // Block 정보만 추출하여 DTO 생성
+                .map(Block -> BlockResponseDto.of(Block.getBlock())) // Block 정보만 추출하여 DTO 생성
                 .collect(Collectors.toList());
 
         Map<String, Object> response = new HashMap<>();

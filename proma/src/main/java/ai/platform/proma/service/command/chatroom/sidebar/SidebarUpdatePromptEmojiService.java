@@ -27,7 +27,7 @@ public class SidebarUpdatePromptEmojiService implements SidebarUpdatePromptEmoji
         Prompt prompt = promptRepository.findByIdAndUser(promptId, user)
                 .orElseThrow(() -> new ApiException(ErrorDefine.PROMPT_NOT_FOUND));
 
-        prompt.updateEmoji(updateEmojiRequestDto.getEmoji());
+        prompt.updateEmoji(updateEmojiRequestDto.emoji());
 
         return ChatRoomIdResponseDto.of(prompt.getId());
     }

@@ -26,7 +26,7 @@ public class SidebarSaveChatRoomService implements SidebarSaveChatRoomUseCase {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
 
-        ChatRoom chatRoom = chatRoomSaveRequestDto.toEntity(chatRoomSaveRequestDto, user);
+        ChatRoom chatRoom = chatRoomSaveRequestDto.toEntity(user);
         chatRoomRepository.save(chatRoom);
 
         return ChatRoomIdResponseDto.of(chatRoom.getId());

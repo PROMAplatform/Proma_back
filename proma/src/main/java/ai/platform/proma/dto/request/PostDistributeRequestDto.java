@@ -6,18 +6,17 @@ import ai.platform.proma.domain.enums.PromptCategory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@Getter
-@AllArgsConstructor
-public class PostDistributeRequestDto {
-    private String postTitle;
-    private String postDescription;
-    private String postCategory;
+public record PostDistributeRequestDto(
+        String postTitle,
+        String postDescription,
+        String postCategory
+) {
 
-    public Post toEntity(Prompt prompt, PostDistributeRequestDto postDistributeRequestDto) {
+    public Post toEntity(Prompt prompt) {
         return Post.builder()
-                .postTitle(postDistributeRequestDto.getPostTitle())
-                .postDescription(postDistributeRequestDto.getPostDescription())
-                .postCategory(PromptCategory.fromValue(postDistributeRequestDto.getPostCategory()))
+                .postTitle(this.postTitle)
+                .postDescription(this.postDescription)
+                .postCategory(PromptCategory.fromValue(this.postCategory))
                 .prompt(prompt)
                 .build();
     }

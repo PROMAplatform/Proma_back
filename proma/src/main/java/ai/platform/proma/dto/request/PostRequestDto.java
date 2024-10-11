@@ -5,17 +5,18 @@ import ai.platform.proma.domain.Prompt;
 import ai.platform.proma.domain.enums.PromptCategory;
 import lombok.Getter;
 
-@Getter
-public class PostRequestDto {
-    private String postTitle;
-    private String postDescription;
-    private String postCategory;
+public record PostRequestDto(
+        String postTitle,
+        String postDescription,
+        String postCategory
+) {
 
-    public Post toEntity(PostRequestDto postRequestDto) {
+
+    public Post toEntity() {
         return Post.builder()
-                .postTitle(postRequestDto.getPostTitle())
-                .postDescription(postRequestDto.getPostDescription())
-                .postCategory(PromptCategory.fromValue(postRequestDto.getPostCategory()))
+                .postTitle(this.postTitle)
+                .postDescription(this.postDescription)
+                .postCategory(PromptCategory.fromValue(this.postCategory))
                 .build();
     }
 }

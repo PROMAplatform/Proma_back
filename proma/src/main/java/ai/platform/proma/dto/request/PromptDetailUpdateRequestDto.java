@@ -4,11 +4,11 @@ import ai.platform.proma.domain.enums.PromptCategory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@Getter
-@AllArgsConstructor
-public class PromptDetailUpdateRequestDto {
-    private String promptTitle;
-    private String promptDescription;
-    private String promptCategory;
-    private String promptPreview;
+
+public record PromptDetailUpdateRequestDto(
+        String promptTitle,
+        String promptDescription,
+        String promptCategory,
+        String promptPreview){
+
 }

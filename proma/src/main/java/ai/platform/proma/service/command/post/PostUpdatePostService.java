@@ -30,7 +30,7 @@ public class PostUpdatePostService implements PostUpdatePostUseCase {
         if (!post.getPrompt().getUser().getId().equals(user.getId())) {
             throw new ApiException(ErrorDefine.UNAUTHORIZED_USER);
         }
-        post.update(postRequestDto.toEntity(postRequestDto));
+        post.update(postRequestDto.toEntity());
 
         return true;
     }
