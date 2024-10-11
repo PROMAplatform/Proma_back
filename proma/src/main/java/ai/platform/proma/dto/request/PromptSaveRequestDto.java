@@ -11,24 +11,22 @@ import lombok.Setter;
 
 import java.util.List;
 
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-public class PromptSaveRequestDto {
-    private String promptTitle;
-    private String promptDescription;
-    private String promptPreview;
-    private String promptCategory;
-    private String promptMethod;
-    private List<ListPromptAtom> listPromptAtom;
 
-    public Prompt toEntity(User user, PromptMethods promptMethods, PromptSaveRequestDto promptSaveRequestDto) {
+public record PromptSaveRequestDto(
+        String promptTitle,
+        String promptDescription,
+        String promptPreview,
+        String promptCategory,
+        String promptMethod,
+        List<ListPromptAtom> listPromptAtom
+) {
+    public Prompt toEntity(User user, PromptMethods promptMethods) {
         return Prompt.builder()
                 .user(user)
-                .promptTitle(promptSaveRequestDto.getPromptTitle())
-                .promptDescription(promptSaveRequestDto.getPromptDescription())
-                .promptPreview(promptSaveRequestDto.getPromptPreview())
-                .promptCategory(PromptCategory.fromValue(promptSaveRequestDto.getPromptCategory()))
+                .promptTitle(this.promptTitle)
+                .promptDescription(this.promptDescription)
+                .promptPreview(this.promptPreview)
+                .promptCategory(PromptCategory.fromValue(this.promptCategory))
                 .isScrap(Scrap.NOTSCRAP)
                 .emoji("💡")
                 .promptMethods(promptMethods)

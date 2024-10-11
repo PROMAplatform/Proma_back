@@ -6,11 +6,11 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor
-public class PromptUpdateRequestDto {
-    private String promptPreview;
-    private List<ListPromptAtom> listPromptAtom;
+
+public record PromptUpdateRequestDto(
+        String promptPreview,
+        List<ListPromptAtom> listPromptAtom
+) {
+
 
 }

@@ -8,12 +8,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-public class ListPromptAtom {
-    private Long blockId;
 
+public record ListPromptAtom(
+        Long blockId
+) {
     public static PromptBlock toEntity(Prompt prompt, Block block) {
         return PromptBlock.builder()
                 .prompt(prompt)

@@ -5,17 +5,16 @@ import ai.platform.proma.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@Getter
-@AllArgsConstructor
-public class ChatRoomSaveRequestDto {
-    private String roomTitle;
-    private String emoji;
 
-    public ChatRoom toEntity(ChatRoomSaveRequestDto chatRoomSaveRequestDto, User user) {
+public record ChatRoomSaveRequestDto(
+        String roomTitle,
+        String emoji) {
+
+    public ChatRoom toEntity(User user) {
         return ChatRoom.builder()
                 .user(user)
-                .chatRoomTitle(chatRoomSaveRequestDto.getRoomTitle())
-                .emoji(chatRoomSaveRequestDto.getEmoji())
+                .chatRoomTitle(this.roomTitle)
+                .emoji(this.emoji)
                 .build();
     }
 }
