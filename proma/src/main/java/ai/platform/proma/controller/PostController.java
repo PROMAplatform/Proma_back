@@ -48,7 +48,7 @@ public class PostController {
 
     @PostMapping("/distribute/{promptId}")
     public ResponseDto<Boolean> distributePrompt(
-            @Valid @PathVariable("promptId") Long promptId,
+            @PathVariable("promptId") Long promptId,
             @Valid @RequestBody PostDistributeRequestDto postDistributeRequestDto,
             @LoginUser Long userId    ) {
         return new ResponseDto<>(postDistributePromptUseCase.distributePrompt(userId, promptId, postDistributeRequestDto));
@@ -57,12 +57,12 @@ public class PostController {
     @GetMapping("")
     public ResponseDto<Map<String, Object>> getPostsBySearchKeyWord(
             @LoginUser Long userId,
-            @Valid @RequestParam(value = "search", required = false) String searchKeyword,
-            @Valid @RequestParam(value = "method", required = false) String method,
-            @Valid @RequestParam(value = "category", required = false) String category,
-            @Valid @RequestParam(value = "like", required = false) String likeOrder,
-            @Valid @RequestParam(value = "page", defaultValue = "0") int page,
-            @Valid @RequestParam(value = "size", defaultValue = "9") int size
+            @RequestParam(value = "search", required = false) String searchKeyword,
+            @RequestParam(value = "method", required = false) String method,
+            @RequestParam(value = "category", required = false) String category,
+            @RequestParam(value = "like", required = false) String likeOrder,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "9") int size
     ) {
 
         return new ResponseDto<>(postGetPostsUseCase.getPosts(userId, searchKeyword, category, page, size, likeOrder, method));
@@ -70,12 +70,12 @@ public class PostController {
 
     @GetMapping("/preview")
     public ResponseDto<Map<String, Object>> getPostsPreview(
-            @Valid @RequestParam(value = "search", required = false) String searchKeyword,
-            @Valid @RequestParam(value = "method", required = false) String method,
-            @Valid @RequestParam(value = "category", required = false) String category,
-            @Valid @RequestParam(value = "like", required = false) String likeOrder,
-            @Valid @RequestParam(value = "page", defaultValue = "0") int page,
-            @Valid @RequestParam(value = "size", defaultValue = "9") int size
+            @RequestParam(value = "search", required = false) String searchKeyword,
+            @RequestParam(value = "method", required = false) String method,
+            @RequestParam(value = "category", required = false) String category,
+            @RequestParam(value = "like", required = false) String likeOrder,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "9") int size
     ) {
 
         return new ResponseDto<>(postGetPostsPreviewUseCase.getPostsPreview(searchKeyword, category, page, size, likeOrder, method));
@@ -83,7 +83,7 @@ public class PostController {
 
     @PostMapping("/scrap/{postId}")
     public ResponseDto<Boolean> promptScrapByPostId(
-            @Valid @PathVariable("postId") Long postId, // JWT사용시 수정 필요
+            @PathVariable("postId") Long postId, // JWT사용시 수정 필요
             @LoginUser Long userId
     ) {
         return new ResponseDto<>(postScrapPromptUseCase.scrapPrompt(postId, userId));
@@ -91,25 +91,25 @@ public class PostController {
 
     @GetMapping("/block/{postId}")
     public ResponseDto<Map<String, Object>> getPromptBlocksByPostId(
-            @Valid @PathVariable("postId") Long postId
+            @PathVariable("postId") Long postId
     ) {
         return new ResponseDto<>(postGetPromptBlocksByPostIdUseCase.getPromptBlocksByPostId(postId));
     }
 
     @PostMapping("/like/{postId}")
     public ResponseDto<Boolean> postLike(
-            @Valid @PathVariable("postId") Long postId,
+            @PathVariable("postId") Long postId,
             @LoginUser Long userId    ) {
         return new ResponseDto<>(postLikeUseCase.postLike(postId, userId));
     }
     @GetMapping("/my-like")
     public ResponseDto<Map<String, Object>> getPostsByUserLike(
             @LoginUser Long userId,
-            @Valid @RequestParam(value = "category", required = false) String category,
-            @Valid @RequestParam(value = "method", required = false) String method,
-            @Valid @RequestParam(value = "like", required = false) String likeOrder,
-            @Valid @RequestParam(value = "page", defaultValue = "0") int page,
-            @Valid @RequestParam(value = "size", defaultValue = "9") int size
+            @RequestParam(value = "category", required = false) String category,
+            @RequestParam(value = "method", required = false) String method,
+            @RequestParam(value = "like", required = false) String likeOrder,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "9") int size
     ){
         return new ResponseDto<>(postGetPostsByUserLikesUseCase.getPostsByUserLikes(userId, category, page, size, likeOrder, method));
     }
@@ -117,26 +117,26 @@ public class PostController {
     @GetMapping("/my-distribute")
     public ResponseDto<Map<String, Object>> getPostsByUserDistribute(
             @LoginUser Long userId,
-            @Valid @RequestParam(value = "category", required = false) String category,
-            @Valid @RequestParam(value = "method", required = false) String method,
-            @Valid @RequestParam(value = "like", required = false) String likeOrder,
-            @Valid @RequestParam(value = "page", defaultValue = "0") int page,
-            @Valid @RequestParam(value = "size", defaultValue = "9") int size
+            @RequestParam(value = "category", required = false) String category,
+            @RequestParam(value = "method", required = false) String method,
+            @RequestParam(value = "like", required = false) String likeOrder,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "9") int size
     ){
 
         return new ResponseDto<>(postGetPostsByUserDistributeUseCase.getPostsByUserDistribute(userId, category, page, size, likeOrder, method));
     }
 
     @PatchMapping("/my-distribute/patch/{postId}")
-    public ResponseDto<Boolean> updatePost(@Valid @PathVariable("postId") Long postId,
-                                     @Valid @RequestBody PostRequestDto requestDto,
+    public ResponseDto<Boolean> updatePost(@PathVariable("postId") Long postId,
+                                           @Valid @RequestBody PostRequestDto requestDto,
                                            @LoginUser Long userId) {
 
         return new ResponseDto<>(postUpdatePostUseCase.updatePost(userId ,postId, requestDto));
     }
 
     @DeleteMapping("/my-distribute/delete/{postId}")
-    public ResponseDto<Boolean> deletePost(@Valid @PathVariable("postId") Long postId,
+    public ResponseDto<Boolean> deletePost(@PathVariable("postId") Long postId,
                                            @LoginUser Long userId) {
         return new ResponseDto<>(postDeletePostUseCase.deletePost(userId,postId));
     }

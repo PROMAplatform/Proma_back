@@ -1,11 +1,10 @@
 package ai.platform.proma.dto.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotNull;
 
 
 public record UpdateEmojiRequestDto(
+        @NotNull(message = "emoji must not be null")
         String emoji
 ) {
 

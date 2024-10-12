@@ -9,6 +9,7 @@ import ai.platform.proma.dto.response.PromptListResponseDto;
 import ai.platform.proma.dto.response.ResponseDto;
 import ai.platform.proma.annotation.LoginUser;
 import ai.platform.proma.usecase.chatroom.sidebar.*;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,8 +33,8 @@ public class ChatRoomSidebarController {
 
     @PostMapping("/room/save")
     public ResponseDto<ChatRoomIdResponseDto> saveChatRoom(
-        @RequestBody ChatRoomSaveRequestDto chatRoomSaveRequestDto,
-        @LoginUser Long userId
+            @Valid @RequestBody ChatRoomSaveRequestDto chatRoomSaveRequestDto,
+            @LoginUser Long userId
     ) {
         return new ResponseDto<>(sidebarSaveChatRoomUseCase.saveChatRoom(chatRoomSaveRequestDto, userId));
     }
@@ -48,7 +49,7 @@ public class ChatRoomSidebarController {
     @PatchMapping("/room/emoji/{chatRoomId}")
     public ResponseDto<ChatRoomIdResponseDto> updateChatRoomEmoji(
             @PathVariable("chatRoomId") Long chatRoomId,
-            @RequestBody UpdateEmojiRequestDto updateEmojiRequestDto,
+            @Valid @RequestBody UpdateEmojiRequestDto updateEmojiRequestDto,
             @LoginUser Long userId
             ) {
         return new ResponseDto<>(sidebarUpdateChatRoomEmojiUseCase.updateChatRoomEmoji(chatRoomId, updateEmojiRequestDto, userId));
@@ -64,7 +65,7 @@ public class ChatRoomSidebarController {
 
     @PatchMapping("/prompt/{promptId}")
     public ResponseDto<Boolean> updatePromptDetail(
-            @RequestBody PromptDetailUpdateRequestDto promptDetailUpdateRequestDto,
+            @Valid @RequestBody PromptDetailUpdateRequestDto promptDetailUpdateRequestDto,
             @PathVariable("promptId") Long promptId,
             @LoginUser Long userId
     ) {
@@ -89,7 +90,7 @@ public class ChatRoomSidebarController {
     @PatchMapping("/prompt/emoji/{promptId}")
     public ResponseDto<ChatRoomIdResponseDto> updatePromptEmoji(
             @PathVariable("promptId") Long promptId,
-            @RequestBody UpdateEmojiRequestDto updateEmojiRequestDto,
+            @Valid @RequestBody UpdateEmojiRequestDto updateEmojiRequestDto,
             @LoginUser Long userId
     ) {
         return new ResponseDto<>(sidebarUpdatePromptEmojiUseCase.updatePromptEmoji(promptId, updateEmojiRequestDto, userId));
