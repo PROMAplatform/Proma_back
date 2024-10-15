@@ -17,4 +17,6 @@ public interface PromptRepository extends JpaRepository<Prompt, Long> {
 
     @Query("SELECT p FROM Prompt p WHERE p.user = :user AND p.isScrap IN (ai.platform.proma.domain.enums.Scrap.SCRAP, ai.platform.proma.domain.enums.Scrap.NOTSCRAP)")
     List<Prompt> findByUserAndScrap(@Param("user") User user);
+
+    List<Prompt> findAllByUserAndIsApisIsTrue(User user);
 }
