@@ -43,6 +43,15 @@ public class Prompt {
     @Enumerated(EnumType.STRING)
     private Scrap isScrap;
 
+    @Column
+    private Boolean isApis;
+
+    @Column(length = 200)
+    private String apisToken;
+
+    @Column(length = 200)
+    private String secretKey;
+
     // --------------------------------------------------------------------
 
     @ManyToOne(fetch = LAZY)
@@ -117,5 +126,10 @@ public class Prompt {
     }
     public void updatePreview(String promptPreview){
         this.promptPreview = promptPreview;
+    }
+    public void updateApis(String apisToken, String secretKey){
+        this.isApis = true;
+        this.apisToken = apisToken;
+        this.secretKey = secretKey;
     }
 }

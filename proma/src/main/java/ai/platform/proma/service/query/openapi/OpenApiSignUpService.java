@@ -26,7 +26,11 @@ public class OpenApiSignUpService implements OpenApiSignupUseCase {
 
         Prompt prompt = promptRepository.findByIdAndUser(promptId, user)
                 .orElseThrow(() -> new ApiException(ErrorDefine.PROMPT_NOT_FOUND));
+
         OpenApiTokenProvider openApiTokenProvider = new OpenApiTokenProvider();
-        return openApiTokenProvider.createTotalToken(user.getSocialId(), user.getRole(), prompt.getId());
+        OpenApiToken openApiToken = openApiTokenProvider.createTotalToken(user.getSocialId(), user.getRole(), prompt.getId());
+        prompt.updateApis(openApiToken.getAccessToken(), openApiToken.getSecretKey());
+
+        return openApiToken;
     }
 }
