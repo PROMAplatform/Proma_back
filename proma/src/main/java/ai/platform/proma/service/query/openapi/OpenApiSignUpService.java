@@ -20,6 +20,7 @@ public class OpenApiSignUpService implements OpenApiSignupUseCase {
 
     private final PromptRepository promptRepository;
     private final UserRepository userRepository;
+
     public OpenApiToken openApiSignup(Long userId, Long promptId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ApiException(ErrorDefine.USER_NOT_FOUND));
