@@ -20,9 +20,7 @@ import java.util.Map;
 public class PostController {
 
     private final PostGetPostsUseCase postGetPostsUseCase;
-    private final PostGetPostsPreviewUseCase postGetPostsPreviewUseCase;
     private final PostScrapPromptUseCase postScrapPromptUseCase;
-    private final PostGetPromptBlocksByPostIdUseCase postGetPromptBlocksByPostIdUseCase;
     private final PostLikeUseCase postLikeUseCase;
     private final PostGetPostsByUserLikesUseCase postGetPostsByUserLikesUseCase;
     private final PostGetPostsByUserDistributeUseCase postGetPostsByUserDistributeUseCase;
@@ -44,19 +42,6 @@ public class PostController {
         return new ResponseDto<>(postGetPostsUseCase.getPosts(userId, searchKeyword, category, page, size, likeOrder, method));
     }
 
-    @GetMapping("/preview") //public으로 변경
-    public ResponseDto<Map<String, Object>> getPostsPreview(
-            @RequestParam(value = "search", required = false) String searchKeyword,
-            @RequestParam(value = "method", required = false) String method,
-            @RequestParam(value = "category", required = false) String category,
-            @RequestParam(value = "like", required = false) String likeOrder,
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "9") int size
-    ) {
-
-        return new ResponseDto<>(postGetPostsPreviewUseCase.getPostsPreview(searchKeyword, category, page, size, likeOrder, method));
-    }
-
     @PostMapping("/{postId}") //스크랩
     public ResponseDto<Boolean> promptScrapByPostId(
             @PathVariable("postId") Long postId, // JWT사용시 수정 필요
@@ -65,12 +50,6 @@ public class PostController {
         return new ResponseDto<>(postScrapPromptUseCase.scrapPrompt(postId, userId));
     }
 
-    @GetMapping("/block/{postId}") //public으로 변경
-    public ResponseDto<Map<String, Object>> getPromptBlocksByPostId(
-            @PathVariable("postId") Long postId
-    ) {
-        return new ResponseDto<>(postGetPromptBlocksByPostIdUseCase.getPromptBlocksByPostId(postId));
-    }
 
     @PostMapping("/{postId}/likes")
     public ResponseDto<Boolean> postLike(
@@ -106,7 +85,7 @@ public class PostController {
 
     @PatchMapping("/{postId}")
     public ResponseDto<Boolean> updatePost(
-            @Valid @PathVariable("postId") Long postId,
+            @PathVariable("postId") Long postId,
             @Valid @RequestBody PostRequestDto requestDto,
             @LoginUser Long userId) {
 
@@ -114,7 +93,7 @@ public class PostController {
     }
 
     @DeleteMapping("/{postId}")
-    public ResponseDto<Boolean> deletePost(@Valid @PathVariable("postId") Long postId,
+    public ResponseDto<Boolean> deletePost(@PathVariable("postId") Long postId,
                                            @LoginUser Long userId) {
         return new ResponseDto<>(postDeletePostUseCase.deletePost(userId,postId));
     }

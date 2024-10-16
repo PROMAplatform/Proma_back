@@ -48,7 +48,7 @@ public class PromptMakerController {
 
     @PostMapping("/{promptId}")
     public ResponseDto<Boolean> distributePrompt(
-            @Valid @PathVariable("promptId") Long promptId,
+            @PathVariable("promptId") Long promptId,
             @Valid @RequestBody PostDistributeRequestDto postDistributeRequestDto,
             @LoginUser Long userId    ) {
         return new ResponseDto<>(postDistributePromptUseCase.distributePrompt(userId, promptId, postDistributeRequestDto));
@@ -77,7 +77,7 @@ public class PromptMakerController {
 
     @PatchMapping("/{promptId}")
     public ResponseDto<Boolean> updatePromptDetail(
-            @RequestBody PromptDetailUpdateRequestDto promptDetailUpdateRequestDto,
+            @Valid @RequestBody PromptDetailUpdateRequestDto promptDetailUpdateRequestDto,
             @PathVariable("promptId") Long promptId,
             @LoginUser Long userId
     ) {
@@ -87,17 +87,17 @@ public class PromptMakerController {
     @PatchMapping("/{promptId}/emojis")
     public ResponseDto<ChatRoomIdResponseDto> updatePromptEmoji(
             @PathVariable("promptId") Long promptId,
-            @RequestBody UpdateEmojiRequestDto updateEmojiRequestDto,
+            @Valid @RequestBody UpdateEmojiRequestDto updateEmojiRequestDto,
             @LoginUser Long userId
     ) {
         return new ResponseDto<>(sidebarUpdatePromptEmojiUseCase.updatePromptEmoji(promptId, updateEmojiRequestDto, userId));
     }
 
-    @PatchMapping("/{promptId}/block")
+    @PatchMapping("/{promptId}/blocks")
     public ResponseDto<Boolean> blockPrompt(
             @PathVariable("promptId") Long promptId,
             @LoginUser Long userId,
-            @RequestBody PromptUpdateRequestDto promptUpdateRequestDto
+            @Valid @RequestBody PromptUpdateRequestDto promptUpdateRequestDto
     ) {
         return new ResponseDto<>(chatRoomUpdatePromptBlockUseCase.updatePromptBlock(promptUpdateRequestDto, promptId, userId));
     }
