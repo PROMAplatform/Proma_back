@@ -11,8 +11,6 @@ public record PromptDetailUpdateRequestDto(
         String promptDescription,
         @NotNull(message = "promptCategory must not be null")
         @ValidEnum(enumClass = PromptCategory.class, message = "Invalid  promptCategory")
-        String promptCategory,
-        @NotNull(message = "promptPreview must not be null")
-        String promptPreview){
+        String promptCategory){
 
 }
