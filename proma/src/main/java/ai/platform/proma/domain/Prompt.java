@@ -46,10 +46,10 @@ public class Prompt {
     @Column
     private Boolean isApis;
 
-    @Column(length = 200)
+    @Column(length = 1000)
     private String apisToken;
 
-    @Column(length = 200)
+    @Column(length = 1000)
     private String secretKey;
 
     // --------------------------------------------------------------------
