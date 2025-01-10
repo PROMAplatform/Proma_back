@@ -30,6 +30,7 @@ public class PromptHistorySaveService implements PromptHistorySaveUsecase {
                 .promptCategory(promptHistorySaveReuqestDto.promptCategory())
                 .user(user)
                 .build();
+
         blockHistoryRepository.save(blockHistory);
 
         return true;
