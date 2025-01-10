@@ -12,10 +12,7 @@ import ai.platform.proma.usecase.chatroom.sidebar.SidebarUpdatePromptEmojiUseCas
 import ai.platform.proma.usecase.post.PostDistributePromptUseCase;
 import ai.platform.proma.usecase.post.PostPromptDetailUseCase;
 import ai.platform.proma.usecase.post.PostPromptTitleListUseCase;
-import ai.platform.proma.usecase.prompt.PromptDeleteBlockUseCase;
-import ai.platform.proma.usecase.prompt.PromptMakeBlockUseCase;
 import ai.platform.proma.usecase.prompt.PromptMakePromptUseCase;
-import ai.platform.proma.usecase.prompt.PromptSearchBlockUseCase;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -45,6 +42,7 @@ public class PromptMakerController {
     ) {
         return new ResponseDto<>(promptMakePromptUseCase.makePrompt(promptSaveRequestDto, userId));
     }
+
 
     @PostMapping("/{promptId}")
     public ResponseDto<Boolean> distributePrompt(
