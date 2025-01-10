@@ -66,6 +66,9 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE)
     private List<Block> blocks;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE)
+    private List<BlockHistory> blockHistories;
+
     @Builder
     public User(String userLoginId, String userName, UserLoginMethod userLoginMethod, String socialId) {
         this.userLoginId = userLoginId;

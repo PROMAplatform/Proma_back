@@ -12,10 +12,8 @@ import ai.platform.proma.usecase.chatroom.sidebar.SidebarUpdatePromptEmojiUseCas
 import ai.platform.proma.usecase.post.PostDistributePromptUseCase;
 import ai.platform.proma.usecase.post.PostPromptDetailUseCase;
 import ai.platform.proma.usecase.post.PostPromptTitleListUseCase;
-import ai.platform.proma.usecase.prompt.PromptDeleteBlockUseCase;
-import ai.platform.proma.usecase.prompt.PromptMakeBlockUseCase;
+import ai.platform.proma.usecase.prompt.PromptHistorySaveUsecase;
 import ai.platform.proma.usecase.prompt.PromptMakePromptUseCase;
-import ai.platform.proma.usecase.prompt.PromptSearchBlockUseCase;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +35,7 @@ public class PromptMakerController {
     private final PostPromptTitleListUseCase postPromptTitleListUseCase;
     private final PostPromptDetailUseCase postPromptDetailUseCase;
     private final PostDistributePromptUseCase postDistributePromptUseCase;
+    private final PromptHistorySaveUsecase promptHistorySaveUsecase;
 
     @PostMapping("")
     public ResponseDto<Boolean> makePrompt(
@@ -45,6 +44,15 @@ public class PromptMakerController {
     ) {
         return new ResponseDto<>(promptMakePromptUseCase.makePrompt(promptSaveRequestDto, userId));
     }
+
+    @PostMapping("/history")
+    public ResponseDto<Boolean> makePromptHistory(
+            @Valid @RequestBody PromptHistorySaveReuqestDto promptHistorySaveReuqestDto,
+            @LoginUser Long userId
+    ) {
+        return new ResponseDto<>(promptHistorySaveUsecase.execute(userId, promptHistorySaveReuqestDto));
+    }
+
 
     @PostMapping("/{promptId}")
     public ResponseDto<Boolean> distributePrompt(
