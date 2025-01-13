@@ -24,7 +24,8 @@ public record PromptSaveRequestDto(
         @ValidEnum(enumClass = PromptMethod.class, message = "Invalid  promptMethod")
         String promptMethod,
         @NotNull(message = "listPromptAtom must not be null")
-        List<ListPromptAtom> listPromptAtom
+        List<ListPromptAtom> listPromptAtom,
+        List<AiListPromptAtom> aiListPromptAtom
 ) {
     public Prompt toEntity(User user, PromptMethods promptMethods) {
         return Prompt.builder()
