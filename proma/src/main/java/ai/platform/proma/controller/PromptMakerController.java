@@ -53,7 +53,6 @@ public class PromptMakerController {
         return new ResponseDto<>(promptHistorySaveUsecase.execute(userId, promptHistorySaveReuqestDto));
     }
 
-
     @PostMapping("/{promptId}")
     public ResponseDto<Boolean> distributePrompt(
             @PathVariable("promptId") Long promptId,
